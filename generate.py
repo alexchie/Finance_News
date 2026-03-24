@@ -120,7 +120,7 @@ def analyze_with_claude(topic_articles):
 
     message = client.messages.create(
         model="claude-opus-4-5",
-        max_tokens=4000,
+        max_tokens=16000,
         messages=[{"role": "user", "content": prompt}]
     )
 
@@ -132,7 +132,12 @@ def analyze_with_claude(topic_articles):
         raw = raw.split("\n", 1)[1]
         raw = raw.rsplit("```", 1)[0]
 
-    return json.loads(raw)
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError as e:
+        print(f"\n❌ JSON 解析失敗：{e}")
+        print(f"Claude 回傳的原始內容（最後200字）：\n{raw[-200:]}")
+        raise
 
 
 def generate_article_html(article):
