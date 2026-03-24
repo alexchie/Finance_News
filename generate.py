@@ -10,7 +10,7 @@ from datetime import date
 API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 TODAY = date.today().strftime("%Y-%m-%d")
-TODAY_DISPLAY = date.today().strftime("%Y 年 %-m 月 %-d 日")  # Linux/Mac 用法
+TODAY_DISPLAY = date.today().strftime("%Y 年 %#m 月 %#d 日")
 OUTPUT_PATH = f"briefings/{TODAY}.html"
 
 # ── 三個主題的 RSS 來源 ────────────────────────────
