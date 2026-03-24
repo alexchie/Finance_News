@@ -371,6 +371,138 @@ def generate_html(data):
 
     return html
 
+def update_index(data, total_count):
+    """更新首頁的最新一期預覽"""
+
+    # 讀取現有的 index.html
+    with open("index.html", "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # 找到 .latest 區塊，整個替換
+    import re
+    new_latest = f"""  <!-- 最新一期預覽 -->
+  <section class="latest">
+    <p class="tag">最新一期 · {TODAY}</p>
+    <h3>{data['issue_title']}</h3>
+    <p>{data['issue_summary']}</p>
+    <a href="briefings/{TODAY}.html">閱讀本期 →</a>
+  </section>"""
+
+    content = re.sub(
+        r'<!-- 最新一期預覽 -->.*?</section>',
+        new_latest,
+        content,
+        flags=re.DOTALL
+    )
+
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(content)
+
+
+def update_briefings_list():
+    """重新生成 briefings.html，掃描所有已存在的期數"""
+
+    import glob
+
+    # 掃描所有已生成的 briefings/*.html
+    files = sorted(glob.glob("briefings/*.html"), reverse=True)
+
+    items_html = ""
+    for filepath in files:
+        filename = os.path.basename(filepath)
+        date_str = filename.replace(".html", "")
+
+        # 讀取那個檔案，抓出標題和摘要
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                file_content = f.read()
+            import re
+            title_match = re.search(r'<h2>(.*?)</h2>', file_content)
+            summary_match = re.search(r'<p class="summary">(.*?)</p>', file_content)
+            count_match = re.search(r'共 (\d+) 則', file_content)
+
+            title = title_match.group(1) if title_match else "—"
+            summary = summary_match.group(1) if summary_match else ""
+            count = count_match.group(1) if count_match else "?"
+        except:
+            title = "—"
+            summary = ""
+            count = "?"
+
+        items_html += f"""
+    <div class="briefing-item">
+      <div class="briefing-meta">
+        <div class="date">{date_str}</div>
+        <div class="count">{count} 則</div>
+      </div>
+      <div class="briefing-content">
+        <h3>{title}</h3>
+        <p>{summary}</p>
+      </div>
+      <div class="briefing-link">
+        <a href="briefings/{date_str}.html">→</a>
+      </div>
+    </div>
+"""
+
+    total_issues = len(files)
+
+    briefings_html = f"""<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>所有期數 · Daily Briefing</title>
+  <style>
+    * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+    body {{ font-family: 'Georgia', serif; background: #ffffff; color: #111111; line-height: 1.8; }}
+    header {{ border-bottom: 2px solid #111; padding: 2rem 2rem 1.5rem; display: flex; justify-content: space-between; align-items: baseline; }}
+    header h1 {{ font-size: 1.2rem; letter-spacing: 0.1em; }}
+    header nav a {{ text-decoration: none; color: #111; margin-left: 2rem; font-size: 0.9rem; }}
+    header nav a:hover {{ text-decoration: underline; }}
+    .page-header {{ max-width: 720px; margin: 3rem auto 2rem; padding: 0 2rem; border-bottom: 1px solid #ddd; padding-bottom: 1.5rem; }}
+    .page-header h2 {{ font-size: 1.8rem; margin-bottom: 0.3rem; }}
+    .page-header p {{ color: #777; font-size: 0.9rem; }}
+    .briefing-list {{ max-width: 720px; margin: 0 auto; padding: 0 2rem; }}
+    .briefing-item {{ display: flex; justify-content: space-between; align-items: flex-start; padding: 1.8rem 0; border-bottom: 1px solid #eee; gap: 2rem; }}
+    .briefing-item:hover {{ background: #fafafa; }}
+    .briefing-meta {{ min-width: 100px; }}
+    .briefing-meta .date {{ font-size: 0.8rem; color: #aaa; letter-spacing: 0.05em; }}
+    .briefing-meta .count {{ font-size: 0.75rem; color: #bbb; margin-top: 0.3rem; }}
+    .briefing-content {{ flex: 1; }}
+    .briefing-content h3 {{ font-size: 1.15rem; margin-bottom: 0.4rem; }}
+    .briefing-content p {{ font-size: 0.9rem; color: #555; }}
+    .briefing-link {{ display: flex; align-items: center; }}
+    .briefing-link a {{ color: #111; text-decoration: none; font-size: 1.2rem; font-weight: bold; }}
+    .briefing-link a:hover {{ color: #555; }}
+    footer {{ border-top: 1px solid #ddd; text-align: center; padding: 2rem; font-size: 0.8rem; color: #aaa; margin-top: 4rem; }}
+  </style>
+</head>
+<body>
+  <header>
+    <h1><a href="index.html" style="text-decoration:none;color:#111;">Daily Briefing</a></h1>
+    <nav>
+      <a href="briefings.html">所有期數</a>
+      <a href="#">關於</a>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h2>所有期數</h2>
+    <p>共 {total_issues} 期 · 每個工作日更新</p>
+  </div>
+
+  <div class="briefing-list">
+    {items_html}
+  </div>
+
+  <footer>© 2026 Daily Briefing · 每個工作日更新</footer>
+</body>
+</html>"""
+
+    with open("briefings.html", "w", encoding="utf-8") as f:
+        f.write(briefings_html)
+
 
 def main():
     if not API_KEY:
@@ -393,8 +525,14 @@ def main():
     os.makedirs("briefings", exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write(html)
+    print(f"   ✓ 生成：{OUTPUT_PATH}")
 
-    print(f"\n✅ 完成：{OUTPUT_PATH}")
+    print("\n④ 更新首頁與列表頁...")
+    update_index(data, total_count=len(data["articles"]) if "articles" in data else sum(len(t["articles"]) for t in data["topics"]))
+    update_briefings_list()
+    print("   ✓ 首頁與列表頁已更新")
+
+    print(f"\n✅ 全部完成！")
 
 
 if __name__ == "__main__":
