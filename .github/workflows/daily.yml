@@ -1,0 +1,36 @@
+name: 每日財經情報自動生成
+
+on:
+  schedule:
+    # 每天早上 8:00 台灣時間（UTC+8），所以 UTC 是 00:00
+    - cron: '0 0 * * 1-5'   # 週一到週五
+  workflow_dispatch:          # 也可以手動在 GitHub 網站觸發
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取得 repo 內容
+        uses: actions/checkout@v4
+
+      - name: 設定 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝套件
+        run: pip install anthropic feedparser
+
+      - name: 執行生成腳本
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python generate.py
+
+      - name: Commit 並推送新檔案
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "📰 每日情報 ${{ env.TODAY || 'auto' }}"
+          git push
