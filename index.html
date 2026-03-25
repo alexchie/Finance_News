@@ -5,161 +5,326 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>每日情報 · Daily Briefing</title>
   <style>
-    /* ── 全站基礎 ── */
+    /* ─── 基礎重置 ─── */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: 'Georgia', serif;
-      background: #ffffff;
-      color: #111111;
-      line-height: 1.8;
+      background: #fafafa;
+      color: #111;
+      line-height: 1.75;
     }
 
-    /* ── 頁首 ── */
+    /* ─── 頂部市場 Ticker ─── */
+    .ticker-bar {
+      background: #111;
+      color: #ccc;
+      font-size: 0.72rem;
+      padding: 0.45rem 2.5rem;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .ticker-date { color: #666; margin-right: 0.4rem; }
+    .ticker-sep { color: #444; margin: 0 0.4rem; }
+    .ticker-up   { color: #6fcf97; }
+    .ticker-down { color: #eb5757; }
+
+    /* ─── 主 Header ─── */
     header {
-      border-bottom: 2px solid #111;
-      padding: 2rem 2rem 1.5rem;
+      background: #fff;
+      border-bottom: 3px solid #111;
+      padding: 1.8rem 2.5rem;
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
+      align-items: center;
     }
-
-    header h1 { font-size: 1.2rem; letter-spacing: 0.1em; }
+    .masthead { line-height: 1.2; }
+    .masthead-title {
+      font-size: 1.75rem;
+      letter-spacing: 0.14em;
+      font-weight: bold;
+    }
+    .masthead-subtitle {
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      color: #999;
+      text-transform: uppercase;
+      margin-top: 0.25rem;
+    }
     header nav a {
       text-decoration: none;
-      color: #111;
+      color: #444;
       margin-left: 2rem;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
+      letter-spacing: 0.04em;
     }
-    header nav a:hover { text-decoration: underline; }
+    header nav a:hover { color: #111; text-decoration: underline; }
 
-    /* ── 主視覺區 ── */
-    .hero {
-      max-width: 680px;
-      margin: 5rem auto;
-      padding: 0 2rem;
-      text-align: center;
+    /* ─── 主體雙欄佈局 ─── */
+    .main-layout {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 3rem 2rem 4rem;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    @media (max-width: 780px) {
+      .main-layout { grid-template-columns: 1fr; gap: 2.5rem; }
     }
 
-    .hero h2 {
-      font-size: 2.8rem;
-      line-height: 1.3;
+    /* ─── 左欄（Sidebar）─── */
+    .sidebar { position: sticky; top: 2rem; }
+    .sidebar-section { margin-bottom: 2.5rem; }
+    .sidebar-label {
+      font-size: 0.63rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #bbb;
+      border-bottom: 1px solid #e8e8e8;
+      padding-bottom: 0.5rem;
       margin-bottom: 1rem;
     }
 
-    .hero .subtitle {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.05em;
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
     }
-
-    .hero .description {
-      font-size: 1rem;
-      color: #333;
-      margin: 1.5rem 0 2.5rem;
+    .stat-item {
+      text-align: center;
+      padding: 0.9rem 0.6rem;
+      background: #fff;
+      border: 1px solid #e8e8e8;
     }
+    .stat-number { font-size: 1.6rem; font-weight: bold; line-height: 1.1; }
+    .stat-label  { font-size: 0.68rem; color: #999; margin-top: 0.25rem; letter-spacing: 0.05em; }
 
-    /* ── 統計數字 ── */
-    .stats {
+    /* About blurb */
+    .about-text { font-size: 0.87rem; color: #666; line-height: 1.75; }
+    .about-text strong { color: #333; font-weight: normal; border-bottom: 1px solid #ccc; }
+
+    /* Sources list */
+    .sources-list {
+      list-style: none;
+      font-size: 0.78rem;
+      color: #888;
+      line-height: 1.9;
+    }
+    .sources-list li::before { content: "— "; color: #ccc; }
+
+    /* ─── 右側主內容 ─── */
+
+    /* 最新一期 */
+    .latest-issue-wrapper {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-top: 3px solid #111;
+      padding: 2.2rem 2.5rem;
+      margin-bottom: 3rem;
+    }
+    .latest-issue-meta {
       display: flex;
-      justify-content: center;
-      gap: 3rem;
-      margin: 2rem 0 3rem;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.1rem;
+      flex-wrap: wrap;
     }
-
-    .stat-item { text-align: center; }
-    .stat-item .number { font-size: 2rem; font-weight: bold; }
-    .stat-item .label { font-size: 0.8rem; color: #777; }
-
-    /* ── 按鈕 ── */
-    .btn-primary {
+    .latest-issue-badge {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      background: #111;
+      color: #fff;
+      padding: 0.2rem 0.65rem;
+    }
+    .latest-issue-date  { font-size: 0.78rem; color: #999; }
+    .latest-issue-count { font-size: 0.78rem; color: #bbb; }
+    .latest-issue-title {
+      font-size: 1.6rem;
+      line-height: 1.35;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+    .latest-issue-summary {
+      font-size: 0.92rem;
+      color: #555;
+      border-left: 3px solid #ddd;
+      padding-left: 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+    }
+    .latest-issue-topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.8rem;
+    }
+    .topic-chip {
+      font-size: 0.7rem;
+      background: #f2f2f2;
+      border: 1px solid #e0e0e0;
+      padding: 0.2rem 0.75rem;
+      color: #555;
+      letter-spacing: 0.03em;
+    }
+    .btn-read {
       display: inline-block;
       background: #111;
       color: #fff;
-      padding: 0.8rem 2rem;
+      padding: 0.65rem 1.8rem;
       text-decoration: none;
-      font-size: 0.95rem;
-      letter-spacing: 0.05em;
-      transition: background 0.2s;
+      font-size: 0.88rem;
+      letter-spacing: 0.06em;
+      transition: background 0.15s;
     }
-    .btn-primary:hover { background: #444; }
+    .btn-read:hover { background: #333; }
 
-    /* ── 最新一期預覽 ── */
-    .latest {
-      max-width: 680px;
-      margin: 4rem auto;
-      padding: 0 2rem;
-      border-top: 1px solid #ddd;
-      padding-top: 3rem;
-    }
-
-    .latest .tag {
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      color: #777;
+    /* 近期期數 */
+    .recent-label {
+      font-size: 0.63rem;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
-      margin-bottom: 1rem;
+      color: #bbb;
+      border-bottom: 1px solid #e8e8e8;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.2rem;
     }
-
-    .latest h3 { font-size: 1.5rem; margin-bottom: 0.8rem; }
-    .latest p { color: #444; font-size: 0.95rem; margin-bottom: 1.5rem; }
-
-    .latest a {
-      color: #111;
-      font-size: 0.9rem;
-      text-decoration: underline;
+    .recent-item {
+      display: grid;
+      grid-template-columns: 105px 1fr 60px;
+      gap: 1.2rem;
+      align-items: start;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      text-decoration: none;
+      color: inherit;
     }
+    .recent-item:hover .recent-title { text-decoration: underline; color: #333; }
+    .recent-date  { font-size: 0.76rem; color: #bbb; padding-top: 0.1rem; }
+    .recent-title { font-size: 0.97rem; line-height: 1.45; color: #222; }
+    .recent-count { font-size: 0.72rem; color: #ccc; text-align: right; padding-top: 0.1rem; }
 
-    /* ── 頁尾 ── */
+    .view-all-link {
+      display: block;
+      text-align: right;
+      font-size: 0.84rem;
+      color: #888;
+      text-decoration: none;
+      margin-top: 1.2rem;
+      letter-spacing: 0.03em;
+    }
+    .view-all-link:hover { color: #111; text-decoration: underline; }
+
+    /* ─── Footer ─── */
     footer {
-      border-top: 1px solid #ddd;
+      border-top: 2px solid #111;
       text-align: center;
-      padding: 2rem;
-      font-size: 0.8rem;
-      color: #aaa;
-      margin-top: 5rem;
+      padding: 1.6rem 2rem;
+      font-size: 0.76rem;
+      color: #bbb;
+      background: #fff;
+      letter-spacing: 0.04em;
     }
   </style>
 </head>
 <body>
 
-  <!-- 頁首導覽 -->
+  <!-- DYNAMIC:TICKER:START -->
+  <div class="ticker-bar">
+    <span style="color:#555;">市場數據載入中...</span>
+  </div>
+  <!-- DYNAMIC:TICKER:END -->
+
   <header>
-    <h1>Daily Briefing</h1>
+    <div class="masthead">
+      <div class="masthead-title">DAILY BRIEFING</div>
+      <div class="masthead-subtitle">每日國際金融情報</div>
+    </div>
     <nav>
       <a href="briefings.html">所有期數</a>
       <a href="#">關於</a>
     </nav>
   </header>
 
-  <!-- 主視覺 -->
-  <section class="hero">
-    <p class="subtitle">AI · 科技 · 市場</p>
-    <h2>每日市場情報</h2>
-    <p class="description">
-      每個工作日，一份看得完、看得懂、有意義的情報。<br>
-      不是新聞摘要，而是結構性的觀點，告訴你 <strong>So-What?</strong>
-    </p>
+  <div class="main-layout">
 
-    <!-- 統計數字 -->
-    <div class="stats">
-      <div class="stat-item">
-        <div class="number">7</div>
-        <div class="label">期</div>
-      </div>
-      <div class="stat-item">
-        <div class="number">80+</div>
-        <div class="label">則報導</div>
-      </div>
-      <div class="stat-item">
-        <div class="number">每日</div>
-        <div class="label">更新</div>
-      </div>
-    </div>
+    <!-- 左側欄 -->
+    <aside class="sidebar">
 
-    <a href="briefings.html" class="btn-primary">直接在網站瀏覽 →</a>
-  </section>
+      <div class="sidebar-section">
+        <div class="sidebar-label">本站數據</div>
+        <!-- DYNAMIC:STATS:START -->
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number">—</div>
+            <div class="stat-label">期</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">—</div>
+            <div class="stat-label">則報導</div>
+          </div>
+          <div class="stat-item" style="grid-column:span 2;">
+            <div class="stat-number" style="font-size:1.1rem;">每個工作日</div>
+            <div class="stat-label">自動更新</div>
+          </div>
+        </div>
+        <!-- DYNAMIC:STATS:END -->
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">關於本刊</div>
+        <p class="about-text">
+          每天早上自動彙整主要財經媒體的最新報導，
+          由 <strong>Claude AI</strong> 撰寫分析，
+          提供 <strong>背景 × 意義 × 深度研究</strong> 三層解讀。
+        </p>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">新聞來源</div>
+        <ul class="sources-list">
+          <li>Reuters</li>
+          <li>Financial Times</li>
+          <li>The Economist</li>
+          <li>BBC Business</li>
+          <li>CNBC</li>
+          <li>WSJ / MarketWatch</li>
+          <li>AP Business</li>
+          <li>Project Syndicate</li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <!-- 右側主內容 -->
+    <main>
+
+      <!-- DYNAMIC:LATEST:START -->
+      <div class="latest-issue-wrapper">
+        <div class="latest-issue-meta">
+          <span class="latest-issue-badge">最新一期</span>
+          <span class="latest-issue-date">—</span>
+          <span class="latest-issue-count">— 則</span>
+        </div>
+        <h2 class="latest-issue-title">—</h2>
+        <p class="latest-issue-summary">—</p>
+        <div class="latest-issue-topics"></div>
+        <a href="#" class="btn-read">閱讀本期全文 →</a>
+      </div>
+      <!-- DYNAMIC:LATEST:END -->
+
+      <!-- DYNAMIC:RECENT:START -->
+      <div class="recent-issues">
+        <div class="recent-label">近期期數</div>
+      </div>
+      <!-- DYNAMIC:RECENT:END -->
+
+      <a href="briefings.html" class="view-all-link">查看所有期數 →</a>
 
         <!-- 最新一期預覽 -->
   <section class="latest">
@@ -170,7 +335,7 @@
   </section>
 
   <footer>
-    © 2026 Daily Briefing · 每個工作日更新
+    © 2026 Daily Briefing &nbsp;·&nbsp; 資料來源：Reuters · FT · The Economist · BBC · CNBC · WSJ · AP · Project Syndicate
   </footer>
 
 </body>
