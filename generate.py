@@ -9,7 +9,8 @@ from datetime import date
 # ── 設定區 ────────────────────────────────────────
 # 安全做法：從環境變數讀取，不要直接寫在程式碼裡
 # 本機測試時，在終端機執行：export ANTHROPIC_API_KEY="你的key"
-API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+API_KEY           = os.environ.get("ANTHROPIC_API_KEY", "")
+GA_MEASUREMENT_ID = os.environ.get("GA_MEASUREMENT_ID", "")   # Google Analytics 4 追蹤 ID（選填）
 
 TODAY = date.today().strftime("%Y-%m-%d")
 TODAY_DISPLAY = date.today().strftime("%Y 年 %#m 月 %#d 日")
@@ -56,6 +57,20 @@ FEEDS = {
 
 ARTICLES_PER_TOPIC = 4   # 每個主題最多選出幾篇
 # ──────────────────────────────────────────────────
+
+
+def _ga_script():
+    """回傳 Google Analytics GA4 script tag；若未設定 GA_MEASUREMENT_ID 則回傳空字串"""
+    if not GA_MEASUREMENT_ID:
+        return ""
+    return f"""  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+    gtag('config', '{GA_MEASUREMENT_ID}');
+  </script>"""
 
 
 def is_within_24h(entry) -> bool:
@@ -468,6 +483,7 @@ def generate_html(data, market_data=None):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{TODAY} · Daily Briefing</title>
+{_ga_script()}
   <style>
     * {{ margin: 0; padding: 0; box-sizing: border-box; }}
 
@@ -977,6 +993,7 @@ def update_briefings_list():
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>所有期數 · Daily Briefing</title>
+{_ga_script()}
   <style>
     * {{ margin: 0; padding: 0; box-sizing: border-box; }}
     body {{ font-family: 'Georgia', serif; background: #ffffff; color: #111111; line-height: 1.8; }}
