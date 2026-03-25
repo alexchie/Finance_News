@@ -921,31 +921,28 @@ def update_index(data, total_count, market_data=None):
         f'      <!-- DYNAMIC:LATEST:END -->'
     )
 
-    # ── RECENT 區塊（最近 3 期，跳過本期）────────────
+    # ── RECENT 區塊（所有期數，跳過本期）────────────
     recent_items_html = ""
-    for fp in all_briefings[1:4]:
+    for fp in all_briefings[1:]:
         date_str = os.path.basename(fp).replace(".html", "")
         try:
             with open(fp, "r", encoding="utf-8") as fh:
                 fc = fh.read()
             tm = re.search(r'<h2[^>]*>(.*?)</h2>', fc)
-            cm = re.search(r'共 (\d+) 則', fc)
             t = tm.group(1) if tm else "—"
-            c = cm.group(1) if cm else "?"
         except Exception:
-            t, c = "—", "?"
+            t = "—"
         recent_items_html += (
             f'        <a href="briefings/{date_str}.html" class="recent-item">\n'
             f'          <div class="recent-date">{date_str}</div>\n'
             f'          <div class="recent-title">{t}</div>\n'
-            f'          <div class="recent-count">{c} 則</div>\n'
             f'        </a>\n'
         )
 
     new_recent = (
         f'      <!-- DYNAMIC:RECENT:START -->\n'
         f'      <div class="recent-issues">\n'
-        f'        <div class="recent-label">近期期數</div>\n'
+        f'        <div class="recent-label">所有期數</div>\n'
         f'{recent_items_html}'
         f'      </div>\n'
         f'      <!-- DYNAMIC:RECENT:END -->'
