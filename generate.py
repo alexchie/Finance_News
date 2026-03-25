@@ -10,7 +10,7 @@ from datetime import date
 # 安全做法：從環境變數讀取，不要直接寫在程式碼裡
 # 本機測試時，在終端機執行：export ANTHROPIC_API_KEY="你的key"
 API_KEY           = os.environ.get("ANTHROPIC_API_KEY", "")
-GA_MEASUREMENT_ID = os.environ.get("GA_MEASUREMENT_ID", "")   # Google Analytics 4 追蹤 ID（選填）
+GA_MEASUREMENT_ID = os.environ.get("GA_MEASUREMENT_ID", "G-0KJ8JBV99C")  # Google Analytics 4 追蹤 ID
 
 TODAY = date.today().strftime("%Y-%m-%d")
 TODAY_DISPLAY = date.today().strftime("%Y 年 %#m 月 %#d 日")
