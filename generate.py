@@ -27,35 +27,35 @@ FEEDS = {
         "https://feeds.bbci.co.uk/news/business/rss.xml",       # BBC 商業
         "https://www.cnbc.com/id/10000664/device/rss/rss.html", # CNBC Economy
         "https://feeds.marketwatch.com/marketwatch/realtimeheadlines/", # MarketWatch 即時
-        "https://feeds.apnews.com/rss/business",                # AP Business（新增）
-        "https://www.ft.com/?format=rss",                       # Financial Times（新增）
-        "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",       # WSJ Markets（新增）
+        "https://feeds.apnews.com/rss/business",                # AP Business
+        "https://www.ft.com/?format=rss",                       # Financial Times
+        "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",       # WSJ Markets
     ],
-    "大公司重大新聞（個體）": [
+    "國際大公司重大新聞": [
         "https://feeds.reuters.com/reuters/companyNews",         # Reuters 公司
         "https://www.theguardian.com/business/rss",             # Guardian 商業
         "https://feeds.bbci.co.uk/news/business/rss.xml",       # BBC 商業
         "https://www.cnbc.com/id/10001147/device/rss/rss.html", # CNBC Earnings
         "https://feeds.marketwatch.com/marketwatch/topstories/",# MarketWatch Top
-        "https://techcrunch.com/feed/",                         # TechCrunch（科技巨頭，新增）
-        "https://www.cnbc.com/id/15839135/device/rss/rss.html", # CNBC Tech（新增）
+        "https://techcrunch.com/feed/",                         # TechCrunch
+        "https://www.cnbc.com/id/15839135/device/rss/rss.html", # CNBC Tech
     ],
-    "央行利率決策": [
-        "https://feeds.reuters.com/reuters/financialNews",       # Reuters 金融
-        "https://www.theguardian.com/business/interest-rates/rss", # Guardian 利率
-        "https://feeds.bbci.co.uk/news/business/economy/rss.xml",  # BBC Economy
-        "https://www.economist.com/finance-and-economics/rss.xml",  # Economist F&E（新增）
-        "https://feeds.a.dj.com/rss/RSSOpinion.xml",           # WSJ Opinion — Fed 評論（新增）
+    "台灣財經": [
+        "https://money.udn.com/rssfeed/news/1001/5588/rss.xml", # 經濟日報 財經
     ],
     # 深度分析：不套用24小時過濾（週刊 + 長文深度分析）
     "深度分析": [
         "https://www.economist.com/leaders/rss.xml",             # Economist Leaders
         "https://www.economist.com/briefing/rss.xml",            # Economist Briefing
-        "https://www.project-syndicate.org/rss",                # Project Syndicate（諾獎學者，新增）
+        "https://www.project-syndicate.org/rss",                # Project Syndicate
     ],
 }
 
-ARTICLES_PER_TOPIC = 3   # 每個主題最多選出幾篇
+ARTICLES_PER_TOPIC = {
+    "金融市場（總經）":   5,
+    "國際大公司重大新聞": 3,
+    "台灣財經":          2,
+}
 # ──────────────────────────────────────────────────
 
 
@@ -187,9 +187,13 @@ def build_prompt(topic_articles, deep_articles):
     for i, a in enumerate(deep_articles, 1):
         deep_block += f"{i}. [{a['source']}] {a['title']}\n{a['summary']}\n連結：{a['link']}\n\n"
 
+    macro_count    = ARTICLES_PER_TOPIC["金融市場（總經）"]
+    corp_count     = ARTICLES_PER_TOPIC["國際大公司重大新聞"]
+    taiwan_count   = ARTICLES_PER_TOPIC["台灣財經"]
+
     prompt = f"""你是一位專業的國際金融市場分析師，負責每日撰寫一份給機構投資人與財經從業人員閱讀的情報簡報。
 
-今天是 {TODAY}，以下是從各大財經媒體抓到的新聞（三大主題僅含過去24小時內發布的報導）：
+今天是 {TODAY}，以下是從各大財經媒體抓到的新聞（各主題僅含過去24小時內發布的報導）：
 
 {articles_block}
 {deep_block}
@@ -197,18 +201,22 @@ def build_prompt(topic_articles, deep_articles):
 
 請完成以下工作，全部用**繁體中文**撰寫：
 
-**一、三大主題新聞分析**
-針對三個主題各選出最重要的 {ARTICLES_PER_TOPIC} 則新聞（不夠的話選有的），每則包含：
+**一、主題新聞分析**
+- 金融市場（總經）：選出最重要的 {macro_count} 則（不夠則選有的）
+- 國際大公司重大新聞：選出最重要的 {corp_count} 則（不夠則選有的）
+- 台灣財經：選出最重要的 {taiwan_count} 則（不夠則選有的）
+
+每則新聞包含：
 1. **事件背景介紹**：這件事發生的來龍去脈、相關歷史背景（3-4句）
 2. **事件內容及意義**：具體發生了什麼，為什麼重要，對市場的直接影響（3-4句）
 3. **詳細分析及研究**：結合歷史數據、市場先例、總體經濟邏輯，深入分析中長期含義（4-6句，需有數據或歷史案例支撐）
+4. **country**：這篇新聞主要涉及的國家或地區（1-2個字，例如：美國、歐盟、中國、台灣、日本）
 
 **二、今日概覽**
-- overview.topics_covered：每個主題（金融市場、大公司、央行）各用5-10字的短語概括今日核心動向
-- overview.regions：列出今日新聞涉及的主要地理區域（如美國、歐盟、日本、中國等）
+- overview.topics_covered：三個主題（金融市場、大公司、台灣）各用5-10字的短語概括今日核心動向
 
 **三、深度分析**
-從 The Economist 候選文章中選出最具分析深度的一篇（不限24小時），完成：
+從 The Economist / Project Syndicate 候選文章中選出最具分析深度的一篇（不限24小時），完成：
 1. **事件背景介紹**（3-4句）
 2. **事件內容及意義**（3-4句）
 3. **詳細分析及研究**（4-6句）
@@ -218,10 +226,9 @@ def build_prompt(topic_articles, deep_articles):
 
 {{
   "issue_title": "今日整體金融市場的核心主題（一句話）",
-  "issue_summary": "今日市場整體局勢的總結（3句話，涵蓋三個主題的連動關係）",
+  "issue_summary": "今日市場整體局勢的總結（3句話，涵蓋各主題的連動關係）",
   "overview": {{
-    "topics_covered": ["金融市場今日核心短語", "大公司今日核心短語", "央行今日核心短語"],
-    "regions": ["美國", "歐盟"]
+    "topics_covered": ["金融市場今日核心短語", "大公司今日核心短語", "台灣財經今日核心短語"]
   }},
   "topics": [
     {{
@@ -229,6 +236,7 @@ def build_prompt(topic_articles, deep_articles):
       "articles": [
         {{
           "title": "新聞繁體中文標題",
+          "country": "美國",
           "background": "事件背景介紹內容",
           "content": "事件內容及意義內容",
           "analysis": "詳細分析及研究內容",
@@ -238,18 +246,39 @@ def build_prompt(topic_articles, deep_articles):
       ]
     }},
     {{
-      "topic_name": "大公司重大新聞（個體）",
-      "articles": []
+      "topic_name": "國際大公司重大新聞",
+      "articles": [
+        {{
+          "title": "新聞繁體中文標題",
+          "country": "美國",
+          "background": "事件背景介紹內容",
+          "content": "事件內容及意義內容",
+          "analysis": "詳細分析及研究內容",
+          "source_name": "來源媒體名稱",
+          "source_url": "原始連結"
+        }}
+      ]
     }},
     {{
-      "topic_name": "央行利率決策",
-      "articles": []
+      "topic_name": "台灣財經",
+      "articles": [
+        {{
+          "title": "新聞繁體中文標題",
+          "country": "台灣",
+          "background": "事件背景介紹內容",
+          "content": "事件內容及意義內容",
+          "analysis": "詳細分析及研究內容",
+          "source_name": "來源媒體名稱",
+          "source_url": "原始連結"
+        }}
+      ]
     }},
     {{
       "topic_name": "深度分析",
       "articles": [
         {{
           "title": "文章繁體中文標題",
+          "country": "美國",
           "background": "事件背景介紹",
           "content": "事件內容及意義",
           "analysis": "詳細分析及研究",
@@ -356,16 +385,16 @@ def generate_html(data, market_data=None):
 
     # ── 各 topic 對應的 anchor ID 與文章 ID 前綴 ────────
     SECTION_IDS = {
-        "金融市場（總經）":    "section-macro",
-        "大公司重大新聞（個體）": "section-corporate",
-        "央行利率決策":        "section-central",
-        "深度分析":            "section-deep",
+        "金融市場（總經）":   "section-macro",
+        "國際大公司重大新聞": "section-corporate",
+        "台灣財經":          "section-taiwan",
+        "深度分析":          "section-deep",
     }
     ARTICLE_PREFIXES = {
-        "金融市場（總經）":    "macro",
-        "大公司重大新聞（個體）": "corporate",
-        "央行利率決策":        "central",
-        "深度分析":            "deep",
+        "金融市場（總經）":   "macro",
+        "國際大公司重大新聞": "corporate",
+        "台灣財經":          "taiwan",
+        "深度分析":          "deep",
     }
 
     # ── 生成各 topic 的 HTML ───────────────────────────
@@ -405,7 +434,6 @@ def generate_html(data, market_data=None):
 
     # ── 生成今日概覽區塊 ──────────────────────────────
     overview = data.get("overview", {})
-    regions = overview.get("regions", [])
     topics_covered = overview.get("topics_covered", [])
 
     # Layer 1：市場指數（有數據才顯示）
@@ -433,11 +461,8 @@ def generate_html(data, market_data=None):
     else:
         market_block = ""
 
-    # Layer 2：地區 tags
-    regions_html = "".join(f'<span class="region-tag">{r}</span>' for r in regions)
-
-    # Layer 3：主題 TOC + 各主題的文章標題列表
-    toc_topic_names = ["金融市場（總經）", "大公司重大新聞（個體）", "央行利率決策", "深度分析"]
+    # Layer 3：主題 TOC + 各主題的文章標題列表（含國家標籤）
+    toc_topic_names = ["金融市場（總經）", "國際大公司重大新聞", "台灣財經", "深度分析"]
 
     # 建立 {topic_name: [articles]} 的快速查找
     topic_articles_map = {t["topic_name"]: t.get("articles", []) for t in data["topics"]}
@@ -450,12 +475,14 @@ def generate_html(data, market_data=None):
         row_class = " deep" if is_deep_row else ""
         theme = topics_covered[i] if i < len(topics_covered) else ""
 
-        # 文章標題列表
+        # 文章標題列表（含國家標籤）
         articles_in_topic = topic_articles_map.get(tname, [])
         title_links_html = ""
         for j, a in enumerate(articles_in_topic):
             art_id = f"article-{prefix}-{j}"
-            title_links_html += f'<a href="#{art_id}" class="toc-article-link">{a["title"]}</a>\n          '
+            country = a.get("country", "")
+            country_tag = f'<span class="country-tag">{country}</span>' if country else ""
+            title_links_html += f'{country_tag}<a href="#{art_id}" class="toc-article-link">{a["title"]}</a>\n          '
 
         articles_block = f"""
         <div class="toc-articles">{title_links_html}
@@ -471,7 +498,6 @@ def generate_html(data, market_data=None):
     <div class="overview-section">
       <div class="overview-label">今日概覽</div>
       {market_block}
-      <div class="overview-regions">{regions_html}</div>
       <div class="overview-toc">{toc_rows_html}
       </div>
     </div>
@@ -604,6 +630,14 @@ def generate_html(data, market_data=None):
     .overview-regions {{
       display: flex; flex-wrap: wrap; gap: 0.5rem;
       margin-bottom: 1.2rem;
+    }}
+    .country-tag {{
+      display: inline-block;
+      background: #111; color: #fff;
+      font-size: 0.65rem; padding: 0.1rem 0.45rem;
+      margin-right: 0.4rem;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
     }}
     .region-tag {{
       background: #111; color: #fff;
