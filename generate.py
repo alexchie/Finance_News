@@ -17,7 +17,7 @@ TODAY_DISPLAY = date.today().strftime("%Y 年 %#m 月 %#d 日")
 OUTPUT_PATH = f"briefings/{TODAY}.html"
 
 TODAY_CUTOFF = time.time() - 86400  # 24小時前的 POSIX timestamp
-SCAN_PER_FEED = 15                   # 每個 feed 最多掃描的條數（過濾後數量會減少）
+SCAN_PER_FEED = 8                    # 每個 feed 最多掃描的條數（過濾後數量會減少）
 
 # ── RSS 來源 ───────────────────────────────────────
 FEEDS = {
@@ -55,7 +55,7 @@ FEEDS = {
     ],
 }
 
-ARTICLES_PER_TOPIC = 4   # 每個主題最多選出幾篇
+ARTICLES_PER_TOPIC = 3   # 每個主題最多選出幾篇
 # ──────────────────────────────────────────────────
 
 
@@ -101,7 +101,7 @@ def fetch_articles_by_topic():
                         continue
                     articles.append({
                         "title": entry.get("title", ""),
-                        "summary": entry.get("summary", "")[:400],
+                        "summary": entry.get("summary", "")[:250],
                         "link": entry.get("link", ""),
                         "source": feed.feed.get("title", "Unknown"),
                     })
@@ -121,7 +121,7 @@ def fetch_deep_analysis_articles():
             for entry in feed.entries[:10]:
                 articles.append({
                     "title": entry.get("title", ""),
-                    "summary": entry.get("summary", "")[:600],
+                    "summary": entry.get("summary", "")[:350],
                     "link": entry.get("link", ""),
                     "source": feed.feed.get("title", "The Economist"),
                 })
@@ -271,8 +271,8 @@ def analyze_with_claude(topic_articles, deep_articles):
     prompt = build_prompt(topic_articles, deep_articles)
 
     message = client.messages.create(
-        model="claude-opus-4-5",
-        max_tokens=8192,
+        model="claude-sonnet-4-6",
+        max_tokens=4096,
         messages=[{"role": "user", "content": prompt}]
     )
 
