@@ -21,29 +21,36 @@ SCAN_PER_FEED = 15                   # 每個 feed 最多掃描的條數（過�
 # ── RSS 來源 ───────────────────────────────────────
 FEEDS = {
     "金融市場（總經）": [
-        "https://feeds.reuters.com/reuters/businessNews",
-        "https://www.theguardian.com/business/economics/rss",
-        "https://www.economist.com/finance-and-economics/rss.xml",
-        "https://feeds.bbci.co.uk/news/business/rss.xml",
-        "https://www.cnbc.com/id/10000664/device/rss/rss.html",
+        "https://feeds.reuters.com/reuters/businessNews",        # Reuters 商業
+        "https://www.theguardian.com/business/economics/rss",   # Guardian 經濟
+        "https://feeds.bbci.co.uk/news/business/rss.xml",       # BBC 商業
+        "https://www.cnbc.com/id/10000664/device/rss/rss.html", # CNBC Economy
+        "https://feeds.marketwatch.com/marketwatch/realtimeheadlines/", # MarketWatch 即時
+        "https://feeds.apnews.com/rss/business",                # AP Business（新增）
+        "https://www.ft.com/?format=rss",                       # Financial Times（新增）
+        "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",       # WSJ Markets（新增）
     ],
     "大公司重大新聞（個體）": [
-        "https://feeds.reuters.com/reuters/companyNews",
-        "https://www.theguardian.com/business/rss",
-        "https://feeds.bbci.co.uk/news/business/rss.xml",
-        "https://www.cnbc.com/id/10001147/device/rss/rss.html",
-        "https://feeds.marketwatch.com/marketwatch/topstories/",
+        "https://feeds.reuters.com/reuters/companyNews",         # Reuters 公司
+        "https://www.theguardian.com/business/rss",             # Guardian 商業
+        "https://feeds.bbci.co.uk/news/business/rss.xml",       # BBC 商業
+        "https://www.cnbc.com/id/10001147/device/rss/rss.html", # CNBC Earnings
+        "https://feeds.marketwatch.com/marketwatch/topstories/",# MarketWatch Top
+        "https://techcrunch.com/feed/",                         # TechCrunch（科技巨頭，新增）
+        "https://www.cnbc.com/id/15839135/device/rss/rss.html", # CNBC Tech（新增）
     ],
     "央行利率決策": [
-        "https://feeds.reuters.com/reuters/financialNews",
-        "https://www.theguardian.com/business/interest-rates/rss",
-        "https://feeds.bbci.co.uk/news/business/economy/rss.xml",
-        "https://feeds.marketwatch.com/marketwatch/realtimeheadlines/",
+        "https://feeds.reuters.com/reuters/financialNews",       # Reuters 金融
+        "https://www.theguardian.com/business/interest-rates/rss", # Guardian 利率
+        "https://feeds.bbci.co.uk/news/business/economy/rss.xml",  # BBC Economy
+        "https://www.economist.com/finance-and-economics/rss.xml",  # Economist F&E（新增）
+        "https://feeds.a.dj.com/rss/RSSOpinion.xml",           # WSJ Opinion — Fed 評論（新增）
     ],
-    # 深度分析：The Economist 長文，不套用24小時過濾（The Economist 為週刊）
+    # 深度分析：不套用24小時過濾（週刊 + 長文深度分析）
     "深度分析": [
-        "https://www.economist.com/leaders/rss.xml",
-        "https://www.economist.com/briefing/rss.xml",
+        "https://www.economist.com/leaders/rss.xml",             # Economist Leaders
+        "https://www.economist.com/briefing/rss.xml",            # Economist Briefing
+        "https://www.project-syndicate.org/rss",                # Project Syndicate（諾獎學者，新增）
     ],
 }
 
@@ -107,6 +114,49 @@ def fetch_deep_analysis_articles():
             print(f"   ⚠ 深度分析抓取失敗：{url} ({e})")
     print(f"   [深度分析] 抓到 {len(articles)} 則候選")
     return articles
+
+
+def fetch_market_data():
+    """
+    抓取美股三大指數 + 台灣加權指數的前一交易日收盤資料。
+    執行於 UTC 0:30（台灣 8:30），美股已收盤，台股未開盤。
+    失敗時靜默回傳 None，不中斷主流程。
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        print("   ⚠ yfinance 未安裝，跳過市場數據")
+        return None
+
+    INDICES = [
+        ("^GSPC", "S&P 500"),
+        ("^DJI",  "道瓊工業"),
+        ("^IXIC", "那斯達克"),
+        ("^TWII", "台灣加權"),
+    ]
+    results = []
+    for symbol, name in INDICES:
+        try:
+            hist = yf.Ticker(symbol).history(period="5d")
+            if len(hist) < 2:
+                print(f"   ⚠ {name} 歷史資料不足，跳過")
+                continue
+            close = round(float(hist.iloc[-1]["Close"]), 2)
+            prev  = round(float(hist.iloc[-2]["Close"]), 2)
+            chg   = round(close - prev, 2)
+            pct   = round(chg / prev * 100, 2) if prev else 0.0
+            date_str = hist.index[-1].strftime("%Y-%m-%d")
+            results.append({
+                "name": name, "close": close,
+                "change": chg, "change_pct": pct,
+                "date": date_str,
+            })
+        except Exception as e:
+            print(f"   ⚠ {name}（{symbol}）數據失敗：{e}")
+
+    if not results:
+        return None
+    return {"indices": results, "as_of": results[0]["date"]}
 
 
 def build_prompt(topic_articles, deep_articles):
@@ -227,10 +277,11 @@ def analyze_with_claude(topic_articles, deep_articles):
         raise
 
 
-def generate_article_html(article):
+def generate_article_html(article, article_id=None):
     """把單篇文章轉成 HTML（標題為可點擊連結）"""
+    id_attr = f' id="{article_id}"' if article_id else ""
     return f"""
-    <div class="news-item">
+    <div class="news-item"{id_attr}>
       <h3><a href="{article['source_url']}" target="_blank" rel="noopener">{article['title']}</a></h3>
 
       <div class="section">
@@ -253,10 +304,11 @@ def generate_article_html(article):
 """
 
 
-def generate_deep_article_html(article):
+def generate_deep_article_html(article, article_id=None):
     """把深度分析文章轉成 HTML（多一個 key_takeaway 欄位）"""
+    id_attr = f' id="{article_id}"' if article_id else ""
     return f"""
-    <div class="news-item deep-item">
+    <div class="news-item deep-item"{id_attr}>
       <h3><a href="{article['source_url']}" target="_blank" rel="noopener">{article['title']}</a></h3>
 
       <div class="section">
@@ -284,15 +336,21 @@ def generate_deep_article_html(article):
 """
 
 
-def generate_html(data):
+def generate_html(data, market_data=None):
     """把完整 JSON 資料轉成 HTML 頁面"""
 
-    # ── 各 topic 對應的 anchor ID ──────────────────────
+    # ── 各 topic 對應的 anchor ID 與文章 ID 前綴 ────────
     SECTION_IDS = {
-        "金融市場（總經）": "section-macro",
+        "金融市場（總經）":    "section-macro",
         "大公司重大新聞（個體）": "section-corporate",
-        "央行利率決策": "section-central",
-        "深度分析": "section-deep",
+        "央行利率決策":        "section-central",
+        "深度分析":            "section-deep",
+    }
+    ARTICLE_PREFIXES = {
+        "金融市場（總經）":    "macro",
+        "大公司重大新聞（個體）": "corporate",
+        "央行利率決策":        "central",
+        "深度分析":            "deep",
     }
 
     # ── 生成各 topic 的 HTML ───────────────────────────
@@ -303,16 +361,18 @@ def generate_html(data):
         topic_name = topic["topic_name"]
         articles = topic.get("articles", [])
         is_deep = (topic_name == "深度分析")
+        prefix = ARTICLE_PREFIXES.get(topic_name, "other")
 
         if not is_deep:
             total_count += len(articles)
 
         articles_html = ""
-        for a in articles:
+        for i, a in enumerate(articles):
+            art_id = f"article-{prefix}-{i}"
             if is_deep:
-                articles_html += generate_deep_article_html(a)
+                articles_html += generate_deep_article_html(a, article_id=art_id)
             else:
-                articles_html += generate_article_html(a)
+                articles_html += generate_article_html(a, article_id=art_id)
 
         section_id = SECTION_IDS.get(topic_name, "")
         id_attr = f' id="{section_id}"' if section_id else ""
@@ -333,24 +393,69 @@ def generate_html(data):
     regions = overview.get("regions", [])
     topics_covered = overview.get("topics_covered", [])
 
+    # Layer 1：市場指數（有數據才顯示）
+    if market_data and market_data.get("indices"):
+        index_cards_html = ""
+        for idx in market_data["indices"]:
+            p = idx["change_pct"]
+            arrow = "▲" if p > 0 else ("▼" if p < 0 else "—")
+            change_cls = "positive" if p > 0 else ("negative" if p < 0 else "neutral")
+            # 格式化收盤價（千分位）
+            close_fmt = f"{idx['close']:,.2f}"
+            change_fmt = f"{arrow}{abs(p):.2f}%"
+            index_cards_html += f"""
+          <div class="index-card">
+            <div class="index-name">{idx['name']}</div>
+            <div class="index-close">{close_fmt}</div>
+            <div class="index-change {change_cls}">{change_fmt}</div>
+          </div>"""
+        market_block = f"""
+      <div class="market-indices">
+        <div class="market-indices-label">市場行情 · {market_data['as_of']} 收盤</div>
+        <div class="market-indices-grid">{index_cards_html}
+        </div>
+      </div>"""
+    else:
+        market_block = ""
+
+    # Layer 2：地區 tags
     regions_html = "".join(f'<span class="region-tag">{r}</span>' for r in regions)
 
+    # Layer 3：主題 TOC + 各主題的文章標題列表
     toc_topic_names = ["金融市場（總經）", "大公司重大新聞（個體）", "央行利率決策", "深度分析"]
+
+    # 建立 {topic_name: [articles]} 的快速查找
+    topic_articles_map = {t["topic_name"]: t.get("articles", []) for t in data["topics"]}
+
     toc_rows_html = ""
     for i, tname in enumerate(toc_topic_names):
         anchor = SECTION_IDS.get(tname, "#")
+        prefix = ARTICLE_PREFIXES.get(tname, "other")
         is_deep_row = (tname == "深度分析")
         row_class = " deep" if is_deep_row else ""
         theme = topics_covered[i] if i < len(topics_covered) else ""
+
+        # 文章標題列表
+        articles_in_topic = topic_articles_map.get(tname, [])
+        title_links_html = ""
+        for j, a in enumerate(articles_in_topic):
+            art_id = f"article-{prefix}-{j}"
+            title_links_html += f'<a href="#{art_id}" class="toc-article-link">{a["title"]}</a>\n          '
+
+        articles_block = f"""
+        <div class="toc-articles">{title_links_html}
+        </div>""" if articles_in_topic else ""
+
         toc_rows_html += f"""
         <div class="toc-row{row_class}">
           <a href="#{anchor}" class="toc-label">{tname}</a>
           <span class="toc-theme">{theme}</span>
-        </div>"""
+        </div>{articles_block}"""
 
     overview_html = f"""
     <div class="overview-section">
       <div class="overview-label">今日概覽</div>
+      {market_block}
       <div class="overview-regions">{regions_html}</div>
       <div class="overview-toc">{toc_rows_html}
       </div>
@@ -432,6 +537,54 @@ def generate_html(data):
       color: #aaa;
       margin-bottom: 1rem;
     }}
+
+    /* 市場指數 */
+    .market-indices {{
+      margin-bottom: 1.4rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid #e8e8e8;
+    }}
+    .market-indices-label {{
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.7rem;
+    }}
+    .market-indices-grid {{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.7rem;
+    }}
+    @media (max-width: 600px) {{
+      .market-indices-grid {{ grid-template-columns: repeat(2, 1fr); }}
+    }}
+    .index-card {{
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      padding: 0.65rem 0.85rem;
+    }}
+    .index-name {{
+      font-size: 0.68rem;
+      color: #999;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.2rem;
+    }}
+    .index-close {{
+      font-size: 1rem;
+      font-weight: bold;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }}
+    .index-change {{
+      font-size: 0.7rem;
+      font-variant-numeric: tabular-nums;
+      margin-top: 0.12rem;
+    }}
+    .index-change.positive {{ color: #2a7a2a; }}
+    .index-change.negative {{ color: #c0392b; }}
+    .index-change.neutral  {{ color: #999; }}
+
     .overview-regions {{
       display: flex; flex-wrap: wrap; gap: 0.5rem;
       margin-bottom: 1.2rem;
@@ -441,8 +594,8 @@ def generate_html(data):
       font-size: 0.72rem; padding: 0.2rem 0.6rem;
       letter-spacing: 0.05em;
     }}
-    .overview-toc {{ display: flex; flex-direction: column; gap: 0.6rem; }}
-    .toc-row {{ display: flex; align-items: baseline; gap: 0.8rem; }}
+    .overview-toc {{ display: flex; flex-direction: column; gap: 0.3rem; }}
+    .toc-row {{ display: flex; align-items: baseline; gap: 0.8rem; margin-top: 0.4rem; }}
     .toc-label {{
       font-size: 0.75rem; font-weight: bold;
       color: #111; text-decoration: none;
@@ -451,6 +604,25 @@ def generate_html(data):
     .toc-label:hover {{ text-decoration: underline; }}
     .toc-theme {{ font-size: 0.88rem; color: #555; }}
     .toc-row.deep .toc-label {{ color: #8B4513; }}
+
+    /* 文章標題列表（概覽內） */
+    .toc-articles {{
+      margin: 0.2rem 0 0.5rem 165px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }}
+    @media (max-width: 600px) {{
+      .toc-articles {{ margin-left: 0; }}
+    }}
+    .toc-article-link {{
+      font-size: 0.81rem;
+      color: #666;
+      text-decoration: none;
+      line-height: 1.5;
+    }}
+    .toc-article-link::before {{ content: "· "; color: #bbb; }}
+    .toc-article-link:hover {{ color: #111; text-decoration: underline; }}
 
     /* 主題區塊 */
     .topic-section {{
@@ -614,32 +786,141 @@ def generate_html(data):
 
     return html
 
-def update_index(data, total_count):
-    """更新首頁的最新一期預覽"""
+def update_index(data, total_count, market_data=None):
+    """
+    重寫 index.html 的四個動態區塊（以 DYNAMIC comment 錨點識別）：
+      TICKER  — 頂部市場行情快訊
+      STATS   — 累計期數與文章數
+      LATEST  — 最新一期完整預覽
+      RECENT  — 最近 3 期列表
+    """
+    import re
+    import glob as glob_module
 
-    # 讀取現有的 index.html
+    # ── 計算累計數字 ──────────────────────────────────
+    all_briefings = sorted(glob_module.glob("briefings/*.html"), reverse=True)
+    total_issues  = len(all_briefings)
+
+    # 從最近 20 期抓文章計數加總
+    total_articles_sum = total_count
+    for fp in all_briefings[1:20]:
+        try:
+            with open(fp, "r", encoding="utf-8") as fh:
+                m = re.search(r'共 (\d+) 則', fh.read())
+                if m:
+                    total_articles_sum += int(m.group(1))
+        except Exception:
+            pass
+
+    articles_display = f"{total_articles_sum}+" if total_articles_sum > 10 else str(total_articles_sum)
+
+    # ── TICKER 區塊 ───────────────────────────────────
+    if market_data and market_data.get("indices"):
+        parts = []
+        for idx in market_data["indices"]:
+            p = idx["change_pct"]
+            arrow = "▲" if p > 0 else ("▼" if p < 0 else "—")
+            cls = "ticker-up" if p > 0 else ("ticker-down" if p < 0 else "")
+            parts.append(
+                f'<span>{idx["name"]} '
+                f'<span class="{cls}">{arrow}{abs(p):.2f}%</span></span>'
+            )
+        sep = '<span class="ticker-sep">|</span>'
+        ticker_inner = (
+            f'<span class="ticker-date">{market_data["as_of"]} 收盤</span>'
+            + sep + sep.join(parts)
+        )
+    else:
+        ticker_inner = '<span style="color:#555;">市場數據暫不可用</span>'
+
+    new_ticker = (
+        f'  <!-- DYNAMIC:TICKER:START -->\n'
+        f'  <div class="ticker-bar">{ticker_inner}</div>\n'
+        f'  <!-- DYNAMIC:TICKER:END -->'
+    )
+
+    # ── STATS 區塊 ────────────────────────────────────
+    new_stats = (
+        f'        <!-- DYNAMIC:STATS:START -->\n'
+        f'        <div class="stats-grid">\n'
+        f'          <div class="stat-item"><div class="stat-number">{total_issues}</div><div class="stat-label">期</div></div>\n'
+        f'          <div class="stat-item"><div class="stat-number">{articles_display}</div><div class="stat-label">則報導</div></div>\n'
+        f'          <div class="stat-item" style="grid-column:span 2;"><div class="stat-number" style="font-size:1.1rem;">每個工作日</div><div class="stat-label">自動更新</div></div>\n'
+        f'        </div>\n'
+        f'        <!-- DYNAMIC:STATS:END -->'
+    )
+
+    # ── LATEST 區塊 ───────────────────────────────────
+    overview = data.get("overview", {})
+    topic_chips = "".join(
+        f'<span class="topic-chip">{t}</span>'
+        for t in overview.get("topics_covered", [])
+    )
+    new_latest = (
+        f'      <!-- DYNAMIC:LATEST:START -->\n'
+        f'      <div class="latest-issue-wrapper">\n'
+        f'        <div class="latest-issue-meta">'
+        f'<span class="latest-issue-badge">最新一期</span>'
+        f'<span class="latest-issue-date">{TODAY}</span>'
+        f'<span class="latest-issue-count">{total_count} 則</span></div>\n'
+        f'        <h2 class="latest-issue-title">{data["issue_title"]}</h2>\n'
+        f'        <p class="latest-issue-summary">{data["issue_summary"]}</p>\n'
+        f'        <div class="latest-issue-topics">{topic_chips}</div>\n'
+        f'        <a href="briefings/{TODAY}.html" class="btn-read">閱讀本期全文 →</a>\n'
+        f'      </div>\n'
+        f'      <!-- DYNAMIC:LATEST:END -->'
+    )
+
+    # ── RECENT 區塊（最近 3 期，跳過本期）────────────
+    recent_items_html = ""
+    for fp in all_briefings[1:4]:
+        date_str = os.path.basename(fp).replace(".html", "")
+        try:
+            with open(fp, "r", encoding="utf-8") as fh:
+                fc = fh.read()
+            tm = re.search(r'<h2[^>]*>(.*?)</h2>', fc)
+            cm = re.search(r'共 (\d+) 則', fc)
+            t = tm.group(1) if tm else "—"
+            c = cm.group(1) if cm else "?"
+        except Exception:
+            t, c = "—", "?"
+        recent_items_html += (
+            f'        <a href="briefings/{date_str}.html" class="recent-item">\n'
+            f'          <div class="recent-date">{date_str}</div>\n'
+            f'          <div class="recent-title">{t}</div>\n'
+            f'          <div class="recent-count">{c} 則</div>\n'
+            f'        </a>\n'
+        )
+
+    new_recent = (
+        f'      <!-- DYNAMIC:RECENT:START -->\n'
+        f'      <div class="recent-issues">\n'
+        f'        <div class="recent-label">近期期數</div>\n'
+        f'{recent_items_html}'
+        f'      </div>\n'
+        f'      <!-- DYNAMIC:RECENT:END -->'
+    )
+
+    # ── 讀取並替換四個動態區塊 ────────────────────────
     with open("index.html", "r", encoding="utf-8") as f:
         content = f.read()
 
-    # 找到 .latest 區塊，整個替換
-    import re
-    new_latest = f"""  <!-- 最新一期預覽 -->
-  <section class="latest">
-    <p class="tag">最新一期 · {TODAY}</p>
-    <h3>{data['issue_title']}</h3>
-    <p>{data['issue_summary']}</p>
-    <a href="briefings/{TODAY}.html">閱讀本期 →</a>
-  </section>"""
-
-    content = re.sub(
-        r'<!-- 最新一期預覽 -->.*?</section>',
-        new_latest,
-        content,
-        flags=re.DOTALL
-    )
+    for anchor, new_block in [
+        ("TICKER", new_ticker),
+        ("STATS",  new_stats),
+        ("LATEST", new_latest),
+        ("RECENT", new_recent),
+    ]:
+        content = re.sub(
+            rf'<!-- DYNAMIC:{anchor}:START -->.*?<!-- DYNAMIC:{anchor}:END -->',
+            new_block,
+            content,
+            flags=re.DOTALL,
+        )
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(content)
+    print(f"   ✓ 首頁更新（{total_issues} 期 / 累計 {total_articles_sum} 則）")
 
 
 def update_briefings_list():
@@ -755,24 +1036,35 @@ def main():
 
     print(f"📅 今日日期：{TODAY}")
 
-    print("\n① 抓取 RSS 文章...")
+    print("\n① 抓取市場數據...")
+    market_data = fetch_market_data()
+    if market_data:
+        print(f"   ✓ 已取得 {len(market_data['indices'])} 個指數（截至 {market_data['as_of']}）")
+    else:
+        print("   ⚠ 市場數據取得失敗，概覽將不顯示指數")
+
+    print("\n② 抓取 RSS 文章...")
     topic_articles = fetch_articles_by_topic()
     deep_articles = fetch_deep_analysis_articles()
 
-    print("\n② 呼叫 Claude 分析（這需要約 15-30 秒）...")
+    print("\n③ 呼叫 Claude 分析（約 15-30 秒）...")
     data = analyze_with_claude(topic_articles, deep_articles)
     print(f"   ✓ 分析完成，標題：{data['issue_title']}")
 
-    print("\n③ 生成 HTML...")
-    html = generate_html(data)
+    print("\n④ 生成 HTML...")
+    total_count = sum(
+        len(t["articles"]) for t in data["topics"]
+        if t["topic_name"] != "深度分析"
+    )
+    html = generate_html(data, market_data)
 
     os.makedirs("briefings", exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"   ✓ 生成：{OUTPUT_PATH}")
 
-    print("\n④ 更新首頁與列表頁...")
-    update_index(data, total_count=len(data["articles"]) if "articles" in data else sum(len(t["articles"]) for t in data["topics"]))
+    print("\n⑤ 更新首頁與列表頁...")
+    update_index(data, total_count, market_data)
     update_briefings_list()
     print("   ✓ 首頁與列表頁已更新")
 
