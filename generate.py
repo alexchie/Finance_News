@@ -871,21 +871,25 @@ def update_index(data, total_count, market_data=None):
             p = idx["change_pct"]
             arrow = "▲" if p > 0 else ("▼" if p < 0 else "—")
             cls = "ticker-up" if p > 0 else ("ticker-down" if p < 0 else "")
+            close_fmt = f"{idx['close']:,.2f}"
             parts.append(
-                f'<span>{idx["name"]} '
-                f'<span class="{cls}">{arrow}{abs(p):.2f}%</span></span>'
+                f'<span class="ticker-item">'
+                f'<span class="ticker-label">{idx["name"]}</span>'
+                f'{close_fmt} '
+                f'<span class="{cls}">{arrow}{abs(p):.2f}%</span>'
+                f'</span>'
             )
-        sep = '<span class="ticker-sep">|</span>'
-        ticker_inner = (
-            f'<span class="ticker-date">{market_data["as_of"]} 收盤</span>'
-            + sep + sep.join(parts)
-        )
+        date_span = f'<span class="ticker-date">{market_data["as_of"]} 收盤</span>'
+        sep = '<span class="ticker-sep">·</span>'
+        ticker_content = date_span + sep.join(parts)
+        # 複製一份以實現無縫捲動
+        ticker_inner = ticker_content + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + ticker_content
     else:
-        ticker_inner = '<span style="color:#555;">市場數據暫不可用</span>'
+        ticker_inner = '<span style="color:#555;">市場數據暫不可用</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#555;">市場數據暫不可用</span>'
 
     new_ticker = (
         f'  <!-- DYNAMIC:TICKER:START -->\n'
-        f'  <div class="ticker-bar">{ticker_inner}</div>\n'
+        f'  <div class="ticker-bar"><div class="ticker-track">{ticker_inner}</div></div>\n'
         f'  <!-- DYNAMIC:TICKER:END -->'
     )
 
