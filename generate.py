@@ -301,7 +301,7 @@ def analyze_with_claude(topic_articles, deep_articles):
 
     message = client.messages.create(
         model="claude-sonnet-4-6",
-        max_tokens=8192,
+        max_tokens=16000,
         messages=[{"role": "user", "content": prompt}]
     )
 
