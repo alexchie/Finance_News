@@ -886,17 +886,24 @@ def update_index(data, total_count, market_data=None):
                 f'<span class="{cls}">{arrow}{abs(p):.2f}%</span>'
                 f'</span>'
             )
-        date_span = f'<span class="ticker-date">{market_data["as_of"]} 收盤</span>'
+        date_fixed = f'<div class="ticker-date-fixed">{market_data["as_of"]} 收盤</div>'
         sep = '<span class="ticker-sep">·</span>'
-        ticker_content = date_span + sep.join(parts)
-        # 複製一份以實現無縫捲動
-        ticker_inner = ticker_content + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + ticker_content
+        data_content = sep.join(parts)
+        # 複製一份以實現無縫捲動（date 固定，只滾動數據）
+        ticker_track = f'<div class="ticker-track">{data_content}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{data_content}</div>'
+        ticker_inner = date_fixed + f'<div class="ticker-scroll-area">{ticker_track}</div>'
     else:
-        ticker_inner = '<span style="color:#555;">市場數據暫不可用</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#555;">市場數據暫不可用</span>'
+        no_data = '<span style="color:#555;">市場數據暫不可用</span>'
+        ticker_inner = (
+            f'<div class="ticker-date-fixed">— 收盤</div>'
+            f'<div class="ticker-scroll-area"><div class="ticker-track">{no_data}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{no_data}</div></div>'
+        )
 
     new_ticker = (
         f'  <!-- DYNAMIC:TICKER:START -->\n'
-        f'  <div class="ticker-bar"><div class="ticker-track">{ticker_inner}</div></div>\n'
+        f'  <div class="ticker-bar">\n'
+        f'    {ticker_inner}\n'
+        f'  </div>\n'
         f'  <!-- DYNAMIC:TICKER:END -->'
     )
 
