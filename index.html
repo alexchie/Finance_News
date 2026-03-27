@@ -22,20 +22,30 @@
       line-height: 1.75;
     }
 
-    /* ─── 頂部市場 Ticker ─── */
+    /* ─── 頂部市場 Ticker（跑馬燈）─── */
     .ticker-bar {
       background: #111;
       color: #ccc;
       font-size: 0.72rem;
-      padding: 0.45rem 2.5rem;
+      padding: 0.42rem 0;
       letter-spacing: 0.04em;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      flex-wrap: wrap;
+      overflow: hidden;
+      white-space: nowrap;
     }
-    .ticker-date { color: #666; margin-right: 0.4rem; }
-    .ticker-sep { color: #444; margin: 0 0.4rem; }
+    .ticker-track {
+      display: inline-block;
+      animation: ticker-scroll 35s linear infinite;
+      padding-left: 100%;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item { display: inline-block; margin-right: 3rem; }
+    .ticker-label { color: #888; margin-right: 0.35rem; }
+    .ticker-date { color: #555; margin-right: 2rem; font-size: 0.67rem; }
+    .ticker-sep { color: #444; margin: 0 1rem; }
     .ticker-up   { color: #6fcf97; }
     .ticker-down { color: #eb5757; }
 
@@ -47,6 +57,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
     }
     .masthead { line-height: 1.2; }
     .masthead-title {
@@ -81,7 +93,22 @@
       align-items: start;
     }
     @media (max-width: 780px) {
-      .main-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+      .main-layout { grid-template-columns: 1fr; gap: 2rem; padding: 1.5rem 1rem 3rem; }
+      .sidebar { position: static; }
+      header { padding: 1rem 1.2rem; }
+      .masthead-title { font-size: 1.3rem; }
+      header nav a { margin-left: 1rem; font-size: 0.8rem; }
+      .latest-issue-wrapper { padding: 1.4rem 1.2rem; }
+      .latest-issue-title { font-size: 1.2rem; }
+      .recent-item { grid-template-columns: 80px 1fr; gap: 0.6rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      header { flex-direction: column; align-items: flex-start; }
+      header nav { margin-top: 0.3rem; }
+      header nav a:first-child { margin-left: 0; }
+      .latest-issue-title { font-size: 1.05rem; }
+      .btn-read { display: block; text-align: center; }
     }
 
     /* ─── 左欄（Sidebar）─── */
