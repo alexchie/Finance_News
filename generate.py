@@ -133,8 +133,8 @@ def fetch_deep_analysis_articles():
 
 def fetch_market_data():
     """
-    抓取美股三大指數 + 台灣加權指數的前一交易日收盤資料。
-    執行於 UTC 0:30（台灣 8:30），美股已收盤，台股未開盤。
+    抓取主要市場收盤資料：美股、台股、黃金、原油、亞洲指數。
+    執行於 UTC 0:25（台灣 8:25），美股已收盤，亞股部分已收盤。
     失敗時靜默回傳 None，不中斷主流程。
     """
     try:
@@ -144,10 +144,17 @@ def fetch_market_data():
         return None
 
     INDICES = [
-        ("^GSPC", "S&P 500"),
-        ("^DJI",  "道瓊工業"),
-        ("^IXIC", "那斯達克"),
-        ("^TWII", "台灣加權"),
+        ("^GSPC",     "S&P 500"),
+        ("^DJI",      "道瓊"),
+        ("^IXIC",     "那斯達克"),
+        ("^TWII",     "台灣加權"),
+        ("GC=F",      "黃金"),
+        ("CL=F",      "WTI"),
+        ("BZ=F",      "布蘭特"),
+        ("000001.SS", "上證"),
+        ("399001.SZ", "深證"),
+        ("^N225",     "日經225"),
+        ("^KS11",     "KOSPI"),
     ]
     results = []
     for symbol, name in INDICES:
