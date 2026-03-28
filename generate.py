@@ -387,6 +387,59 @@ def generate_deep_article_html(article, article_id=None):
 """
 
 
+_TICKER_CSS = """
+    .ticker-bar {
+      background: #111; color: #ccc; font-size: 0.72rem;
+      letter-spacing: 0.04em; display: flex; align-items: center; height: 2rem;
+    }
+    .ticker-date-fixed {
+      color: #fff; font-size: 0.67rem; white-space: nowrap;
+      padding: 0 1rem; border-right: 1px solid #333;
+      flex-shrink: 0; height: 100%; display: flex; align-items: center;
+    }
+    .ticker-scroll-area { overflow: hidden; white-space: nowrap; flex: 1; height: 100%; }
+    .ticker-track {
+      display: inline-block; animation: ticker-scroll 23s linear infinite;
+      padding-left: 1rem; height: 100%; line-height: 2rem;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ticker-item { display: inline-block; }
+    .ticker-label { color: #888; margin-right: 0.3rem; }
+    .ticker-sep { color: #444; margin: 0 0.3rem; }
+    .ticker-up   { color: #6fcf97; }
+    .ticker-down { color: #eb5757; }
+"""
+
+
+def _build_ticker_html(market_data):
+    """Build the ticker bar HTML (shared between index.html and briefing pages)."""
+    sep = '<span class="ticker-sep">·</span>'
+    if market_data and market_data.get("indices"):
+        parts = []
+        for idx in market_data["indices"]:
+            p = idx["change_pct"]
+            arrow = "▲" if p > 0 else ("▼" if p < 0 else "—")
+            cls = "ticker-up" if p > 0 else ("ticker-down" if p < 0 else "")
+            close_fmt = f"{idx['close']:,.2f}"
+            parts.append(
+                f'<span class="ticker-item">'
+                f'<span class="ticker-label">{idx["name"]}</span>'
+                f'{close_fmt} '
+                f'<span class="{cls}">{arrow}{abs(p):.2f}%</span>'
+                f'</span>'
+            )
+        date_fixed = f'<div class="ticker-date-fixed">{market_data["as_of"]} 收盤</div>'
+        data_content = sep.join(parts)
+        track = f'<div class="ticker-track">{data_content}{sep}{data_content}</div>'
+    else:
+        no_data = '<span style="color:#555;">市場數據暫不可用</span>'
+        date_fixed = '<div class="ticker-date-fixed">— 收盤</div>'
+        track = f'<div class="ticker-track">{no_data}{sep}{no_data}</div>'
+    scroll = f'<div class="ticker-scroll-area">{track}</div>'
+    return f'<div class="ticker-bar">{date_fixed}{scroll}</div>'
+
+
 def generate_html(data, market_data=None):
     """把完整 JSON 資料轉成 HTML 頁面"""
 
@@ -805,9 +858,12 @@ def generate_html(data, market_data=None):
       color: #aaa;
       margin-top: 3rem;
     }}
+  {_TICKER_CSS}
   </style>
 </head>
 <body>
+
+  {_build_ticker_html(market_data)}
 
   <header>
     <h1><a href="../index.html" style="text-decoration:none;color:#111;">Daily Briefing</a></h1>
@@ -872,38 +928,9 @@ def update_index(data, total_count, market_data=None):
     articles_display = f"{total_articles_sum}+" if total_articles_sum > 10 else str(total_articles_sum)
 
     # ── TICKER 區塊 ───────────────────────────────────
-    if market_data and market_data.get("indices"):
-        parts = []
-        for idx in market_data["indices"]:
-            p = idx["change_pct"]
-            arrow = "▲" if p > 0 else ("▼" if p < 0 else "—")
-            cls = "ticker-up" if p > 0 else ("ticker-down" if p < 0 else "")
-            close_fmt = f"{idx['close']:,.2f}"
-            parts.append(
-                f'<span class="ticker-item">'
-                f'<span class="ticker-label">{idx["name"]}</span>'
-                f'{close_fmt} '
-                f'<span class="{cls}">{arrow}{abs(p):.2f}%</span>'
-                f'</span>'
-            )
-        date_fixed = f'<div class="ticker-date-fixed">{market_data["as_of"]} 收盤</div>'
-        sep = '<span class="ticker-sep">·</span>'
-        data_content = sep.join(parts)
-        # 複製一份以實現無縫捲動（date 固定，只滾動數據）
-        ticker_track = f'<div class="ticker-track">{data_content}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{data_content}</div>'
-        ticker_inner = date_fixed + f'<div class="ticker-scroll-area">{ticker_track}</div>'
-    else:
-        no_data = '<span style="color:#555;">市場數據暫不可用</span>'
-        ticker_inner = (
-            f'<div class="ticker-date-fixed">— 收盤</div>'
-            f'<div class="ticker-scroll-area"><div class="ticker-track">{no_data}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{no_data}</div></div>'
-        )
-
     new_ticker = (
         f'  <!-- DYNAMIC:TICKER:START -->\n'
-        f'  <div class="ticker-bar">\n'
-        f'    {ticker_inner}\n'
-        f'  </div>\n'
+        f'  {_build_ticker_html(market_data)}\n'
         f'  <!-- DYNAMIC:TICKER:END -->'
     )
 
