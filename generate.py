@@ -937,6 +937,7 @@ def update_index(data, total_count, market_data=None):
     # ── STATS 區塊 ────────────────────────────────────
     new_stats = (
         f'        <!-- DYNAMIC:STATS:START -->\n'
+        f'        <div class="sidebar-label">本站數據</div>\n'
         f'        <div class="stats-grid">\n'
         f'          <div class="stat-item"><div class="stat-number">{total_issues}</div><div class="stat-label">期</div></div>\n'
         f'          <div class="stat-item"><div class="stat-number">{articles_display}</div><div class="stat-label">則報導</div></div>\n'
