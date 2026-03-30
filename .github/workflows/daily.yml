@@ -2,11 +2,11 @@ name: 每日財經情報自動生成
 
 on:
   schedule:
-    # 台灣時間 7:30 AM = UTC 前一天 23:30
-    # 提早排程以吸收 GitHub Actions 最多 30 分鐘的排隊延遲，
-    # 確保腳本執行 + GitHub Pages 部署在 8:30 前完成。
+    # 備援排程：台灣時間 7:30 AM = UTC 23:30（前一天）
+    # 主要由 cron-job.org 在 UTC 00:00（台灣 08:00）精準觸發 workflow_dispatch。
+    # 若 cron-job.org 未觸發，此備援排程可確保當天仍會執行。
     - cron: '30 23 * * *'
-  workflow_dispatch:          # 可在 GitHub 網站手動觸發
+  workflow_dispatch:          # cron-job.org 與手動觸發均使用此事件
 
 jobs:
   generate:
