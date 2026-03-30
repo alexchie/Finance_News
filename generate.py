@@ -1130,6 +1130,11 @@ def main():
         print("   執行：export ANTHROPIC_API_KEY='你的key'")
         return
 
+    # 防止重複執行：今日簡報已存在則跳過，避免重複呼叫 API 浪費 token
+    if os.path.exists(OUTPUT_PATH):
+        print(f"⏭️  今日簡報已存在（{OUTPUT_PATH}），跳過生成。")
+        return
+
     print(f"📅 今日日期：{TODAY}")
 
     print("\n① 抓取市場數據...")
