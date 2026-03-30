@@ -147,20 +147,40 @@
       margin-bottom: 1rem;
     }
 
-    /* Stats */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.8rem;
+    /* Stats block (重新設計) */
+    .stats-block {
+      border: 1px solid #e0e0e0;
+      overflow: hidden;
     }
-    .stat-item {
-      text-align: center;
-      padding: 0.9rem 0.6rem;
-      background: #fff;
-      border: 1px solid #e8e8e8;
+    .stats-block-title {
+      background: #111;
+      color: #fff;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 0.52rem 1rem;
     }
-    .stat-number { font-size: 1.6rem; font-weight: bold; line-height: 1.1; }
-    .stat-label  { font-size: 0.68rem; color: #999; margin-top: 0.25rem; letter-spacing: 0.05em; }
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.62rem 1rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .stats-row:last-child { border-bottom: none; }
+    .stats-row-label { font-size: 0.72rem; color: #aaa; letter-spacing: 0.03em; }
+    .stats-row-value { font-size: 1.05rem; font-weight: bold; color: #111; }
+    .stats-row-value.sm { font-size: 0.82rem; font-weight: normal; color: #555; }
+    .live-dot {
+      display: inline-block;
+      width: 5px; height: 5px;
+      background: #6fcf97;
+      border-radius: 50%;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+      animation: liveblink 2s ease-in-out infinite;
+    }
+    @keyframes liveblink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
     /* About blurb */
     .about-text { font-size: 0.87rem; color: #666; line-height: 1.75; }
@@ -313,6 +333,30 @@
     <aside class="sidebar">
 
       <div class="sidebar-section">
+        <!-- DYNAMIC:STATS:START -->
+        <div class="stats-block">
+          <div class="stats-block-title">本站數據</div>
+          <div class="stats-row">
+            <span class="stats-row-label">累積期數</span>
+            <span class="stats-row-value">3</span>
+          </div>
+          <div class="stats-row">
+            <span class="stats-row-label">累積文章</span>
+            <span class="stats-row-value">30+</span>
+          </div>
+          <div class="stats-row">
+            <span class="stats-row-label">發刊頻率</span>
+            <span class="stats-row-value sm">每個工作日</span>
+          </div>
+          <div class="stats-row">
+            <span class="stats-row-label"><span class="live-dot"></span>最後更新</span>
+            <span class="stats-row-value sm" id="last-updated-display" data-date="2026-03-28">2026-03-28</span>
+          </div>
+        </div>
+        <!-- DYNAMIC:STATS:END -->
+      </div>
+
+      <div class="sidebar-section">
         <div class="sidebar-label">關於本刊</div>
         <p class="about-text">
           每個交易日早上 8:30，本刊從 Reuters、FT、The Economist
@@ -330,17 +374,6 @@
           新聞時事，掌握全球金融市場脈動。適合財經從業人員、
           投資人與商業決策者。
         </p>
-      </div>
-
-      <div class="sidebar-section">
-        <!-- DYNAMIC:STATS:START -->
-        <div class="sidebar-label">本站數據</div>
-        <div class="stats-grid">
-          <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">期</div></div>
-          <div class="stat-item"><div class="stat-number">30+</div><div class="stat-label">則報導</div></div>
-          <div class="stat-item" style="grid-column:span 2;"><div class="stat-number" style="font-size:1.1rem;">每個工作日</div><div class="stat-label">自動更新</div></div>
-        </div>
-        <!-- DYNAMIC:STATS:END -->
       </div>
 
       <div class="sidebar-section">
@@ -403,5 +436,24 @@
     © 2026 Daily Briefing &nbsp;·&nbsp; 資料來源：Reuters · FT · The Economist · BBC · CNBC · WSJ · AP · Project Syndicate · 經濟日報
   </footer>
 
+  <script>
+    (function () {
+      var el = document.getElementById('last-updated-display');
+      if (!el) return;
+      var dateStr = el.getAttribute('data-date');
+      function refresh() {
+        var now = new Date();
+        var pub = new Date(dateStr + 'T08:30:00+08:00');
+        var diffH = (now - pub) / 3600000;
+        if (diffH < 0)        el.textContent = dateStr;
+        else if (diffH < 4)   el.textContent = '剛剛更新';
+        else if (diffH < 24)  el.textContent = '今日 08:30';
+        else if (diffH < 48)  el.textContent = '昨日 08:30';
+        else                  el.textContent = Math.floor(diffH / 24) + ' 天前';
+      }
+      refresh();
+      setInterval(refresh, 60000);
+    })();
+  </script>
 </body>
 </html>

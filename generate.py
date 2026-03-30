@@ -937,11 +937,13 @@ def update_index(data, total_count, market_data=None):
     # ── STATS 區塊 ────────────────────────────────────
     new_stats = (
         f'        <!-- DYNAMIC:STATS:START -->\n'
-        f'        <div class="sidebar-label">本站數據</div>\n'
-        f'        <div class="stats-grid">\n'
-        f'          <div class="stat-item"><div class="stat-number">{total_issues}</div><div class="stat-label">期</div></div>\n'
-        f'          <div class="stat-item"><div class="stat-number">{articles_display}</div><div class="stat-label">則報導</div></div>\n'
-        f'          <div class="stat-item" style="grid-column:span 2;"><div class="stat-number" style="font-size:1.1rem;">每個工作日</div><div class="stat-label">自動更新</div></div>\n'
+        f'        <div class="stats-block">\n'
+        f'          <div class="stats-block-title">本站數據</div>\n'
+        f'          <div class="stats-row"><span class="stats-row-label">累積期數</span><span class="stats-row-value">{total_issues}</span></div>\n'
+        f'          <div class="stats-row"><span class="stats-row-label">累積文章</span><span class="stats-row-value">{articles_display}</span></div>\n'
+        f'          <div class="stats-row"><span class="stats-row-label">發刊頻率</span><span class="stats-row-value sm">每個工作日</span></div>\n'
+        f'          <div class="stats-row"><span class="stats-row-label"><span class="live-dot"></span>最後更新</span>'
+        f'<span class="stats-row-value sm" id="last-updated-display" data-date="{TODAY}">{TODAY}</span></div>\n'
         f'        </div>\n'
         f'        <!-- DYNAMIC:STATS:END -->'
     )
