@@ -1018,6 +1018,47 @@ def update_index(data, total_count, market_data=None):
     print(f"   ✓ 首頁更新（{total_issues} 期 / 累計 {total_articles_sum} 則）")
 
 
+def send_newsletter(html_content, subject):
+    """透過 Brevo Campaign API 將今日簡報寄給所有訂閱者"""
+    import urllib.request as _req
+    import json as _json
+
+    api_key      = os.environ.get("BREVO_API_KEY", "")
+    list_id      = os.environ.get("BREVO_LIST_ID", "")
+    sender_email = os.environ.get("BREVO_SENDER_EMAIL", "")
+
+    if not api_key or not list_id or not sender_email:
+        print("   ⚠️  未設定 Brevo 環境變數，略過寄信。")
+        return
+
+    headers = {"api-key": api_key, "Content-Type": "application/json"}
+
+    # Step 1: 建立 Campaign
+    campaign_payload = _json.dumps({
+        "name": f"Daily Briefing {TODAY}",
+        "subject": subject,
+        "sender": {"name": "每日財經情報", "email": sender_email},
+        "type": "classic",
+        "htmlContent": html_content,
+        "recipients": {"listIds": [int(list_id)]}
+    }).encode()
+
+    req = _req.Request(
+        "https://api.brevo.com/v3/emailCampaigns",
+        data=campaign_payload, headers=headers
+    )
+    with _req.urlopen(req) as resp:
+        campaign_id = _json.loads(resp.read())["id"]
+
+    # Step 2: 立即發送
+    send_req = _req.Request(
+        f"https://api.brevo.com/v3/emailCampaigns/{campaign_id}/sendNow",
+        method="POST", headers={"api-key": api_key}
+    )
+    _req.urlopen(send_req)
+    print(f"   ✓ 電子報已發送（Campaign ID: {campaign_id}）")
+
+
 def update_briefings_list():
     """重新生成 briefings.html，掃描所有已存在的期數"""
 
@@ -1168,6 +1209,9 @@ def main():
     update_index(data, total_count, market_data)
     update_briefings_list()
     print("   ✓ 首頁與列表頁已更新")
+
+    print("\n⑥ 發送電子報...")
+    send_newsletter(html, f"每日財經情報 {TODAY} · {data['issue_title'][:25]}…")
 
     print(f"\n✅ 全部完成！")
 

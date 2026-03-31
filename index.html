@@ -195,6 +195,24 @@
     }
     .sources-list li::before { content: "— "; color: #ccc; }
 
+    /* ─── 訂閱表單 ─── */
+    .subscribe-form { display: flex; flex-direction: column; gap: 0.5rem; }
+    .subscribe-input {
+      border: 1px solid #ddd; padding: 0.55rem 0.75rem;
+      font-size: 0.82rem; font-family: inherit; outline: none; width: 100%;
+      box-sizing: border-box;
+    }
+    .subscribe-input:focus { border-color: #111; }
+    .subscribe-btn {
+      background: #111; color: #fff; border: none; padding: 0.6rem;
+      font-size: 0.78rem; letter-spacing: 0.1em; cursor: pointer;
+      font-family: inherit; transition: background 0.15s;
+    }
+    .subscribe-btn:hover { background: #333; }
+    .subscribe-msg { font-size: 0.75rem; color: #aaa; margin-top: 0.25rem; line-height: 1.5; }
+    .subscribe-msg.ok  { color: #2a7a2a; }
+    .subscribe-msg.err { color: #c0392b; }
+
     /* ─── 右側主內容 ─── */
 
     /* 最新一期 */
@@ -392,6 +410,19 @@
         </ul>
       </div>
 
+      <div class="sidebar-section">
+        <div class="sidebar-label">訂閱電子報</div>
+        <p class="about-text" style="margin-bottom:0.9rem;">
+          每天早上直送信箱，隨時可退訂。
+        </p>
+        <form class="subscribe-form" id="subscribe-form">
+          <input class="subscribe-input" type="email" id="subscribe-email"
+                 placeholder="your@email.com" required autocomplete="email">
+          <button class="subscribe-btn" type="submit">SUBSCRIBE</button>
+        </form>
+        <div class="subscribe-msg" id="subscribe-msg"></div>
+      </div>
+
     </aside>
 
     <!-- 右側主內容 -->
@@ -435,6 +466,41 @@
   <footer>
     © 2026 Daily Briefing &nbsp;·&nbsp; 資料來源：Reuters · FT · The Economist · BBC · CNBC · WSJ · AP · Project Syndicate · 經濟日報
   </footer>
+
+  <script>
+    /* ── 訂閱表單 ── */
+    document.getElementById('subscribe-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = document.getElementById('subscribe-email').value.trim();
+      var msg   = document.getElementById('subscribe-msg');
+      var btn   = this.querySelector('button');
+      msg.textContent = '處理中…'; msg.className = 'subscribe-msg';
+      btn.disabled = true;
+
+      fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
+        headers: {
+          'api-key': 'BREVO_CONTACTS_KEY',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email, listIds: [3], updateEnabled: true })
+      })
+      .then(function (r) {
+        if (r.status === 201 || r.status === 204) {
+          msg.textContent = '✓ 訂閱成功！明天起開始收信。';
+          msg.className = 'subscribe-msg ok';
+          document.getElementById('subscribe-email').value = '';
+        } else {
+          return r.json().then(function (d) { throw new Error(d.message || r.status); });
+        }
+      })
+      .catch(function () {
+        msg.textContent = '訂閱失敗，請稍後再試。';
+        msg.className = 'subscribe-msg err';
+      })
+      .finally(function () { btn.disabled = false; });
+    });
+  </script>
 
   <script>
     (function () {
