@@ -131,11 +131,46 @@ def fetch_deep_analysis_articles():
     return articles
 
 
+def _fetch_stooq(yf_symbol, name):
+    """Fallback: fetch last 2 trading days from stooq.com (stdlib only, no new deps)."""
+    import urllib.request as _req
+    import io, csv
+    STOOQ_MAP = {
+        "000001.SS": "000001.ss",
+        "399001.SZ": "399001.sz",
+    }
+    stooq_sym = STOOQ_MAP.get(yf_symbol.upper())
+    if not stooq_sym:
+        return None
+    url = f"https://stooq.com/q/d/l/?s={stooq_sym}&i=d&n=10"
+    try:
+        with _req.urlopen(url, timeout=10) as resp:
+            text = resp.read().decode()
+        rows = list(csv.DictReader(io.StringIO(text)))
+        rows = sorted(rows, key=lambda r: r["Date"])
+        rows = [r for r in rows if r.get("Close") and r["Close"] != "N/D"]
+        if len(rows) < 2:
+            return None
+        close = round(float(rows[-1]["Close"]), 2)
+        prev  = round(float(rows[-2]["Close"]), 2)
+        chg   = round(close - prev, 2)
+        pct   = round(chg / prev * 100, 2) if prev else 0.0
+        return {
+            "name": name, "close": close,
+            "change": chg, "change_pct": pct,
+            "date": rows[-1]["Date"],
+        }
+    except Exception as e:
+        print(f"   ⚠ {name} stooq 備援也失敗：{e}")
+        return None
+
+
 def fetch_market_data():
     """
     抓取主要市場收盤資料：美股、台股、黃金、原油、亞洲指數。
     執行於 UTC 0:25（台灣 8:25），美股已收盤，亞股部分已收盤。
     失敗時靜默回傳 None，不中斷主流程。
+    中國 A 股（上證/深證）在 yfinance 失敗時自動改用 stooq.com 備援。
     """
     try:
         import yfinance as yf
@@ -158,23 +193,30 @@ def fetch_market_data():
     ]
     results = []
     for symbol, name in INDICES:
+        entry = None
         try:
             hist = yf.Ticker(symbol).history(period="5d")
-            if len(hist) < 2:
-                print(f"   ⚠ {name} 歷史資料不足，跳過")
-                continue
-            close = round(float(hist.iloc[-1]["Close"]), 2)
-            prev  = round(float(hist.iloc[-2]["Close"]), 2)
-            chg   = round(close - prev, 2)
-            pct   = round(chg / prev * 100, 2) if prev else 0.0
-            date_str = hist.index[-1].strftime("%Y-%m-%d")
-            results.append({
-                "name": name, "close": close,
-                "change": chg, "change_pct": pct,
-                "date": date_str,
-            })
+            hist = hist.dropna(subset=["Close"])
+            if len(hist) >= 2:
+                close    = round(float(hist.iloc[-1]["Close"]), 2)
+                prev     = round(float(hist.iloc[-2]["Close"]), 2)
+                chg      = round(close - prev, 2)
+                pct      = round(chg / prev * 100, 2) if prev else 0.0
+                date_str = hist.index[-1].strftime("%Y-%m-%d")
+                entry    = {"name": name, "close": close,
+                            "change": chg, "change_pct": pct, "date": date_str}
+            else:
+                print(f"   ⚠ {name} yfinance 資料不足，嘗試 stooq 備援…")
         except Exception as e:
-            print(f"   ⚠ {name}（{symbol}）數據失敗：{e}")
+            print(f"   ⚠ {name}（{symbol}）yfinance 失敗：{e}，嘗試 stooq 備援…")
+
+        if entry is None:
+            entry = _fetch_stooq(symbol, name)
+
+        if entry:
+            results.append(entry)
+        elif symbol in ("000001.SS", "399001.SZ"):
+            print(f"   ℹ {name} 兩個來源均無數據（可能前一天休市）")
 
     if not results:
         return None
