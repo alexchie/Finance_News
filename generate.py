@@ -132,7 +132,8 @@ def fetch_deep_analysis_articles():
 
 
 def _fetch_stooq(yf_symbol, name):
-    """Fallback: fetch last 2 trading days from stooq.com (stdlib only, no new deps)."""
+    """Fallback: fetch recent trading days from stooq.com (stdlib only, no new deps).
+    If only 1 row is available (e.g. market closed yesterday), returns 0% change."""
     import urllib.request as _req
     import io, csv
     STOOQ_MAP = {
@@ -149,10 +150,10 @@ def _fetch_stooq(yf_symbol, name):
         rows = list(csv.DictReader(io.StringIO(text)))
         rows = sorted(rows, key=lambda r: r["Date"])
         rows = [r for r in rows if r.get("Close") and r["Close"] != "N/D"]
-        if len(rows) < 2:
+        if not rows:
             return None
         close = round(float(rows[-1]["Close"]), 2)
-        prev  = round(float(rows[-2]["Close"]), 2)
+        prev  = round(float(rows[-2]["Close"]), 2) if len(rows) >= 2 else close
         chg   = round(close - prev, 2)
         pct   = round(chg / prev * 100, 2) if prev else 0.0
         return {
@@ -205,8 +206,15 @@ def fetch_market_data():
                 date_str = hist.index[-1].strftime("%Y-%m-%d")
                 entry    = {"name": name, "close": close,
                             "change": chg, "change_pct": pct, "date": date_str}
+            elif len(hist) == 1:
+                # Only one row available — show last known price with 0% change
+                close    = round(float(hist.iloc[-1]["Close"]), 2)
+                date_str = hist.index[-1].strftime("%Y-%m-%d")
+                entry    = {"name": name, "close": close,
+                            "change": 0.0, "change_pct": 0.0, "date": date_str}
+                print(f"   ⚠ {name} yfinance 僅一筆資料，顯示最近收盤價（漲跌 0%）")
             else:
-                print(f"   ⚠ {name} yfinance 資料不足，嘗試 stooq 備援…")
+                print(f"   ⚠ {name} yfinance 無資料，嘗試 stooq 備援…")
         except Exception as e:
             print(f"   ⚠ {name}（{symbol}）yfinance 失敗：{e}，嘗試 stooq 備援…")
 
@@ -215,7 +223,7 @@ def fetch_market_data():
 
         if entry:
             results.append(entry)
-        elif symbol in ("000001.SS", "399001.SZ"):
+        else:
             print(f"   ℹ {name} 兩個來源均無數據（可能前一天休市）")
 
     if not results:
