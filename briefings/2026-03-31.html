@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026-03-31 · Daily Briefing</title>
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KJ8JBV99C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0KJ8JBV99C');
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #ffffff;
+      color: #111111;
+      line-height: 1.9;
+    }
+
+    header {
+      border-bottom: 2px solid #111;
+      padding: 2rem 2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    header h1 { font-size: 1.2rem; letter-spacing: 0.1em; }
+    header nav a {
+      text-decoration: none; color: #111;
+      margin-left: 2rem; font-size: 0.9rem;
+    }
+    header nav a:hover { text-decoration: underline; }
+
+    .article {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .breadcrumb {
+      font-size: 0.8rem; color: #aaa; margin-bottom: 2rem;
+    }
+    .breadcrumb a { color: #aaa; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* 期數標題 */
+    .issue-meta {
+      border-bottom: 2px solid #111;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .issue-meta .date {
+      font-size: 0.8rem; color: #aaa;
+      letter-spacing: 0.1em; margin-bottom: 0.5rem;
+    }
+    .issue-meta h2 {
+      font-size: 1.9rem; line-height: 1.3; margin-bottom: 0.8rem;
+    }
+    .issue-meta .summary {
+      font-size: 0.95rem; color: #444;
+      border-left: 3px solid #111;
+      padding-left: 1rem;
+    }
+
+    /* 今日概覽 */
+    .overview-section {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 3rem;
+    }
+    .overview-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 1rem;
+    }
+
+    /* 市場指數 */
+    .market-indices {
+      margin-bottom: 1.4rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .market-indices-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.7rem;
+    }
+    .market-indices-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.7rem;
+    }
+    @media (max-width: 600px) {
+      .market-indices-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .index-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      padding: 0.65rem 0.85rem;
+    }
+    .index-name {
+      font-size: 0.68rem;
+      color: #999;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.2rem;
+    }
+    .index-close {
+      font-size: 1rem;
+      font-weight: bold;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }
+    .index-change {
+      font-size: 0.7rem;
+      font-variant-numeric: tabular-nums;
+      margin-top: 0.12rem;
+    }
+    .index-change.positive { color: #2a7a2a; }
+    .index-change.negative { color: #c0392b; }
+    .index-change.neutral  { color: #999; }
+
+    .overview-regions {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .country-tag {
+      display: inline-block;
+      background: #111; color: #fff;
+      font-size: 0.65rem; padding: 0.1rem 0.45rem;
+      margin-right: 0.4rem;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
+    }
+    .region-tag {
+      background: #111; color: #fff;
+      font-size: 0.72rem; padding: 0.2rem 0.6rem;
+      letter-spacing: 0.05em;
+    }
+    .overview-toc { display: flex; flex-direction: column; gap: 0.3rem; }
+    .toc-row { display: flex; align-items: baseline; gap: 0.8rem; margin-top: 0.4rem; }
+    .toc-label {
+      font-size: 0.75rem; font-weight: bold;
+      color: #111; text-decoration: none;
+      min-width: 165px; flex-shrink: 0;
+    }
+    .toc-label:hover { text-decoration: underline; }
+    .toc-theme { font-size: 0.88rem; color: #555; }
+    .toc-row.deep .toc-label { color: #8B4513; }
+
+    /* 文章標題列表（概覽內） */
+    .toc-articles {
+      margin: 0.2rem 0 0.5rem 165px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    @media (max-width: 600px) {
+      .toc-articles { margin-left: 0; }
+    }
+    .toc-article-link {
+      font-size: 0.81rem;
+      color: #666;
+      text-decoration: none;
+      line-height: 1.5;
+    }
+    .toc-article-link::before { content: "· "; color: #bbb; }
+    .toc-article-link:hover { color: #111; text-decoration: underline; }
+
+    /* 主題區塊 */
+    .topic-section {
+      margin-bottom: 4rem;
+    }
+    .topic-header {
+      border-bottom: 1px solid #111;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    .topic-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: normal;
+      color: #555;
+    }
+
+    /* 單篇新聞 */
+    .news-item {
+      padding: 2rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .news-item h3 {
+      font-size: 1.15rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.4;
+    }
+    .news-item h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .news-item h3 a:hover {
+      text-decoration: underline;
+    }
+
+    /* 三個內容段落 */
+    .section {
+      margin-bottom: 1rem;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.3rem;
+    }
+    .section p {
+      font-size: 0.93rem;
+      color: #333;
+    }
+
+    /* 詳細分析特別標示 */
+    .section.analysis {
+      background: #f5f5f5;
+      border-left: 3px solid #111;
+      padding: 1rem 1.2rem;
+    }
+    .section.analysis .section-label {
+      color: #666;
+    }
+    .section.analysis p {
+      color: #222;
+    }
+
+    /* 深度洞察 */
+    .section.key-takeaway {
+      background: #fdf6f0;
+      border-left: 3px solid #8B4513;
+      padding: 1rem 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .section.key-takeaway .section-label {
+      color: #8B4513;
+    }
+    .section.key-takeaway p {
+      color: #222;
+    }
+
+    /* 深度分析 section */
+    .deep-analysis-section .topic-title {
+      color: #8B4513;
+    }
+    .deep-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      background: #8B4513;
+      color: #fff;
+      padding: 0.15rem 0.5rem;
+      margin-left: 0.8rem;
+      vertical-align: middle;
+      font-style: normal;
+      font-weight: normal;
+    }
+
+    .source {
+      font-size: 0.78rem;
+      color: #bbb;
+      margin-top: 1rem;
+    }
+    .source a { color: #bbb; text-decoration: none; }
+    .source a:hover { text-decoration: underline; }
+
+    /* 底部導覽 */
+    .nav-bottom {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .nav-bottom a { color: #111; text-decoration: none; }
+    .nav-bottom a:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid #ddd;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 3rem;
+    }
+  
+    .ticker-bar {
+      background: #111; color: #ccc; font-size: 0.72rem;
+      letter-spacing: 0.04em; display: flex; align-items: center; height: 2rem;
+    }
+    .ticker-date-fixed {
+      color: #fff; font-size: 0.67rem; white-space: nowrap;
+      padding: 0 1rem; border-right: 1px solid #333;
+      flex-shrink: 0; height: 100%; display: flex; align-items: center;
+    }
+    .ticker-scroll-area { overflow: hidden; white-space: nowrap; flex: 1; height: 100%; }
+    .ticker-track {
+      display: inline-block; animation: ticker-scroll 23s linear infinite;
+      padding-left: 1rem; height: 100%; line-height: 2rem;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ticker-item { display: inline-block; }
+    .ticker-label { color: #888; margin-right: 0.3rem; }
+    .ticker-sep { color: #444; margin: 0 0.3rem; }
+    .ticker-up   { color: #6fcf97; }
+    .ticker-down { color: #eb5757; }
+
+  </style>
+</head>
+<body>
+
+  <div class="ticker-bar"><div class="ticker-date-fixed">2026-03-30 收盤</div><div class="ticker-scroll-area"><div class="ticker-track"><span class="ticker-item"><span class="ticker-label">S&P 500</span>6,343.72 <span class="ticker-down">▼0.39%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>45,216.14 <span class="ticker-up">▲0.11%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>20,794.64 <span class="ticker-down">▼0.73%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>33,112.59 <span class="ticker-down">▼0.68%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>4,547.50 <span class="ticker-up">▲1.24%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>106.77 <span class="ticker-up">▲7.16%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>110.28 <span class="ticker-down">▼2.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>nan <span class="">—nan%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>nan <span class="">—nan%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>53,373.07 <span class="ticker-down">▼0.43%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>5,438.87 <span class="ticker-down">▼0.40%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">S&P 500</span>6,343.72 <span class="ticker-down">▼0.39%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>45,216.14 <span class="ticker-up">▲0.11%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>20,794.64 <span class="ticker-down">▼0.73%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>33,112.59 <span class="ticker-down">▼0.68%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>4,547.50 <span class="ticker-up">▲1.24%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>106.77 <span class="ticker-up">▲7.16%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>110.28 <span class="ticker-down">▼2.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>nan <span class="">—nan%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>nan <span class="">—nan%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>53,373.07 <span class="ticker-down">▼0.43%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>5,438.87 <span class="ticker-down">▼0.40%</span></span></div></div></div>
+
+  <header>
+    <h1><a href="../index.html" style="text-decoration:none;color:#111;">Daily Briefing</a></h1>
+    <nav>
+      <a href="../briefings.html">所有期數</a>
+      <a href="#">關於</a>
+    </nav>
+  </header>
+
+  <div class="article">
+
+    <div class="breadcrumb"><a href="../briefings.html">← 所有期數</a></div>
+
+    <div class="issue-meta">
+      <div class="date">2026-03-31 · 共 10 則</div>
+      <h2>伊朗戰火第五週：布蘭特原油衝破116美元，全球市場承壓、Fed按兵不動</h2>
+      <p class="summary">美以對伊朗軍事行動進入第五週，荷莫茲海峽封鎖持續推升油價至多年高位，布蘭特原油突破116美元、WTI漲破106美元，引爆全球能源成本急劇攀升。Fed主席鮑爾雖表示通膨預期仍受控、無須升息應對油價衝擊，但市場對滯脹風險的憂慮已明顯加深，亞股普跌、美股自衝突爆發以來累跌逾7%。台灣作為高度依賴能源進口的外向型經濟體，中東局勢惡化對其能源供應鏈與出口競爭力的潛在衝擊正受到高度關注。</p>
+    </div>
+
+    
+    <div class="overview-section">
+      <div class="overview-label">今日概覽</div>
+      
+      <div class="market-indices">
+        <div class="market-indices-label">市場行情 · 2026-03-30 收盤</div>
+        <div class="market-indices-grid">
+          <div class="index-card">
+            <div class="index-name">S&P 500</div>
+            <div class="index-close">6,343.72</div>
+            <div class="index-change negative">▼0.39%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">道瓊</div>
+            <div class="index-close">45,216.14</div>
+            <div class="index-change positive">▲0.11%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">那斯達克</div>
+            <div class="index-close">20,794.64</div>
+            <div class="index-change negative">▼0.73%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">台灣加權</div>
+            <div class="index-close">33,112.59</div>
+            <div class="index-change negative">▼0.68%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">黃金</div>
+            <div class="index-close">4,547.50</div>
+            <div class="index-change positive">▲1.24%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">WTI</div>
+            <div class="index-close">106.77</div>
+            <div class="index-change positive">▲7.16%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">布蘭特</div>
+            <div class="index-close">110.28</div>
+            <div class="index-change negative">▼2.03%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">上證</div>
+            <div class="index-close">nan</div>
+            <div class="index-change neutral">—nan%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">深證</div>
+            <div class="index-close">nan</div>
+            <div class="index-change neutral">—nan%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">日經225</div>
+            <div class="index-close">53,373.07</div>
+            <div class="index-change negative">▼0.43%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">KOSPI</div>
+            <div class="index-close">5,438.87</div>
+            <div class="index-change negative">▼0.40%</div>
+          </div>
+        </div>
+      </div>
+      <div class="overview-toc">
+        <div class="toc-row">
+          <a href="#section-macro" class="toc-label">金融市場（總經）</a>
+          <span class="toc-theme">油價飆升Fed維穩、滯脹風險升溫</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">中東</span><a href="#article-macro-0" class="toc-article-link">布蘭特原油衝破116美元，川普揚言摧毀伊朗油井與出口樞紐</a>
+          <span class="country-tag">美國</span><a href="#article-macro-1" class="toc-article-link">鮑爾：通膨預期仍受控，油價衝擊不需升息應對</a>
+          <span class="country-tag">全球</span><a href="#article-macro-2" class="toc-article-link">伊朗戰爭第五週：亞股下滑，美股自衝突爆發以來累跌逾7%</a>
+          <span class="country-tag">英國</span><a href="#article-macro-3" class="toc-article-link">英國家庭能源危機加劇：半數家庭已難以負擔日常必需品</a>
+          <span class="country-tag">中東</span><a href="#article-macro-4" class="toc-article-link">中東產油國出售美國國債：流動性需求背後的地緣財務邏輯</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-corporate" class="toc-label">國際大公司重大新聞</a>
+          <span class="toc-theme">能源成本衝擊企業獲利與供應鏈</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">美國</span><a href="#article-corporate-0" class="toc-article-link">Sysco斥資291億美元收購Jetro Restaurant Depot，押注「現購自取」食品服務商機</a>
+          <span class="country-tag">美國</span><a href="#article-corporate-1" class="toc-article-link">JetBlue上調行李費用，航空業加速將燃油成本轉嫁消費者</a>
+          <span class="country-tag">中國</span><a href="#article-corporate-2" class="toc-article-link">中國供應商警告：荷莫茲封鎖推升製造成本，美國消費者將承擔更高物價</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-taiwan" class="toc-label">台灣財經</a>
+          <span class="toc-theme">中東戰火波及台灣能源與貿易</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">台灣</span><a href="#article-taiwan-0" class="toc-article-link">伊朗襲擊杜拜港油輪，WTI漲破106美元，台灣能源供應安全警訊升溫</a>
+          <span class="country-tag">中東</span><a href="#article-taiwan-1" class="toc-article-link">伊朗國會初步批准荷莫茲海峽「過路費」計劃，全球貿易秩序面臨根本性挑戰</a>
+          
+        </div>
+        <div class="toc-row deep">
+          <a href="#section-deep" class="toc-label">深度分析</a>
+          <span class="toc-theme"></span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">全球</span><a href="#article-deep-0" class="toc-article-link">全球貿易的夢魘情境：荷莫茲絕非唯一的致命咽喉要道</a>
+          
+        </div>
+      </div>
+    </div>
+
+
+    
+    <section class="topic-section" id="section-macro">
+      <div class="topic-header">
+        <h2 class="topic-title">金融市場（總經）</h2>
+      </div>
+      
+    <div class="news-item" id="article-macro-0">
+      <h3><a href="https://www.theguardian.com/business/2026/mar/30/price-of-oil-trump-iran-stock-markets-middle-east" target="_blank" rel="noopener">布蘭特原油衝破116美元，川普揚言摧毀伊朗油井與出口樞紐</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>美以聯合發動「史詩怒火行動」已進入第五週，伊朗對荷莫茲海峽的封鎖導致全球約20%的石油海上運輸受阻。胡塞武裝於週末對以色列發動攻擊，進一步擴大衝突範圍。此次能源供應衝擊被部分分析師形容為史上規模最大的能源供應危機。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>布蘭特原油3月30日盤中突破116美元，WTI亦漲破106美元，改寫近四年高位。川普在哈佛演講前後公開揚言將「炸毀」伊朗油井及科哈爾格島（Kharg Island）出口樞紐，市場對衝突進一步升級的憂慮驟升。此舉直接推高全球能源成本，對製造業、航空業及消費者購買力形成顯著壓力。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>對照歷史先例，1973年阿拉伯石油禁運令油價在數月內暴漲約400%，引發美國與西歐陷入嚴重滯脹；1990年海灣戰爭期間油價亦在數月內翻倍，但因衝突快速結束而迅速回落。本次衝突的關鍵差異在於荷莫茲海峽的戰略地位——全球約20%海運石油及大量LNG須途經此處，一旦長期封鎖，影響遠超1970年代。目前布蘭特油價已較衝突爆發前上漲約40%，若川普真正動武攻擊科哈爾格島，伊朗約90%的石油出口將喪失，全球供給缺口估計每日達200萬至300萬桶，油價恐進一步衝擊130至140美元區間。此外，伊朗國會安全委員會初步批准對荷莫茲海峽徵收「過路費」，若付諸實施將開創危險先例，從根本上改變全球能源定價結構。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.theguardian.com/business/2026/mar/30/price-of-oil-trump-iran-stock-markets-middle-east" target="_blank">The Guardian / 經濟日報</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-1">
+      <h3><a href="https://www.cnbc.com/2026/03/30/powell-sees-inflation-outlook-in-check-no-wider-crisis-yet-in-private-credit.html" target="_blank" rel="noopener">鮑爾：通膨預期仍受控，油價衝擊不需升息應對</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Fed自2024年下半年進入降息週期，至2025年底已累計降息約100個基點。然而伊朗戰爭爆發後，能源通膨急劇升溫，市場開始擔憂Fed是否被迫轉向緊縮。鮑爾此次哈佛演講是其任期（至2026年5月）結束前最後幾次公開亮相之一。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>鮑爾3月30日在哈佛大學表示，目前通膨預期仍維持在可控範圍內，Fed不需要因為油價衝擊而升息。另一位Fed理事Miran則表示，利率水準今年仍有望進一步下調約一個百分點。這一表態暫時緩解市場對政策急轉彎的恐慌，但也引發部分分析師質疑Fed是否低估了滯脹風險。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>Fed此次應對邏輯與1970年代形成鮮明對比：當時Fed在Arthur Burns領導下未能及時應對能源通膨的二次傳導，導致通膨預期失錨，最終迫使Volcker在1980年代以極端緊縮收拾殘局。鮑爾此次依據的是「暫時性能源衝擊不應改變貨幣政策路徑」的正統框架，但前提是通膨預期確實保持穩定。目前美國5年期盈虧平衡通膨率（breakeven inflation）已升至約3.2%，若持續走高至3.5%以上，Fed將面臨兩難困境：升息壓制通膨可能加速衰退，按兵不動則可能失去通膨錨定效果。Fed Governor Miran支持今年再降息約100個基點，但此舉在油價仍高企的背景下，市場定價能否同步配合，存在相當大的不確定性。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.cnbc.com/2026/03/30/powell-sees-inflation-outlook-in-check-no-wider-crisis-yet-in-private-credit.html" target="_blank">CNBC</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-2">
+      <h3><a href="https://www.bbc.com/news/articles/cz905eyjznno?at_medium=RSS&at_campaign=rss" target="_blank" rel="noopener">伊朗戰爭第五週：亞股下滑，美股自衝突爆發以來累跌逾7%</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>美以對伊朗軍事行動爆發後，全球金融市場持續承壓。亞洲股市受能源進口成本大幅上升、企業獲利預期下修等因素拖累，普遍走低。美國股市則因能源通膨、供應鏈干擾及地緣政治不確定性三重壓力，累積跌幅已超越多數歷史地緣政治危機的市場反應。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>MarketWatch數據顯示，S&P 500自伊朗衝突爆發以來已下跌7.4%，超過過去歷次地緣政治衝擊的中位數跌幅6.1%。亞洲股市3月30日繼續走低，尤其是高度依賴能源進口的日本、韓國及東南亞市場。對沖基金大佬Bill Ackman逆勢表示，當前是「近年來難得的買入優質股票良機」，但市場普遍情緒仍偏保守。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>歷史上重大地緣政治衝擊對股市的影響往往呈現「快速下跌、相對快速修復」的型態：1990年海灣戰爭期間S&P 500最大跌幅約20%，但衝突結束後六個月內幾乎完全收復；2001年九一一事件後S&P 500跌約12%，一個月後即反彈。然而本次衝突的特殊性在於其對全球能源供應的結構性干擾時間更長、範圍更廣，且川普的政策立場搖擺加大了市場預測難度。若衝突持續超過三個月且荷莫茲海峽無法恢復正常通航，企業獲利壓力將從能源密集型產業蔓延至消費與科技板塊。目前私人信貸市場（規模達22兆美元）亦開始出現壓力跡象，鮑爾對此表示暫無更廣泛危機，但監管機構的看法更為謹慎，這是值得長期追蹤的系統性風險點。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.bbc.com/news/articles/cz905eyjznno?at_medium=RSS&at_campaign=rss" target="_blank">BBC News / MarketWatch</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-3">
+      <h3><a href="https://www.theguardian.com/business/2026/mar/30/pessimism-takes-root-uk-shoppers-struggle-essentials-iran-war-prices" target="_blank" rel="noopener">英國家庭能源危機加劇：半數家庭已難以負擔日常必需品</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>英國在2021至2022年間已因俄烏戰爭引發的能源危機付出沉重代價，政府當時推出能源價格保障計劃（Energy Price Guarantee），耗資逾數百億英鎊。此次伊朗戰爭再度推升全球能源價格，令英國家庭在通膨尚未完全消退之際再度面臨購買力壓縮。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>最新民調顯示，英國有半數家庭已難以負擔日常必需品，數百萬人正動用儲蓄或借貸維持生活。英國政府正研議通過地方議會直接向受衝擊最深的家庭發放補貼，以避免重蹈2022年大規模能源補貼的財政代價。法國柴油均價同步創下1985年以來新高，顯示能源危機已全面席捲歐洲。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>2022年英國能源危機期間，政府能源補貼計劃最終耗費約690億英鎊，對英國財政造成嚴重負擔，並被部分學者認為是推升通膨的因素之一。The Economist本週亦刊文指出，各國政府應避免重複2022年大規模能源紓困的錯誤，因為廣泛補貼會壓抑節能誘因、扭曲價格信號、並加劇財政赤字。英國若選擇透過地方議會定向發放補貼，理論上更具效率，但執行難度與政治壓力同樣不可小覷。從更宏觀的視角看，歐洲能源對中東的依賴度在2022年後雖有所下降（大量轉向美國LNG），但本次荷莫茲封鎖對歐洲的影響不及亞洲直接，核心壓力仍來自全球油價的系統性上漲而非直接供應中斷。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.theguardian.com/business/2026/mar/30/pessimism-takes-root-uk-shoppers-struggle-essentials-iran-war-prices" target="_blank">The Guardian</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-4">
+      <h3><a href="https://www.marketwatch.com/story/this-is-a-reason-the-middle-easts-major-oil-producing-countries-have-been-selling-their-u-s-treasurys-e5df841c?mod=mw_rss_topstories" target="_blank" rel="noopener">中東產油國出售美國國債：流動性需求背後的地緣財務邏輯</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>中東主要產油國長期以來是美國國債的重要持有者，其石油美元盈餘再循環至美債市場是維持全球美元霸權的重要機制。然而近年來，沙烏地阿拉伯、UAE等國已逐步多元化其外匯儲備配置，此趨勢在伊朗戰爭爆發後加速。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>MarketWatch報導，中東主要產油國近期持續出售美國國債，分析人士認為主要動機是流動性需求——戰爭導致區域經濟受到衝擊（例如Bahrain財政瀕臨崩潰），加上需要籌資應對能源基礎設施防禦及內部穩定開支。這一動向在美國財政已高度依賴外部融資的背景下，構成不容忽視的額外壓力。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>中東國家拋售美債的連鎖效應可能比表面看起來更深遠：2022年俄羅斯外匯儲備被凍結後，多個新興市場主權財富基金開始重新評估持有美元資產的政治風險，此次中東拋售潮若持續，將強化「去美元化」的敘事。從規模看，目前沙烏地阿拉伯持有約1,100億美元的美國國債，UAE、科威特等合計約500至800億美元，若集中拋售雖不足以引發系統性崩潰，但在美國財政部每季度需融資數兆美元的背景下，邊際影響仍會推升長端利率。更值得關注的是，這一趨勢若與中國（持有約7,600億美元美債）的去美元化行動形成共振，對美元長期地位的結構性衝擊將不可低估。白宮傳出川普考慮要求阿拉伯國家分擔戰爭費用，此舉若落實，將進一步複雜化美國與海灣盟友的財務關係。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.marketwatch.com/story/this-is-a-reason-the-middle-easts-major-oil-producing-countries-have-been-selling-their-u-s-treasurys-e5df841c?mod=mw_rss_topstories" target="_blank">MarketWatch / Financial Times</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-corporate">
+      <div class="topic-header">
+        <h2 class="topic-title">國際大公司重大新聞</h2>
+      </div>
+      
+    <div class="news-item" id="article-corporate-0">
+      <h3><a href="https://www.marketwatch.com/story/sysco-goes-all-in-on-the-cash-and-carry-food-service-business-with-a-29-billion-buyout-5e06c72c?mod=mw_rss_topstories" target="_blank" rel="noopener">Sysco斥資291億美元收購Jetro Restaurant Depot，押注「現購自取」食品服務商機</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Sysco是美國最大的食品服務配送商，長期以傳統配送模式服務餐廳、醫院及學校等機構客戶。Jetro Restaurant Depot是美國最大的「現購自取」（Cash & Carry）批發商，服務對象以中小型餐飲業者為主。此次收購是Sysco歷史上規模最大的併購交易。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Sysco宣布以291億美元現金加股票方式收購Jetro Restaurant Depot，消息公布後股價下跌，市場對高槓桿收購的財務風險及整合難度表示疑慮。Sysco管理層認為此舉將拓展服務中小型餐飲客戶的能力，並在能源成本急升、食品通膨持續的環境下鞏固市場地位。這筆交易亦反映出食品服務行業在高通膨時期的整合加速趨勢。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從產業邏輯看，「現購自取」模式在通膨環境下具備獨特吸引力：中小餐飲業者可按需採購、降低庫存風險，同時規避配送費用上漲的壓力。然而291億美元的估值對Sysco而言意味著約4至5倍的年營收溢價，整合風險不容小覷——歷史上食品服務行業的大型併購（如2015年Sysco嘗試收購US Foods被監管阻止）往往因反壟斷審查及文化整合困難而受挫。此外，在油價高企的當下，Sysco自身的配送成本已大幅上升，若再疊加龐大的債務負擔，盈利能力修復時間恐比預期更長。從正面角度看，若整合成功，Sysco將覆蓋從大型機構到小型餐飲的全業態食品服務市場，在行業整合潮中佔據更有利的定價地位。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.marketwatch.com/story/sysco-goes-all-in-on-the-cash-and-carry-food-service-business-with-a-29-billion-buyout-5e06c72c?mod=mw_rss_topstories" target="_blank">MarketWatch</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-1">
+      <h3><a href="https://www.cnbc.com/2026/03/30/jetblue-airways-raises-checked-baggage-fees-as-fuel-prices-soar.html" target="_blank" rel="noopener">JetBlue上調行李費用，航空業加速將燃油成本轉嫁消費者</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>自美以對伊朗發動軍事行動以來，全球航空燃油價格急劇攀升，航空公司的燃油支出佔營運成本的比例已從疫情後正常化的約20至25%大幅躍升。低成本航空公司因燃油對沖比例較低，所受衝擊尤為直接。JetBlue近年本已面臨財務壓力，2024年曾嘗試收購Spirit Airlines失敗，財務狀況較主要競爭對手脆弱。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>JetBlue宣布將托運行李費用上調至少4美元，成為近期美國航空業中最明確的燃油成本轉嫁案例之一。全球各大航空公司的機票價格亦持續攀升，旅遊業面臨需求萎縮壓力。這一舉措直接衝擊消費者的出行意願，對依賴旅遊消費的零售、酒店及相關服務業亦形成負面外溢效應。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>航空業燃油成本轉嫁的傳導速度通常滯後於油價變動約一至二個季度，因此當前的費用調整可能僅是系列漲價的開端。歷史上，2008年油價衝擊至每桶147美元時，多家美國航空公司（包括當時的Northwest、Delta等）相繼破產或尋求合併；目前油價雖尚未達到2008年極端水準，但若持續高企至130美元以上，財務結構較弱的航空公司（如JetBlue、Spirit）將面臨生存壓力。對消費者而言，目前機票價格漲幅已超過一般CPI，加上英國、歐洲家庭消費力已明顯下滑，需求端的壓縮可能比供給端的漲價更快顯現，形成一場航空業少見的「成本推升+需求萎縮」雙重夾擊。這也是為何航空股在此次衝突中跌幅顯著大於大盤的重要原因。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.cnbc.com/2026/03/30/jetblue-airways-raises-checked-baggage-fees-as-fuel-prices-soar.html" target="_blank">CNBC</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-2">
+      <h3><a href="https://www.cnbc.com/2026/03/30/china-suppliers-warn-higher-us-prices-hormuz-closure.html" target="_blank" rel="noopener">中國供應商警告：荷莫茲封鎖推升製造成本，美國消費者將承擔更高物價</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>中國是全球最大的製造業出口國，其生產過程高度依賴石油化工原料及能源投入。荷莫茲海峽封鎖不僅直接衝擊中國從中東進口的原油（佔中國原油進口約40至45%），更透過全球石化原料漲價間接影響製造成本。中美貿易緊張局勢下，中國供應商的價格調整訊號對美國通膨預期具有重要的前瞻意義。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>多家中國供應商向CNBC表示，荷莫茲海峽封鎖已導致石化原料、包裝材料及運輸成本全面上漲，預計將透過提價方式轉嫁給美國買家。這意味著美國的「輸入性通膨」壓力將在未來數月進一步顯現，而Fed正試圖維持「通膨預期穩定」的政策敘事將面臨更嚴峻考驗。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>中國製造業供應鏈的通膨傳導路徑通常需要三至六個月才能完整反映在美國CPI數據中，這意味著當前Fed對通膨的樂觀評估可能基於滯後數據，低估了未來數季的通膨壓力。從數據角度看，中國PPI（生產者物價指數）每上升1個百分點，歷史上大約對美國核心商品CPI產生約0.1至0.2個百分點的推升效應，在當前供給衝擊規模下，這一傳導幅度可能更為顯著。此外，若川普政府同時推進對中國商品的關稅政策（原有貿易戰關稅架構仍在），則「中東能源衝擊+關稅壁壘」的雙重成本疊加將使美國製造商和消費者面臨前所未有的通膨組合壓力。這也解釋了為何部分Fed理事對降息持更為謹慎的態度，儘管官方立場仍傾向維持寬鬆偏向。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.cnbc.com/2026/03/30/china-suppliers-warn-higher-us-prices-hormuz-closure.html" target="_blank">CNBC</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-taiwan">
+      <div class="topic-header">
+        <h2 class="topic-title">台灣財經</h2>
+      </div>
+      
+    <div class="news-item" id="article-taiwan-0">
+      <h3><a href="https://money.udn.com/money/story/5599/9413002" target="_blank" rel="noopener">伊朗襲擊杜拜港油輪，WTI漲破106美元，台灣能源供應安全警訊升溫</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>台灣能源自給率極低，高達98%以上的能源需求依賴進口，其中石油與天然氣主要來自中東及澳洲。荷莫茲海峽是台灣石油進口的關鍵通道之一，伊朗封鎖海峽的行動對台灣的能源安全構成直接威脅。台灣目前的戰略石油儲備約為60至90天的用量，在長期封鎖情境下存在明顯缺口。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>伊朗攻擊波斯灣油輪（包括杜拜港附近），導致WTI原油價格漲破106美元，改寫四年高位，布蘭特亦同步攀升至116美元。英國《金融時報》同日報導，英國將於本週接收來自中東的最後一批航空燃油，顯示供應鏈緊張程度已達到需要正式預警的臨界點。台灣工業用電及燃油成本的急劇上升，正對半導體製造業及出口製造業的生產成本形成壓力。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>台灣在能源安全方面的脆弱性歷來是其地緣政治風險中被低估的一環。參考日本的案例，日本2011年福島核災後大量增加中東原油依賴，當年僅荷莫茲海峽的封鎖威脅就曾導致日圓急劇貶值及能源進口成本飆升。台灣的情況與日本類似，但外匯儲備規模（約5,000億美元）提供了一定的緩衝能力。然而，若油價持續維持在100至120美元以上，台灣的貿易逆差壓力將明顯擴大——根據台灣能源局數據，國際油價每漲10美元，台灣每年進口成本約增加60至80億美元。更值得關注的是，台灣半導體製造業雖非高度能源密集型，但上游化工原料（如電子級化學品）的供應鏈受油價衝擊顯著，可能間接推升晶圓製造的投入成本。政策面上，台灣能源轉型進程（核電退場、再生能源擴張）在此時更凸顯其戰略必要性，但短期內無法彌補化石燃料依賴的結構性缺口。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/5599/9413002" target="_blank">經濟日報</a></div>
+    </div>
+
+    <div class="news-item" id="article-taiwan-1">
+      <h3><a href="https://money.udn.com/money/story/5599/9413008" target="_blank" rel="noopener">伊朗國會初步批准荷莫茲海峽「過路費」計劃，全球貿易秩序面臨根本性挑戰</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>荷莫茲海峽是全球最重要的能源運輸通道，每日約1,700至1,900萬桶石油及大量LNG經此通過，佔全球海運石油貿易的約20%。伊朗在歷史上多次威脅封鎖荷莫茲，但從未真正實施對過往船隻徵收費用的計劃。此舉若落實，將是二次世界大戰後國際航行自由原則面臨最嚴峻的制度性挑戰之一。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>《紐約時報》報導，伊朗國會安全委員會於3月30日初步批准針對荷莫茲海峽過往船隻徵收「過路費」的計劃，此議案仍需全體國會議員表決通過。伊朗據報擬與特定國家合作制定收費機制。這一動向對全球能源貿易的法律框架與運營成本均構成深遠影響，若付諸實施，將直接衝擊亞洲（尤其是中國、日本、南韓及台灣）的能源進口成本。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從國際法角度看，荷莫茲海峽屬於《聯合國海洋法公約》（UNCLOS）規定的「用於國際航行的海峽」，過境通行權受到保障，任何單方面徵費行為均缺乏國際法依據。然而伊朗的戰略意圖顯然不在於獲得費用本身，而是藉此確立對海峽的「實際控制權」敘事，增強談判籌碼。對台灣及東亞而言，若此收費機制哪怕短暫實施，亞洲買家將承擔雙重成本：既是油價上漲的最終買家（亞洲溢價歷史上較布蘭特高出約1至3美元/桶），又可能直接被課徵過路費。更深遠的影響是，此舉可能加速中國、印度及東南亞國家的能源供應路線多元化，包括加快推進中俄石油管線的使用及非洲能源開發，從而長期削弱中東在全球能源體系中的定價壟斷地位——但這一結構調整需要數年乃至十年才能完成，短期內仍是全球能源供應的最大單一風險點。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/5599/9413008" target="_blank">經濟日報</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section deep-analysis-section" id="section-deep">
+      <div class="topic-header">
+        <h2 class="topic-title">深度分析 <span class="deep-badge">IN-DEPTH</span></h2>
+      </div>
+      
+    <div class="news-item deep-item" id="article-deep-0">
+      <h3><a href="https://www.economist.com/briefing/2026/03/26/hormuz-is-not-the-only-weak-spot-for-global-trade" target="_blank" rel="noopener">全球貿易的夢魘情境：荷莫茲絕非唯一的致命咽喉要道</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>全球化貿易體系在數十年的發展中，以極度追求效率的「即時生產」（Just-in-Time）模式構建了高度集中化的供應鏈網絡，這一體系的脆弱性在2021年蘇伊士運河阻塞事件及新冠疫情期間已暴露無遺。荷莫茲海峽封鎖只是當前伊朗戰爭的冰山一角，《經濟學人》本週深入研究了全球其他主要貿易咽喉要道的脆弱性，揭示了更廣泛的系統性風險。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>《經濟學人》的分析發現，全球貿易高度集中於少數幾個地理瓶頸：除荷莫茲海峽外，麻六甲海峽（每日約1,600萬桶石油通過）、巴拿馬運河（全球貿易量的3至5%）、蘇伊士運河（全球貿易量的12%）及博斯普魯斯海峽均屬高度脆弱節點。更值得警惕的是，這些要道的脆弱性並非僅來自軍事衝突，氣候變遷（如巴拿馬運河旱災導致的水位下降）、恐怖主義及網路攻擊同樣構成重大威脅。分析亦指出，比地理瓶頸更危險的是「非地理性單點失敗」，包括高度集中的半導體製造（台灣佔全球先進晶片產能約90%）、關鍵礦產（中國控制全球鋰、鈷、稀土的大部分精煉產能）及雲端基礎設施（三家美國科技巨頭主導全球雲端服務）。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>若荷莫茲與麻六甲兩大海峽同時出現中斷，《經濟學人》估計全球貿易量將萎縮約15至20%，影響程度將遠超2008年金融危機期間的貿易衰退幅度（約12%）。歷史上最接近的參照是二戰期間盟軍對軸心國的海上封鎖，當時受影響國家的工業產出在六個月內下降了20至40%，但當時的全球供應鏈遠比今日簡單，且各國製造業自給率更高。更根本的問題在於，現代全球貿易體系的設計哲學本質上是「為效率優化而非為韌性優化」：金融投資者的短期回報壓力促使企業持續精簡庫存、外包生產、集中採購，這些行為在個體層面理性，卻在系統層面製造了高度脆弱性。諾貝爾經濟學獎得主Michael Spence（本次撰文作者）指出，解決方案需要公共政策的主動介入：戰略儲備建立、供應鏈多元化的財稅激勵、及關鍵基礎設施的韌性標準立法，而非僅依賴市場自發調整。</p>
+      </div>
+
+      <div class="section key-takeaway">
+        <div class="section-label">深度洞察</div>
+        <p>荷莫茲危機最深刻的教訓，不在於伊朗的軍事能力，而在於它揭示了全球化體系的根本性設計缺陷：數十年的效率至上主義在全球供應鏈中製造了無數「單點失敗」，任何一個節點的中斷都可能觸發超出預期的系統性連鎖反應。從歷史視角看，每一次大規模地緣政治危機（1970年代石油危機、1990年代海灣戰爭、2000年代反恐戰爭）都曾觸發主要經濟體短暫反思供應鏈韌性，但危機過後往往迅速回歸效率優先的舊模式，這一「危機失憶症」使得每次衝擊的代價不斷累積升高。本次伊朗戰爭的結構性不同在於，它同時衝擊了能源（荷莫茲）、科技（潛在的台海地緣風險共鳴）及金融（中東主權財富基金拋售美債）三個相互關聯的系統，形成的複合風險遠超以往任何單一地緣衝擊。對機構投資人而言，這意味著傳統的「地緣政治衝擊短暫、市場快速修復」的投資框架需要根本性修正——在多個關鍵節點同時承壓的情境下，修復時間線將顯著延長，且存在非線性跳躍式惡化的尾部風險。從政策制度邏輯看，解決方案需要在三個層面同步推進：國家層面的戰略儲備與供應鏈立法（類似美國CHIPS Act對半導體的思路）、區域層面的替代路線投資（如歐盟的氫能走廊、印太經濟框架的供應鏈協議），以及企業層面的「效率與韌性再平衡」，接受適度的成本上升以換取系統穩定性。最終，荷莫茲危機或將成為推動全球供應鏈從「全球化1.0」（效率最大化）向「全球化2.0」（韌性優先、區域化再平衡）加速轉型的歷史分水嶺，而這一轉型的贏家，將是那些提前佈局替代供應鏈、本地化生產能力及清潔能源自主化的國家與企業。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.economist.com/briefing/2026/03/26/hormuz-is-not-the-only-weak-spot-for-global-trade" target="_blank">The Economist</a></div>
+    </div>
+
+    </section>
+
+
+    <div class="nav-bottom">
+      <a href="../briefings.html">← 返回所有期數</a>
+    </div>
+
+  </div>
+
+  <footer>© 2026 Daily Briefing · 每個工作日更新</footer>
+</body>
+</html>
