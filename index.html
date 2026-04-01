@@ -398,19 +398,6 @@
         </ul>
       </div>
 
-      <div class="sidebar-section">
-        <div class="sidebar-label">訂閱電子報</div>
-        <p class="about-text" style="margin-bottom:0.9rem;">
-          每天早上直送信箱，隨時可退訂。
-        </p>
-        <form class="subscribe-form" id="subscribe-form">
-          <input class="subscribe-input" type="email" id="subscribe-email"
-                 placeholder="your@email.com" required autocomplete="email">
-          <button class="subscribe-btn" type="submit">SUBSCRIBE</button>
-        </form>
-        <div class="subscribe-msg" id="subscribe-msg"></div>
-      </div>
-
     </aside>
 
     <!-- 右側主內容 -->
@@ -469,22 +456,21 @@
       msg.textContent = '處理中…'; msg.className = 'subscribe-msg';
       btn.disabled = true;
 
-      fetch('https://api.brevo.com/v3/contacts', {
+      var fd = new FormData();
+      fd.append('EMAIL', email);
+      fd.append('email_address_check', '');
+      fd.append('locale', 'en');
+      fd.append('html_type', 'simple');
+
+      fetch('https://23ed4e66.sibforms.com/serve/MUIFAMu78f_VMnK7Q_YxIwUo8MpPsclQNQrVOpU3HCugYbAH3bRoKxY78IkHuLPRLmYKJs4DUVS40IL9k-DkWQ0uNHbYJGK3-MWX2P_G14_n5pO5CnbuJ7uX0r6D5Z5rRaJ72WnmaIXugAdLMGEsG3IqPmjr8mAmALF7fvDL5mtfIQndc89LUTRwRgA_Ov-_WwOAwhLGk0m6jIs_cA==', {
         method: 'POST',
-        headers: {
-          'api-key': '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',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: email, listIds: [3], updateEnabled: true })
+        mode: 'no-cors',
+        body: fd
       })
-      .then(function (r) {
-        if (r.status === 201 || r.status === 204) {
-          msg.textContent = '✓ 訂閱成功！明天起開始收信。';
-          msg.className = 'subscribe-msg ok';
-          document.getElementById('subscribe-email').value = '';
-        } else {
-          return r.json().then(function (d) { throw new Error(d.message || r.status); });
-        }
+      .then(function () {
+        msg.textContent = '✓ 已送出！請至信箱確認訂閱。';
+        msg.className = 'subscribe-msg ok';
+        document.getElementById('subscribe-email').value = '';
       })
       .catch(function () {
         msg.textContent = '訂閱失敗，請稍後再試。';
