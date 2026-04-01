@@ -1046,15 +1046,34 @@ def update_index(data, total_count, market_data=None):
         f'      <!-- DYNAMIC:RECENT:END -->'
     )
 
-    # ── 讀取並替換四個動態區塊 ────────────────────────
+    # ── SUBSCRIBE 區塊（靜態，確保不因 merge 衝突而遺失）──
+    new_subscribe = (
+        '      <!-- DYNAMIC:SUBSCRIBE:START -->\n'
+        '      <div class="sidebar-section">\n'
+        '        <div class="sidebar-label">訂閱電子報</div>\n'
+        '        <p class="about-text" style="margin-bottom:0.9rem;">\n'
+        '          每天早上直送信箱，隨時可退訂。\n'
+        '        </p>\n'
+        '        <form class="subscribe-form" id="subscribe-form">\n'
+        '          <input class="subscribe-input" type="email" id="subscribe-email"\n'
+        '                 placeholder="your@email.com" required autocomplete="email">\n'
+        '          <button class="subscribe-btn" type="submit">SUBSCRIBE</button>\n'
+        '        </form>\n'
+        '        <div class="subscribe-msg" id="subscribe-msg"></div>\n'
+        '      </div>\n'
+        '      <!-- DYNAMIC:SUBSCRIBE:END -->'
+    )
+
+    # ── 讀取並替換五個動態區塊 ────────────────────────
     with open("index.html", "r", encoding="utf-8") as f:
         content = f.read()
 
     for anchor, new_block in [
-        ("TICKER", new_ticker),
-        ("STATS",  new_stats),
-        ("LATEST", new_latest),
-        ("RECENT", new_recent),
+        ("TICKER",    new_ticker),
+        ("SUBSCRIBE", new_subscribe),
+        ("STATS",     new_stats),
+        ("LATEST",    new_latest),
+        ("RECENT",    new_recent),
     ]:
         content = re.sub(
             rf'<!-- DYNAMIC:{anchor}:START -->.*?<!-- DYNAMIC:{anchor}:END -->',
