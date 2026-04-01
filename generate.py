@@ -1103,13 +1103,25 @@ def send_newsletter(html_content, subject):
     headers = {"api-key": api_key, "Content-Type": "application/json"}
 
     try:
+        # Brevo 強制要求 campaign HTML 內含退訂連結，否則拒絕建立
+        unsubscribe_footer = (
+            '<div style="text-align:center;padding:24px 0 16px;font-size:12px;color:#999;">'
+            '<a href="{UNSUBSCRIBE_LINK}" style="color:#999;text-decoration:underline;">退訂電子報</a>'
+            '</div>'
+        )
+        email_html = (
+            html_content.replace("</body>", unsubscribe_footer + "</body>")
+            if "</body>" in html_content
+            else html_content + unsubscribe_footer
+        )
+
         # Step 1: 建立 Campaign
         campaign_payload = _json.dumps({
-            "name": f"Daily Briefing {TODAY}",
+            "name": f"Daily Finance News {TODAY}",
             "subject": subject,
-            "sender": {"name": "每日財經情報", "email": sender_email},
+            "sender": {"name": "Daily Finance News", "email": sender_email},
             "type": "classic",
-            "htmlContent": html_content,
+            "htmlContent": email_html,
             "recipients": {"listIds": [int(list_id)]}
         }).encode()
 
@@ -1284,7 +1296,7 @@ def main():
     print("   ✓ 首頁與列表頁已更新")
 
     print("\n⑥ 發送電子報...")
-    send_newsletter(html, f"每日財經情報 {TODAY} · {data['issue_title'][:25]}…")
+    send_newsletter(html, f"Daily Finance News {TODAY} · {data['issue_title'][:25]}…")
 
     print(f"\n✅ 全部完成！")
 
