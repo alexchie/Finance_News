@@ -1102,30 +1102,34 @@ def send_newsletter(html_content, subject):
 
     headers = {"api-key": api_key, "Content-Type": "application/json"}
 
-    # Step 1: 建立 Campaign
-    campaign_payload = _json.dumps({
-        "name": f"Daily Briefing {TODAY}",
-        "subject": subject,
-        "sender": {"name": "每日財經情報", "email": sender_email},
-        "type": "classic",
-        "htmlContent": html_content,
-        "recipients": {"listIds": [int(list_id)]}
-    }).encode()
+    try:
+        # Step 1: 建立 Campaign
+        campaign_payload = _json.dumps({
+            "name": f"Daily Briefing {TODAY}",
+            "subject": subject,
+            "sender": {"name": "每日財經情報", "email": sender_email},
+            "type": "classic",
+            "htmlContent": html_content,
+            "recipients": {"listIds": [int(list_id)]}
+        }).encode()
 
-    req = _req.Request(
-        "https://api.brevo.com/v3/emailCampaigns",
-        data=campaign_payload, headers=headers
-    )
-    with _req.urlopen(req) as resp:
-        campaign_id = _json.loads(resp.read())["id"]
+        req = _req.Request(
+            "https://api.brevo.com/v3/emailCampaigns",
+            data=campaign_payload, headers=headers
+        )
+        with _req.urlopen(req) as resp:
+            campaign_id = _json.loads(resp.read())["id"]
 
-    # Step 2: 立即發送
-    send_req = _req.Request(
-        f"https://api.brevo.com/v3/emailCampaigns/{campaign_id}/sendNow",
-        method="POST", headers={"api-key": api_key}
-    )
-    _req.urlopen(send_req)
-    print(f"   ✓ 電子報已發送（Campaign ID: {campaign_id}）")
+        # Step 2: 立即發送
+        send_req = _req.Request(
+            f"https://api.brevo.com/v3/emailCampaigns/{campaign_id}/sendNow",
+            method="POST", headers={"api-key": api_key}
+        )
+        _req.urlopen(send_req)
+        print(f"   ✓ 電子報已發送（Campaign ID: {campaign_id}）")
+
+    except Exception as e:
+        print(f"   ⚠️  電子報發送失敗（不影響簡報生成）：{e}")
 
 
 def update_briefings_list():
