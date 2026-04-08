@@ -1192,7 +1192,13 @@ def send_newsletter(data, market_data, subject):
         print(f"   ✓ 電子報已發送（Campaign ID: {campaign_id}）")
 
     except Exception as e:
-        print(f"   ⚠️  電子報發送失敗（不影響簡報生成）：{e}")
+        detail = ""
+        if hasattr(e, "read"):
+            try:
+                detail = " → " + e.read().decode()
+            except Exception:
+                pass
+        print(f"   ⚠️  電子報發送失敗（不影響簡報生成）：{e}{detail}")
 
 
 def update_briefings_list():
