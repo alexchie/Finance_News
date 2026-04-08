@@ -191,6 +191,7 @@ def fetch_market_data():
         ("399001.SZ", "深證"),
         ("^N225",     "日經225"),
         ("^KS11",     "KOSPI"),
+        ("BTC-USD",   "Bitcoin"),
     ]
     results = []
     for symbol, name in INDICES:
@@ -1087,7 +1088,69 @@ def update_index(data, total_count, market_data=None):
     print(f"   ✓ 首頁更新（{total_issues} 期 / 累計 {total_articles_sum} 則）")
 
 
-def send_newsletter(html_content, subject):
+def _build_email_html(data, market_data):
+    """Build a minimal digest email: titles + indices + link to full briefing."""
+    # ── Article titles by topic ──────────────────────────────
+    topics_html = ""
+    for topic in data.get("topics", []):
+        titles_html = "".join(
+            f'<li style="margin-bottom:6px;">{a["title"]}</li>'
+            for a in topic.get("articles", [])
+        )
+        if titles_html:
+            topics_html += (
+                f'<h3 style="font-size:14px;color:#555;margin:18px 0 6px;">'
+                f'{topic["topic_name"]}</h3>'
+                f'<ul style="margin:0;padding-left:20px;font-size:14px;'
+                f'line-height:1.7;color:#222;">{titles_html}</ul>'
+            )
+
+    # ── Market indices ───────────────────────────────────────
+    indices_rows = ""
+    if market_data and market_data.get("indices"):
+        for idx in market_data["indices"]:
+            p = idx["change_pct"]
+            arrow = "▲" if p > 0 else ("▼" if p < 0 else "—")
+            color = "#1a7a1a" if p > 0 else ("#b30000" if p < 0 else "#555")
+            indices_rows += (
+                f'<tr>'
+                f'<td style="padding:5px 12px 5px 0;font-size:13px;">{idx["name"]}</td>'
+                f'<td style="padding:5px 12px 5px 0;font-size:13px;">{idx["close"]:,.2f}</td>'
+                f'<td style="padding:5px 0;font-size:13px;color:{color};">'
+                f'{arrow} {abs(p):.2f}%</td>'
+                f'</tr>'
+            )
+        indices_section = (
+            f'<h2 style="font-size:15px;border-bottom:1px solid #ddd;'
+            f'padding-bottom:6px;margin-top:28px;">市場指數</h2>'
+            f'<table style="border-collapse:collapse;">{indices_rows}</table>'
+        )
+    else:
+        indices_section = ""
+
+    briefing_url = f"https://alexchie.github.io/Finance_News/briefings/{TODAY}.html"
+
+    return (
+        f'<!DOCTYPE html><html><head><meta charset="utf-8"></head>'
+        f'<body style="font-family:Helvetica,Arial,sans-serif;max-width:600px;'
+        f'margin:0 auto;padding:24px 16px;color:#222;">'
+        f'<h1 style="font-size:18px;border-bottom:2px solid #111;padding-bottom:8px;">'
+        f'Daily Finance News · {TODAY}</h1>'
+        f'<p style="font-size:14px;color:#444;margin:8px 0 0;">{data.get("issue_title","")}</p>'
+        f'<h2 style="font-size:15px;border-bottom:1px solid #ddd;'
+        f'padding-bottom:6px;margin-top:28px;">今日新聞</h2>'
+        f'{topics_html}'
+        f'{indices_section}'
+        f'<div style="margin-top:32px;text-align:center;">'
+        f'<a href="{briefing_url}" style="background:#111;color:#fff;padding:10px 24px;'
+        f'text-decoration:none;font-size:13px;letter-spacing:.05em;">閱讀完整版 →</a></div>'
+        f'<div style="margin-top:32px;text-align:center;font-size:11px;color:#aaa;">'
+        f'<a href="{{UNSUBSCRIBE_LINK}}" style="color:#aaa;">退訂電子報</a></div>'
+        f'</body></html>'
+    )
+
+
+def send_newsletter(data, market_data, subject):
     """透過 Brevo Campaign API 將今日簡報寄給所有訂閱者"""
     import urllib.request as _req
     import json as _json
@@ -1103,25 +1166,13 @@ def send_newsletter(html_content, subject):
     headers = {"api-key": api_key, "Content-Type": "application/json"}
 
     try:
-        # Brevo 強制要求 campaign HTML 內含退訂連結，否則拒絕建立
-        unsubscribe_footer = (
-            '<div style="text-align:center;padding:24px 0 16px;font-size:12px;color:#999;">'
-            '<a href="{UNSUBSCRIBE_LINK}" style="color:#999;text-decoration:underline;">退訂電子報</a>'
-            '</div>'
-        )
-        email_html = (
-            html_content.replace("</body>", unsubscribe_footer + "</body>")
-            if "</body>" in html_content
-            else html_content + unsubscribe_footer
-        )
-
         # Step 1: 建立 Campaign
         campaign_payload = _json.dumps({
             "name": f"Daily Finance News {TODAY}",
             "subject": subject,
             "sender": {"name": "Daily Finance News", "email": sender_email},
             "type": "classic",
-            "htmlContent": email_html,
+            "htmlContent": _build_email_html(data, market_data),
             "recipients": {"listIds": [int(list_id)]}
         }).encode()
 
@@ -1296,7 +1347,7 @@ def main():
     print("   ✓ 首頁與列表頁已更新")
 
     print("\n⑥ 發送電子報...")
-    send_newsletter(html, f"Daily Finance News {TODAY} · {data['issue_title'][:25]}…")
+    send_newsletter(data, market_data, f"Daily Finance News {TODAY} · {data['issue_title'][:25]}…")
 
     print(f"\n✅ 全部完成！")
 
