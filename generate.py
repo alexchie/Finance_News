@@ -3,6 +3,7 @@ import calendar
 import feedparser
 import os
 import json
+import sys
 import time
 from datetime import date
 
@@ -1215,7 +1216,27 @@ def update_briefings_list():
         f.write(briefings_html)
 
 
+def _send_only_mode():
+    """讀取當日 JSON 資料，直接呼叫 send_newsletter()，不消耗 Claude token。"""
+    data_path = f"briefings/{TODAY}.json"
+    if not os.path.exists(data_path):
+        print(f"❌ 找不到資料檔：{data_path}，請先執行正常流程")
+        return
+    with open(data_path, encoding="utf-8") as f:
+        payload = json.load(f)
+    data        = payload["data"]
+    market_data = payload["market_data"]
+    subject     = f"Daily Finance News {TODAY} · {data['issue_title'][:25]}…"
+    print(f"\n⑥ 發送電子報（send-only 模式）...")
+    send_newsletter(data, market_data, subject)
+    print("\n✅ 完成！")
+
+
 def main():
+    if "--send-only" in sys.argv:
+        _send_only_mode()
+        return
+
     if not API_KEY:
         print("❌ 找不到 ANTHROPIC_API_KEY，請先設定環境變數")
         print("   執行：export ANTHROPIC_API_KEY='你的key'")
@@ -1254,6 +1275,12 @@ def main():
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"   ✓ 生成：{OUTPUT_PATH}")
+
+    json_path = f"briefings/{TODAY}.json"
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"data": data, "market_data": market_data}, f,
+                  ensure_ascii=False, indent=2)
+    print(f"   ✓ 資料儲存：{json_path}")
 
     print("\n⑤ 更新首頁與列表頁...")
     update_index(data, total_count, market_data)
