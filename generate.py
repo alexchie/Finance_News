@@ -5,7 +5,7 @@ import os
 import json
 import sys
 import time
-from datetime import date
+from datetime import date, timedelta
 
 # ── 設定區 ────────────────────────────────────────
 # 安全做法：從環境變數讀取，不要直接寫在程式碼裡
@@ -151,6 +151,7 @@ def _fetch_stooq(yf_symbol, name):
         rows = list(csv.DictReader(io.StringIO(text)))
         rows = sorted(rows, key=lambda r: r["Date"])
         rows = [r for r in rows if r.get("Close") and r["Close"] != "N/D"]
+        rows = [r for r in rows if r["Date"] < str(date.today())]  # 排除今日（UTC）未收盤資料
         if not rows:
             return None
         close = round(float(rows[-1]["Close"]), 2)
@@ -193,11 +194,15 @@ def fetch_market_data():
         ("^N225",     "日經225"),
         ("^KS11",     "KOSPI"),
     ]
+    # 明確指定日期範圍：end 為 exclusive，確保絕對不含「今日（UTC）」的未收盤資料
+    fetch_end   = date.today()
+    fetch_start = fetch_end - timedelta(days=10)   # 往前 10 天，涵蓋週末＋連假
+
     results = []
     for symbol, name in INDICES:
         entry = None
         try:
-            hist = yf.Ticker(symbol).history(period="5d")
+            hist = yf.Ticker(symbol).history(start=str(fetch_start), end=str(fetch_end))
             hist = hist.dropna(subset=["Close"])
             if len(hist) >= 2:
                 close    = round(float(hist.iloc[-1]["Close"]), 2)
