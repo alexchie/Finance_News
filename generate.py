@@ -1074,8 +1074,68 @@ def update_index(data, total_count, market_data=None):
     print(f"   ✓ 首頁更新（{total_issues} 期 / 累計 {total_articles_sum} 則）")
 
 
-def send_newsletter(html_content, subject):
-    """透過 Brevo Campaign API 將今日簡報寄給所有訂閱者"""
+def _build_email_html(data, market_data):
+    """Build a minimal digest email: titles + indices + link to full briefing."""
+    topics_html = ""
+    for topic in data.get("topics", []):
+        titles_html = "".join(
+            f'<li style="margin-bottom:6px;">{a["title"]}</li>'
+            for a in topic.get("articles", [])
+        )
+        if titles_html:
+            topics_html += (
+                f'<h3 style="font-size:14px;color:#555;margin:18px 0 6px;">'
+                f'{topic["topic_name"]}</h3>'
+                f'<ul style="margin:0;padding-left:20px;font-size:14px;'
+                f'line-height:1.7;color:#222;">{titles_html}</ul>'
+            )
+
+    indices_rows = ""
+    if market_data and market_data.get("indices"):
+        for idx in market_data["indices"]:
+            p = idx["change_pct"]
+            arrow = "▲" if p > 0 else ("▼" if p < 0 else "—")
+            color = "#1a7a1a" if p > 0 else ("#b30000" if p < 0 else "#555")
+            indices_rows += (
+                f'<tr>'
+                f'<td style="padding:5px 12px 5px 0;font-size:13px;">{idx["name"]}</td>'
+                f'<td style="padding:5px 12px 5px 0;font-size:13px;">{idx["close"]:,.2f}</td>'
+                f'<td style="padding:5px 0;font-size:13px;color:{color};">'
+                f'{arrow} {abs(p):.2f}%</td>'
+                f'</tr>'
+            )
+        indices_section = (
+            f'<h2 style="font-size:15px;border-bottom:1px solid #ddd;'
+            f'padding-bottom:6px;margin-top:28px;">市場指數</h2>'
+            f'<table style="border-collapse:collapse;">{indices_rows}</table>'
+        )
+    else:
+        indices_section = ""
+
+    briefing_url = f"https://alexchie.github.io/Finance_News/briefings/{TODAY}.html"
+
+    return (
+        f'<!DOCTYPE html><html><head><meta charset="utf-8"></head>'
+        f'<body style="font-family:Helvetica,Arial,sans-serif;max-width:600px;'
+        f'margin:0 auto;padding:24px 16px;color:#222;">'
+        f'<h1 style="font-size:18px;border-bottom:2px solid #111;padding-bottom:8px;">'
+        f'Daily Finance News · {TODAY}</h1>'
+        f'<p style="font-size:14px;color:#444;margin:8px 0 0;">{data.get("issue_title","")}</p>'
+        f'<h2 style="font-size:15px;border-bottom:1px solid #ddd;'
+        f'padding-bottom:6px;margin-top:28px;">今日新聞</h2>'
+        f'{topics_html}'
+        f'{indices_section}'
+        f'<div style="margin-top:32px;text-align:center;">'
+        f'<a href="{briefing_url}" style="background:#111;color:#fff;padding:10px 24px;'
+        f'text-decoration:none;font-size:13px;letter-spacing:.05em;">閱讀完整版 →</a></div>'
+        f'<div style="margin-top:32px;text-align:center;font-size:11px;color:#aaa;">'
+        f'<a href="{{UNSUBSCRIBE_LINK}}" style="color:#aaa;">退訂電子報</a></div>'
+        f'</body></html>'
+    )
+
+
+def send_newsletter(data, market_data, subject):
+    """透過 Brevo Campaign API 將今日簡報寄給所有訂閱者。回傳 True 成功，False 失敗。"""
     import urllib.request as _req
     import json as _json
 
@@ -1085,34 +1145,48 @@ def send_newsletter(html_content, subject):
 
     if not api_key or not list_id or not sender_email:
         print("   ⚠️  未設定 Brevo 環境變數，略過寄信。")
-        return
+        return False
 
     headers = {"api-key": api_key, "Content-Type": "application/json"}
 
-    # Step 1: 建立 Campaign
-    campaign_payload = _json.dumps({
-        "name": f"Daily Briefing {TODAY}",
-        "subject": subject,
-        "sender": {"name": "每日財經情報", "email": sender_email},
-        "type": "classic",
-        "htmlContent": html_content,
-        "recipients": {"listIds": [int(list_id)]}
-    }).encode()
+    try:
+        # Step 1: 建立 Campaign
+        campaign_payload = _json.dumps({
+            "name": f"Daily Finance News {TODAY}",
+            "subject": subject,
+            "sender": {"name": "Daily Finance News", "email": sender_email},
+            "type": "classic",
+            "htmlContent": _build_email_html(data, market_data),
+            "recipients": {"listIds": [int(list_id)]}
+        }).encode()
 
-    req = _req.Request(
-        "https://api.brevo.com/v3/emailCampaigns",
-        data=campaign_payload, headers=headers
-    )
-    with _req.urlopen(req) as resp:
-        campaign_id = _json.loads(resp.read())["id"]
+        req = _req.Request(
+            "https://api.brevo.com/v3/emailCampaigns",
+            data=campaign_payload, headers=headers
+        )
+        with _req.urlopen(req) as resp:
+            campaign_id = _json.loads(resp.read())["id"]
 
-    # Step 2: 立即發送
-    send_req = _req.Request(
-        f"https://api.brevo.com/v3/emailCampaigns/{campaign_id}/sendNow",
-        method="POST", headers={"api-key": api_key}
-    )
-    _req.urlopen(send_req)
-    print(f"   ✓ 電子報已發送（Campaign ID: {campaign_id}）")
+        # Step 2: 立即發送
+        send_req = _req.Request(
+            f"https://api.brevo.com/v3/emailCampaigns/{campaign_id}/sendNow",
+            method="POST", headers={"api-key": api_key}
+        )
+        _req.urlopen(send_req)
+        print(f"   ✓ 電子報已發送（Campaign ID: {campaign_id}）")
+        return True
+
+    except Exception as e:
+        detail = ""
+        if hasattr(e, "code"):
+            detail += f" [HTTP {e.code}]"
+        if hasattr(e, "read"):
+            try:
+                detail += f" → {e.read().decode('utf-8', errors='replace')}"
+            except Exception:
+                pass
+        print(f"   ❌ 電子報發送失敗：{e}{detail}")
+        return False
 
 
 def update_briefings_list():
@@ -1222,18 +1296,34 @@ def update_briefings_list():
 
 
 def _send_only_mode():
-    """讀取當日 JSON 資料，直接呼叫 send_newsletter()，不消耗 Claude token。"""
-    data_path = f"briefings/{TODAY}.json"
-    if not os.path.exists(data_path):
-        print(f"❌ 找不到資料檔：{data_path}，請先執行正常流程")
-        return
-    with open(data_path, encoding="utf-8") as f:
-        payload = json.load(f)
-    data        = payload["data"]
-    market_data = payload["market_data"]
-    subject     = f"Daily Finance News {TODAY} · {data['issue_title'][:25]}…"
+    """讀取當日資料（JSON 或 HTML fallback），直接呼叫 send_newsletter()。"""
+    import re as _re
+    json_path = f"briefings/{TODAY}.json"
+    html_path = f"briefings/{TODAY}.html"
+
+    if os.path.exists(json_path):
+        with open(json_path, encoding="utf-8") as f:
+            payload = json.load(f)
+        data        = payload["data"]
+        market_data = payload["market_data"]
+    elif os.path.exists(html_path):
+        # Fallback：從 HTML 解析標題，不含文章列表與市場數據
+        print(f"   ⚠️  {json_path} 不存在，改從 HTML 解析標題...")
+        with open(html_path, encoding="utf-8") as f:
+            html_content = f.read()
+        m = _re.search(r'<div class="issue-meta">.*?<h2>(.+?)</h2>', html_content, _re.DOTALL)
+        issue_title = m.group(1).strip() if m else TODAY
+        data        = {"issue_title": issue_title, "topics": []}
+        market_data = None
+    else:
+        print(f"❌ 找不到 {json_path} 也找不到 {html_path}")
+        sys.exit(1)
+
+    subject = f"Daily Finance News {TODAY} · {data['issue_title'][:25]}…"
     print(f"\n⑥ 發送電子報（send-only 模式）...")
-    send_newsletter(data, market_data, subject)
+    ok = send_newsletter(data, market_data, subject)
+    if not ok:
+        sys.exit(1)
     print("\n✅ 完成！")
 
 
@@ -1293,7 +1383,7 @@ def main():
     print("   ✓ 首頁與列表頁已更新")
 
     print("\n⑥ 發送電子報...")
-    send_newsletter(html, f"每日財經情報 {TODAY} · {data['issue_title'][:25]}…")
+    send_newsletter(data, market_data, f"Daily Finance News {TODAY} · {data['issue_title'][:25]}…")
 
     print(f"\n✅ 全部完成！")
 
