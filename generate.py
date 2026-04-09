@@ -193,6 +193,7 @@ def fetch_market_data():
         ("399001.SZ", "深證"),
         ("^N225",     "日經225"),
         ("^KS11",     "KOSPI"),
+        ("BTC-USD",   "Bitcoin"),
     ]
     # 明確指定日期範圍：end 為 exclusive，確保絕對不含「今日（UTC）」的未收盤資料
     fetch_end   = date.today()
@@ -1052,15 +1053,34 @@ def update_index(data, total_count, market_data=None):
         f'      <!-- DYNAMIC:RECENT:END -->'
     )
 
-    # ── 讀取並替換四個動態區塊 ────────────────────────
+    # ── SUBSCRIBE 區塊（靜態，確保不因 merge 衝突而遺失）──
+    new_subscribe = (
+        '      <!-- DYNAMIC:SUBSCRIBE:START -->\n'
+        '      <div class="sidebar-section">\n'
+        '        <div class="sidebar-label">訂閱電子報</div>\n'
+        '        <p class="about-text" style="margin-bottom:0.9rem;">\n'
+        '          每天早上直送信箱，隨時可退訂。\n'
+        '        </p>\n'
+        '        <form class="subscribe-form" id="subscribe-form">\n'
+        '          <input class="subscribe-input" type="email" id="subscribe-email"\n'
+        '                 placeholder="your@email.com" required autocomplete="email">\n'
+        '          <button class="subscribe-btn" type="submit">SUBSCRIBE</button>\n'
+        '        </form>\n'
+        '        <div class="subscribe-msg" id="subscribe-msg"></div>\n'
+        '      </div>\n'
+        '      <!-- DYNAMIC:SUBSCRIBE:END -->'
+    )
+
+    # ── 讀取並替換五個動態區塊 ────────────────────────
     with open("index.html", "r", encoding="utf-8") as f:
         content = f.read()
 
     for anchor, new_block in [
-        ("TICKER", new_ticker),
-        ("STATS",  new_stats),
-        ("LATEST", new_latest),
-        ("RECENT", new_recent),
+        ("TICKER",    new_ticker),
+        ("SUBSCRIBE", new_subscribe),
+        ("STATS",     new_stats),
+        ("LATEST",    new_latest),
+        ("RECENT",    new_recent),
     ]:
         content = re.sub(
             rf'<!-- DYNAMIC:{anchor}:START -->.*?<!-- DYNAMIC:{anchor}:END -->',
@@ -1076,6 +1096,7 @@ def update_index(data, total_count, market_data=None):
 
 def _build_email_html(data, market_data):
     """Build a minimal digest email: titles + indices + link to full briefing."""
+    # ── Article titles by topic ──────────────────────────────
     topics_html = ""
     for topic in data.get("topics", []):
         titles_html = "".join(
@@ -1090,6 +1111,7 @@ def _build_email_html(data, market_data):
                 f'line-height:1.7;color:#222;">{titles_html}</ul>'
             )
 
+    # ── Market indices ───────────────────────────────────────
     indices_rows = ""
     if market_data and market_data.get("indices"):
         for idx in market_data["indices"]:
@@ -1135,7 +1157,7 @@ def _build_email_html(data, market_data):
 
 
 def send_newsletter(data, market_data, subject):
-    """透過 Brevo Campaign API 將今日簡報寄給所有訂閱者。回傳 True 成功，False 失敗。"""
+    """透過 Brevo Campaign API 將今日簡報寄給所有訂閱者"""
     import urllib.request as _req
     import json as _json
 
@@ -1174,19 +1196,15 @@ def send_newsletter(data, market_data, subject):
         )
         _req.urlopen(send_req)
         print(f"   ✓ 電子報已發送（Campaign ID: {campaign_id}）")
-        return True
 
     except Exception as e:
         detail = ""
-        if hasattr(e, "code"):
-            detail += f" [HTTP {e.code}]"
         if hasattr(e, "read"):
             try:
-                detail += f" → {e.read().decode('utf-8', errors='replace')}"
+                detail = " → " + e.read().decode()
             except Exception:
                 pass
-        print(f"   ❌ 電子報發送失敗：{e}{detail}")
-        return False
+        print(f"   ⚠️  電子報發送失敗（不影響簡報生成）：{e}{detail}")
 
 
 def update_briefings_list():
