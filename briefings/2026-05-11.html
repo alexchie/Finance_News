@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026-05-11 · Daily Briefing</title>
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KJ8JBV99C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0KJ8JBV99C');
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #ffffff;
+      color: #111111;
+      line-height: 1.9;
+    }
+
+    header {
+      border-bottom: 2px solid #111;
+      padding: 2rem 2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    header h1 { font-size: 1.2rem; letter-spacing: 0.1em; }
+    header nav a {
+      text-decoration: none; color: #111;
+      margin-left: 2rem; font-size: 0.9rem;
+    }
+    header nav a:hover { text-decoration: underline; }
+
+    .article {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .breadcrumb {
+      font-size: 0.8rem; color: #aaa; margin-bottom: 2rem;
+    }
+    .breadcrumb a { color: #aaa; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* 期數標題 */
+    .issue-meta {
+      border-bottom: 2px solid #111;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .issue-meta .date {
+      font-size: 0.8rem; color: #aaa;
+      letter-spacing: 0.1em; margin-bottom: 0.5rem;
+    }
+    .issue-meta h2 {
+      font-size: 1.9rem; line-height: 1.3; margin-bottom: 0.8rem;
+    }
+    .issue-meta .summary {
+      font-size: 0.95rem; color: #444;
+      border-left: 3px solid #111;
+      padding-left: 1rem;
+    }
+
+    /* 今日概覽 */
+    .overview-section {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 3rem;
+    }
+    .overview-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 1rem;
+    }
+
+    /* 市場指數 */
+    .market-indices {
+      margin-bottom: 1.4rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .market-indices-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.7rem;
+    }
+    .market-indices-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.7rem;
+    }
+    @media (max-width: 600px) {
+      .market-indices-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .index-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      padding: 0.65rem 0.85rem;
+    }
+    .index-name {
+      font-size: 0.68rem;
+      color: #999;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.2rem;
+    }
+    .index-close {
+      font-size: 1rem;
+      font-weight: bold;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }
+    .index-change {
+      font-size: 0.7rem;
+      font-variant-numeric: tabular-nums;
+      margin-top: 0.12rem;
+    }
+    .index-change.positive { color: #2a7a2a; }
+    .index-change.negative { color: #c0392b; }
+    .index-change.neutral  { color: #999; }
+
+    .overview-regions {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .country-tag {
+      display: inline-block;
+      background: #111; color: #fff;
+      font-size: 0.65rem; padding: 0.1rem 0.45rem;
+      margin-right: 0.4rem;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
+    }
+    .region-tag {
+      background: #111; color: #fff;
+      font-size: 0.72rem; padding: 0.2rem 0.6rem;
+      letter-spacing: 0.05em;
+    }
+    .overview-toc { display: flex; flex-direction: column; gap: 0.3rem; }
+    .toc-row { display: flex; align-items: baseline; gap: 0.8rem; margin-top: 0.4rem; }
+    .toc-label {
+      font-size: 0.75rem; font-weight: bold;
+      color: #111; text-decoration: none;
+      min-width: 165px; flex-shrink: 0;
+    }
+    .toc-label:hover { text-decoration: underline; }
+    .toc-theme { font-size: 0.88rem; color: #555; }
+    .toc-row.deep .toc-label { color: #8B4513; }
+
+    /* 文章標題列表（概覽內） */
+    .toc-articles {
+      margin: 0.2rem 0 0.5rem 165px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    @media (max-width: 600px) {
+      .toc-articles { margin-left: 0; }
+    }
+    .toc-article-link {
+      font-size: 0.81rem;
+      color: #666;
+      text-decoration: none;
+      line-height: 1.5;
+    }
+    .toc-article-link::before { content: "· "; color: #bbb; }
+    .toc-article-link:hover { color: #111; text-decoration: underline; }
+
+    /* 主題區塊 */
+    .topic-section {
+      margin-bottom: 4rem;
+    }
+    .topic-header {
+      border-bottom: 1px solid #111;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    .topic-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: normal;
+      color: #555;
+    }
+
+    /* 單篇新聞 */
+    .news-item {
+      padding: 2rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .news-item h3 {
+      font-size: 1.15rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.4;
+    }
+    .news-item h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .news-item h3 a:hover {
+      text-decoration: underline;
+    }
+
+    /* 三個內容段落 */
+    .section {
+      margin-bottom: 1rem;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.3rem;
+    }
+    .section p {
+      font-size: 0.93rem;
+      color: #333;
+    }
+
+    /* 詳細分析特別標示 */
+    .section.analysis {
+      background: #f5f5f5;
+      border-left: 3px solid #111;
+      padding: 1rem 1.2rem;
+    }
+    .section.analysis .section-label {
+      color: #666;
+    }
+    .section.analysis p {
+      color: #222;
+    }
+
+    /* 深度洞察 */
+    .section.key-takeaway {
+      background: #fdf6f0;
+      border-left: 3px solid #8B4513;
+      padding: 1rem 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .section.key-takeaway .section-label {
+      color: #8B4513;
+    }
+    .section.key-takeaway p {
+      color: #222;
+    }
+
+    /* 深度分析 section */
+    .deep-analysis-section .topic-title {
+      color: #8B4513;
+    }
+    .deep-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      background: #8B4513;
+      color: #fff;
+      padding: 0.15rem 0.5rem;
+      margin-left: 0.8rem;
+      vertical-align: middle;
+      font-style: normal;
+      font-weight: normal;
+    }
+
+    .source {
+      font-size: 0.78rem;
+      color: #bbb;
+      margin-top: 1rem;
+    }
+    .source a { color: #bbb; text-decoration: none; }
+    .source a:hover { text-decoration: underline; }
+
+    /* 底部導覽 */
+    .nav-bottom {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .nav-bottom a { color: #111; text-decoration: none; }
+    .nav-bottom a:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid #ddd;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 3rem;
+    }
+  
+    .ticker-bar {
+      background: #111; color: #ccc; font-size: 0.72rem;
+      letter-spacing: 0.04em; display: flex; align-items: center; height: 2rem;
+    }
+    .ticker-date-fixed {
+      color: #fff; font-size: 0.67rem; white-space: nowrap;
+      padding: 0 1rem; border-right: 1px solid #333;
+      flex-shrink: 0; height: 100%; display: flex; align-items: center;
+    }
+    .ticker-scroll-area { overflow: hidden; white-space: nowrap; flex: 1; height: 100%; }
+    .ticker-track {
+      display: inline-block; animation: ticker-scroll 23s linear infinite;
+      padding-left: 1rem; height: 100%; line-height: 2rem;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ticker-item { display: inline-block; }
+    .ticker-label { color: #888; margin-right: 0.3rem; }
+    .ticker-sep { color: #444; margin: 0 0.3rem; }
+    .ticker-up   { color: #6fcf97; }
+    .ticker-down { color: #eb5757; }
+
+  </style>
+</head>
+<body>
+
+  <div class="ticker-bar"><div class="ticker-date-fixed">2026-05-08 收盤</div><div class="ticker-scroll-area"><div class="ticker-track"><span class="ticker-item"><span class="ticker-label">S&P 500</span>7,398.93 <span class="ticker-up">▲0.84%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>49,609.16 <span class="ticker-up">▲0.02%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>26,247.08 <span class="ticker-up">▲1.71%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>41,603.94 <span class="ticker-down">▼0.79%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>4,706.50 <span class="ticker-down">▼0.29%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>98.31 <span class="ticker-up">▲3.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>104.36 <span class="ticker-up">▲3.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>4,179.95 <span class="">—0.00%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>15,563.80 <span class="ticker-down">▼0.50%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>62,713.65 <span class="ticker-down">▼0.19%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>7,498.00 <span class="ticker-up">▲0.11%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">Bitcoin</span>82,295.00 <span class="ticker-up">▲2.02%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">S&P 500</span>7,398.93 <span class="ticker-up">▲0.84%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>49,609.16 <span class="ticker-up">▲0.02%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>26,247.08 <span class="ticker-up">▲1.71%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>41,603.94 <span class="ticker-down">▼0.79%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>4,706.50 <span class="ticker-down">▼0.29%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>98.31 <span class="ticker-up">▲3.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>104.36 <span class="ticker-up">▲3.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>4,179.95 <span class="">—0.00%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>15,563.80 <span class="ticker-down">▼0.50%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>62,713.65 <span class="ticker-down">▼0.19%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>7,498.00 <span class="ticker-up">▲0.11%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">Bitcoin</span>82,295.00 <span class="ticker-up">▲2.02%</span></span></div></div></div>
+
+  <header>
+    <h1><a href="../index.html" style="text-decoration:none;color:#111;">Daily Briefing</a></h1>
+    <nav>
+      <a href="../briefings.html">所有期數</a>
+      <a href="#">關於</a>
+    </nav>
+  </header>
+
+  <div class="article">
+
+    <div class="breadcrumb"><a href="../briefings.html">← 所有期數</a></div>
+
+    <div class="issue-meta">
+      <div class="date">2026-05-11 · 共 10 則</div>
+      <h2>美伊和談破裂、油價飆升與聯準會升息疑慮三重壓力下，全球市場進入高度避險模式</h2>
+      <p class="summary">美伊雙方互拒和平提案，荷莫茲海峽持續封鎖，導致油價再度急漲，通膨壓力重燃；Pimco與富蘭克林坦伯頓等機構已明確警告聯準會可能被迫升息而非降息，衝擊股市估值基礎。與此同時，川習峰會即將在北京登場，中國正試圖把握中東動盪帶來的戰略空窗期，地緣政治風險與貨幣政策不確定性形成雙重壓力，使機構投資人的資產配置邏輯面臨根本性重估。</p>
+    </div>
+
+    
+    <div class="overview-section">
+      <div class="overview-label">今日概覽</div>
+      
+      <div class="market-indices">
+        <div class="market-indices-label">市場行情 · 2026-05-08 收盤</div>
+        <div class="market-indices-grid">
+          <div class="index-card">
+            <div class="index-name">S&P 500</div>
+            <div class="index-close">7,398.93</div>
+            <div class="index-change positive">▲0.84%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">道瓊</div>
+            <div class="index-close">49,609.16</div>
+            <div class="index-change positive">▲0.02%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">那斯達克</div>
+            <div class="index-close">26,247.08</div>
+            <div class="index-change positive">▲1.71%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">台灣加權</div>
+            <div class="index-close">41,603.94</div>
+            <div class="index-change negative">▼0.79%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">黃金</div>
+            <div class="index-close">4,706.50</div>
+            <div class="index-change negative">▼0.29%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">WTI</div>
+            <div class="index-close">98.31</div>
+            <div class="index-change positive">▲3.03%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">布蘭特</div>
+            <div class="index-close">104.36</div>
+            <div class="index-change positive">▲3.03%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">上證</div>
+            <div class="index-close">4,179.95</div>
+            <div class="index-change neutral">—0.00%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">深證</div>
+            <div class="index-close">15,563.80</div>
+            <div class="index-change negative">▼0.50%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">日經225</div>
+            <div class="index-close">62,713.65</div>
+            <div class="index-change negative">▼0.19%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">KOSPI</div>
+            <div class="index-close">7,498.00</div>
+            <div class="index-change positive">▲0.11%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">Bitcoin</div>
+            <div class="index-close">82,295.00</div>
+            <div class="index-change positive">▲2.02%</div>
+          </div>
+        </div>
+      </div>
+      <div class="overview-toc">
+        <div class="toc-row">
+          <a href="#section-macro" class="toc-label">金融市場（總經）</a>
+          <span class="toc-theme">美伊和談破局油價急漲Fed升息疑慮升溫</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">美國</span><a href="#article-macro-0" class="toc-article-link">川普斥伊朗和談回覆「完全無法接受」，油價急漲、美股期指下挫</a>
+          <span class="country-tag">美國</span><a href="#article-macro-1" class="toc-article-link">Pimco警告：伊朗戰爭可能迫使聯準會升息，富蘭克林坦伯頓亦反對降息</a>
+          <span class="country-tag">美國</span><a href="#article-macro-2" class="toc-article-link">川習峰會將登場，川普擬就伊朗戰爭向習近平施壓</a>
+          <span class="country-tag">中國</span><a href="#article-macro-3" class="toc-article-link">川普戰爭給中國帶來經濟機遇，北京試圖將中東動盪轉化為戰略優勢</a>
+          <span class="country-tag">美國</span><a href="#article-macro-4" class="toc-article-link">逾半數美國選民不滿川普經濟施政，伊朗戰爭與通膨衝擊共和黨期中選舉前景</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-corporate" class="toc-label">國際大公司重大新聞</a>
+          <span class="toc-theme">沙烏地阿美獲利暴增摩根大通治理爭議</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">沙烏地</span><a href="#article-corporate-0" class="toc-article-link">沙烏地阿美Q1獲利暴增26%，中東戰火意外成為最大受益者</a>
+          <span class="country-tag">美國</span><a href="#article-corporate-1" class="toc-article-link">代理顧問機構敦促摩根大通投資人投票拆分傑米・戴蒙的執行長兼董事長雙重職務</a>
+          <span class="country-tag">美國</span><a href="#article-corporate-2" class="toc-article-link">Big Tech人工智慧鉅額資本支出壓縮股東回報，Goldman Sachs預估S&P 500回購成長僅3%</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-taiwan" class="toc-label">台灣財經</a>
+          <span class="toc-theme">台灣國防預算過低引發美方失望</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">台灣</span><a href="#article-taiwan-0" class="toc-article-link">美高層官員透露：美國對台灣立法院大砍國防特別預算深感失望</a>
+          <span class="country-tag">歐盟</span><a href="#article-taiwan-1" class="toc-article-link">英法主導逾40國討論荷莫茲「護航任務」，本周開盤五大關鍵國際要聞</a>
+          
+        </div>
+        <div class="toc-row deep">
+          <a href="#section-deep" class="toc-label">深度分析</a>
+          <span class="toc-theme"></span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">全球</span><a href="#article-deep-0" class="toc-article-link">伊朗戰爭的戰略後座力：一場將重塑未來十年全球權力格局的地緣大洗牌</a>
+          
+        </div>
+      </div>
+    </div>
+
+
+    
+    <section class="topic-section" id="section-macro">
+      <div class="topic-header">
+        <h2 class="topic-title">金融市場（總經）</h2>
+      </div>
+      
+    <div class="news-item" id="article-macro-0">
+      <h3><a href="https://www.ft.com/content/f66186e7-8e14-466d-b4de-114ee70c3e62" target="_blank" rel="noopener">川普斥伊朗和談回覆「完全無法接受」，油價急漲、美股期指下挫</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>自2026年2月美國對伊朗發動軍事行動以來，荷莫茲海峽——全球約20%石油貿易的咽喉要道——持續受到封鎖或威脅，造成全球能源市場供應鏈嚴重中斷。雙方曾於4月初達成脆弱停火協議，但此後談判多次陷入僵局，外界對永久停戰的期待始終未能實現。美方此前提出一份重啟談判的架構性方案，期望重建荷莫茲海峽的航運秩序。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>5月10日，伊朗正式回覆美方和平提案，但川普隨即在社群媒體發文，稱伊朗回覆「完全無法接受」，明確拒絕；伊朗方面亦回絕美方條件，並再度揚言封鎖海峽。此消息傳出後，國際油價大幅上揚，美股期指應聲下跌，市場避險情緒急速升溫。此事件的重要性在於，它徹底粉碎外界對短期停戰的希望，迫使市場將「持續衝突」列為基本情境重新定價。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>荷莫茲海峽每日通過約1,700萬桶原油，占全球海運石油的約21%；歷史上，1980年代伊朗-伊拉克戰爭「油輪戰」期間，油價曾在數月內上漲逾40%，並引發西方國家嚴重通膨。本次衝突已持續逾10周，若比照1970年代阿拉伯石油禁運的歷史先例，能源短缺的全面衝擊往往有3至6個月的滯後效應，歐洲目前仍未完全感受到供應鏈斷裂的衝擊。此外，油價持續走高將直接推高美國CPI中的能源分項，給聯準會帶來被迫升息的壓力，從而壓縮股票估值的折現空間。衍生品市場已顯示近月WTI原油期權隱含波動率顯著攀升，機構投資人應警惕油價可能突破2026年前高的尾部風險。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/f66186e7-8e14-466d-b4de-114ee70c3e62" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-1">
+      <h3><a href="https://www.ft.com/content/ba919246-ff50-4b8d-931c-43ee8d37795d" target="_blank" rel="noopener">Pimco警告：伊朗戰爭可能迫使聯準會升息，富蘭克林坦伯頓亦反對降息</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>2026年初，聯準會在通膨逐漸受控的背景下曾醞釀降息，市場普遍預期年中至少有一至兩次降息。然而伊朗戰爭爆發後，能源價格持續上升，核心通膨的下行路徑受阻，部分FOMC委員已開始公開表達審慎立場。Pimco與富蘭克林坦伯頓作為全球最大固定收益資產管理機構之一，其公開表態對市場利率預期具有重要的風向標意義。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Pimco與富蘭克林坦伯頓在接受《金融時報》採訪時均明確警告，中東衝突持續推升能源成本，聯準會不僅不應降息，甚至可能被迫採取升息行動以抑制輸入性通膨。這是自本輪衝突爆發以來，主流債券機構首次明確提出「升息可能性」，標誌著市場利率預期出現重大轉向。若升息預期成真，將對股票、房地產及私募信貸等長久期資產產生全面性重新估值壓力。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>歷史上，1979年伊朗革命導致油價在12個月內上漲逾一倍，聯準會主席沃克爾隨後將基準利率推升至20%，觸發1981至1982年嚴重衰退。雖然當前聯準會工具更為完善、通膨預期錨定能力更強，但若油價維持高位超過兩季，美國CPI能源分項對整體通膨的貢獻率可能再度超過1個百分點。聯邦基金期貨市場已迅速調整，年底降息次數預期從年初的兩次降至接近零，部分合約甚至開始計入升息概率。這對於持有長久期美國國債及科技成長股的機構投資人而言，構成顯著的組合風險——需密切追蹤5月CPI數據及下次FOMC聲明措辭變化。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/ba919246-ff50-4b8d-931c-43ee8d37795d" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-2">
+      <h3><a href="https://www.ft.com/content/09c91701-114b-45e9-9aa1-767ef95a5217" target="_blank" rel="noopener">川習峰會將登場，川普擬就伊朗戰爭向習近平施壓</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>川普預計於5月13日（週三）抵達北京，進行就任以來與習近平的第二次面對面峰會。自伊朗戰爭爆發以來，中國一直未明確選邊，但持續向伊朗提供外交支援，並藉機擴大在中東地區的經濟存在，包括接收部分繞道好望角的石油貨運。此次峰會的議題極為複雜，涵蓋伊朗戰爭、台灣問題、貿易關稅及科技脫鉤等多條敏感線索。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>川普此行的核心目標之一是向北京施壓，要求中國減少對伊朗的政治與經濟支援，以協助推動停戰並重開荷莫茲海峽。然而中方立場曖昧，北京既不希望中東全面失序衝擊其能源供應，又視此次危機為削弱美國全球信譽、擴大自身戰略空間的機遇。峰會結果將直接影響市場對中東局勢走向、美中關係及全球供應鏈重組的定價。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>《經濟學人》分析指出，中國正把美伊戰爭視為歷史性的戰略機遇——填補美國在中東留下的影響力真空。若此次峰會無法達成具體協議，市場應預期荷莫茲海峽封鎖狀態將延續更長時間。從歷史上看，中美高峰會後往往伴隨短暫的風險資產反彈，但若結果低於預期，回吐往往更劇烈。此外，台灣問題在峰會中的份量值得關注——北京正利用美國在伊朗戰爭中的精力分散，推動對台施壓，這對台灣相關資產（包括台積電股價及台幣匯率）構成獨立的地緣政治風險溢價。投資人需在峰會結束後24至48小時內密切追蹤雙邊聯合聲明的用詞細節。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/09c91701-114b-45e9-9aa1-767ef95a5217" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-3">
+      <h3><a href="https://www.ft.com/content/27ecd13b-c544-4304-8f76-0f2d4ed296e1" target="_blank" rel="noopener">川普戰爭給中國帶來經濟機遇，北京試圖將中東動盪轉化為戰略優勢</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>自美伊戰爭爆發後，全球能源與供應鏈秩序遭到嚴重擾動，美國在中東的聲譽及領導力受到質疑。中國長期以來透過「一帶一路」深耕中東關係，並是伊朗、沙烏地阿拉伯、阿聯酋等國的重要貿易夥伴。在美國深陷軍事衝突之際，中國保持相對中立的外交姿態，使其在區域各方中的可信度上升。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>《金融時報》深度報導指出，北京正積極利用此次中東動盪：一方面藉機以折扣價格收購受制裁的伊朗石油，強化能源安全；另一方面向海灣國家提供基礎建設與數位投資，填補美國注意力缺口留下的地緣政治空間。此舉不僅是短期機會主義，更是中國「南方國家」外交戰略的重要組成部分，可能導致中東地區長期去美元化傾向加速。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>2023年沙烏地阿拉伯與伊朗在中國斡旋下實現外交復交，已是北京在中東影響力崛起的先兆。若此次伊朗戰爭最終以中國扮演重要調停角色而告終，將極大強化人民幣在石油貿易中的定價地位——目前已有估計顯示約20%的沙烏地對華石油交易以人民幣結算。從宏觀角度看，中東去美元化每加速一步，均會對美元作為全球儲備貨幣的長期地位構成邊際侵蝕，進而影響美國國債的長期需求基礎。機構投資人應將「中國在中東影響力擴張」納入新興市場資產配置的結構性風險因子，同時留意人民幣國際化進程可能因此加速的溢出效應。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/27ecd13b-c544-4304-8f76-0f2d4ed296e1" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-4">
+      <h3><a href="https://www.ft.com/content/d08de75e-4a62-4475-9754-7f6d186f7eeb" target="_blank" rel="noopener">逾半數美國選民不滿川普經濟施政，伊朗戰爭與通膨衝擊共和黨期中選舉前景</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>2026年期中選舉將於11月舉行，目前距離選舉不足六個月。共和黨在參眾兩院均維持多數，但執政黨在期中選舉歷史上普遍面臨逆風。伊朗戰爭爆發以來，美國消費者承受油價上漲、通膨重燃的雙重衝擊，民眾對政府的不滿情緒持續積聚。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>《金融時報》最新民調顯示，超過50%的美國選民對川普的經濟表現感到不滿，伊朗戰爭的通膨後果已成為影響民意的核心因素。這一數字對共和黨的期中選舉前景構成嚴峻警訊，若不滿情緒持續發酵，可能導致國會政治格局在年底發生重大變化，進而影響財政政策走向。市場對此的直接反應是對美國財政紀律及長期國債供給前景的擔憂升溫。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>歷史數據顯示，在期中選舉年執政黨總統支持率低於45%時，執政黨平均在眾議院失去約28席。若共和黨在2026年期中選舉中失去眾議院控制權，川普的財政與貿易議程將面臨立法層面的根本挑戰，包括減稅延續方案及國防開支計畫均可能受阻。對固定收益市場而言，政治不確定性升高往往導致5至10年期美債殖利率曲線趨陡，因市場開始計入財政政策的不可預測性。此外，若通膨持續，2026下半年將進入聯準會政策窗口最敏感的時期，政治壓力可能迫使白宮對聯準會獨立性施壓，進一步擾動市場對貨幣政策可信度的定價。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/d08de75e-4a62-4475-9754-7f6d186f7eeb" target="_blank">Financial Times</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-corporate">
+      <div class="topic-header">
+        <h2 class="topic-title">國際大公司重大新聞</h2>
+      </div>
+      
+    <div class="news-item" id="article-corporate-0">
+      <h3><a href="https://www.theguardian.com/business/2026/may/10/saudi-aramco-profits-jump-despite-conflict-middle-east" target="_blank" rel="noopener">沙烏地阿美Q1獲利暴增26%，中東戰火意外成為最大受益者</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>沙烏地阿美是全球市值最大的能源公司之一，也是沙烏地阿拉伯政府財政收入的核心支柱。伊朗戰爭爆發後，荷莫茲海峽局勢緊張導致國際油價急升，而沙烏地阿美的出口路線主要走紅海與波斯灣西側，受伊朗直接封鎖影響相對有限。沙烏地政府近年來積極推動「2030願景」，需要穩定的油價收入來支撐龐大的國內投資計畫。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>沙烏地阿美公布2026年第一季財報，稅後淨利達約269億英鎊（折合約340億美元），較去年同期大增26%。這一亮麗成績主要歸功於油價在中東衝突背景下的顯著上升，以及公司持續提升的生產效率。對市場而言，此財報既反映了能源類股在當前宏觀環境下的防禦性優勢，也引發對通膨長期化的進一步擔憂。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>2022年俄烏戰爭期間，沙烏地阿美全年獲利曾創下歷史紀錄約1,610億美元，當年油價峰值逼近每桶140美元。本次衝突若持續，WTI油價中期目標可能上看每桶110至130美元區間，能源板塊的獲利能見度在所有S&P 500板塊中相對最高。然而投資人需注意，高油價對全球需求具有自我毀滅性——歷史上每次油價大漲後12至18個月，全球GDP增速均出現顯著放緩，最終反過來壓低能源需求。阿美當前股息殖利率約4.5%，在利率上行環境下仍具吸引力，但估值已部分反映油價高位預期，進一步上行空間取決於衝突持續時間。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.theguardian.com/business/2026/may/10/saudi-aramco-profits-jump-despite-conflict-middle-east" target="_blank">The Guardian</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-1">
+      <h3><a href="https://www.theguardian.com/business/2026/may/10/advisers-urge-jp-morgan-investors-to-vote-to-split-chair-and-ceo-positions" target="_blank" rel="noopener">代理顧問機構敦促摩根大通投資人投票拆分傑米・戴蒙的執行長兼董事長雙重職務</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>傑米・戴蒙（Jamie Dimon）自2005年起擔任摩根大通執行長，2006年起兼任董事長，是美國金融界任期最長、影響力最大的領導人之一。近年來，ESG治理標準的提升使「執行長兼董事長」的雙重職務模式受到越來越多的機構股東質疑，認為此架構削弱了董事會對管理層的獨立監督能力。ISS（機構股東服務）及Glass Lewis兩大主要代理顧問機構的立場對機構投資人投票行為具有決定性影響力。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>ISS與Glass Lewis在摩根大通年度股東大會前，雙雙建議投資人支持要求拆分執行長與董事長職務的股東提案，理由是當前架構賦予戴蒙過度集中的權力，不符合現代公司治理最佳實踐。這是近年來治理倡導力量對美國最大銀行發動的最高強度挑戰，結果將作為美國金融業治理改革的重要風向標。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從歷史先例看，ISS與Glass Lewis聯合推薦後，相關股東提案的支持率平均提升10至20個百分點，但在創辦人型或強勢執行長主導的公司中，提案仍難以獲得多數支持——戴蒙本人持股及內部人士投票往往是關鍵變數。值得注意的是，摩根大通在戴蒙領導下的股東總回報表現在同業中名列前茅，這使「治理溢價」論述在反對者眼中說服力有限。然而從系統性風險角度，美國最大銀行的治理架構若過度依賴單一領導人，在繼任計畫或意外事件發生時，市場可能出現非線性的估值衝擊——2012年「倫敦鯨」事件即是一個警示案例，顯示過度集權可能導致風控盲點。機構投資人應將此次投票結果作為評估摩根大通長期治理風險的重要數據點。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.theguardian.com/business/2026/may/10/advisers-urge-jp-morgan-investors-to-vote-to-split-chair-and-ceo-positions" target="_blank">The Guardian</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-2">
+      <h3><a href="https://www.marketwatch.com/story/big-techs-ai-spending-is-depriving-investors-of-juicy-payouts-39d17305?mod=mw_rss_topstories" target="_blank" rel="noopener">Big Tech人工智慧鉅額資本支出壓縮股東回報，Goldman Sachs預估S&P 500回購成長僅3%</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>2023至2025年間，微軟、Google、亞馬遜、Meta等科技巨頭掀起AI基礎設施軍備競賽，資本支出規模持續創歷史新高。與此同時，在利率偏高、經濟不確定性上升的環境中，管理層面臨更大的資本分配壓力，需要在長期AI投資與短期股東回報（股息及回購）之間做出取捨。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>高盛最新報告指出，受AI資本支出大幅擠壓及宏觀經濟前景不明朗的雙重影響，預計2026年S&P 500企業的股票回購規模成長率將僅有3%，遠低於過去十年年均約10%的水準。這意味著過去支撐美股估值的「工程性EPS成長」動力將顯著減弱，市場需要更多依賴真實盈利增長來維持股價。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>歷史上，股票回購是S&P 500 EPS成長的重要貢獻來源，2010至2019年間，回購對EPS成長的貢獻度平均高達約3個百分點。若2026年回購成長率降至3%，疊加AI投資回報的不確定性，科技板塊的Forward P/E估值壓縮風險顯著提升。此外，在油價高企、通膨升溫的環境下，非科技企業的自由現金流亦面臨能源成本上升的侵蝕，進一步限制回購能力。從板塊輪動角度，回購力道減弱往往利好高股息、低波動的防禦型板塊（如公用事業、必需消費），而不利於依賴回購提振每股盈餘的成長型科技股。機構投資人在評估個股時，需更嚴格地區分「真實盈利成長」與「財務工程驅動的EPS增長」。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.marketwatch.com/story/big-techs-ai-spending-is-depriving-investors-of-juicy-payouts-39d17305?mod=mw_rss_topstories" target="_blank">MarketWatch</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-taiwan">
+      <div class="topic-header">
+        <h2 class="topic-title">台灣財經</h2>
+      </div>
+      
+    <div class="news-item" id="article-taiwan-0">
+      <h3><a href="https://money.udn.com/money/story/5599/9494281" target="_blank" rel="noopener">美高層官員透露：美國對台灣立法院大砍國防特別預算深感失望</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>在美中台三角關係持續緊張的背景下，美國長期要求台灣提高國防支出，以展現自我防衛意志並減輕美國的安全承諾負擔。台灣立法院近期通過的國防特別預算案，金額據報遠低於華盛頓認為的「合理水準」，此時正值伊朗戰爭分散美國戰略資源、北京加大對台施壓之際，美方的不滿尤為敏感。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>路透社引述美國一名高層官員表示，美國對台灣立法院通過的國防特別預算案深感失望，認為金額不足以應對當前台海安全形勢所需。這是美方罕見地以官方管道公開表達對台灣防衛意志的質疑，時機敏感性極高——川普政府正在進行川習峰會前的戰略佈局，台灣議題可能成為美中談判的籌碼之一。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>台灣國防支出長期維持在GDP約2.4至2.6%的水準，低於北約建議的2%基準，但考量台灣GDP規模，絕對金額仍屬有限。美方「失望」的公開表態，在台海博弈脈絡下具有多重訊號意義：其一，可能預示川普政府正考慮以台灣議題作為川習峰會中的可交易籌碼，這對台灣的戰略安全構成深層不確定性；其二，若美方施壓導致台灣未來大幅提高國防預算，將對台灣財政空間及公債市場產生實質壓力。從市場角度，此消息可能短期內壓低台積電ADR及台幣匯率，因地緣政治風險溢價上升；長期而言，台灣軍工相關概念股（如漢翔、中科院相關供應鏈）可能因國防預算擴張預期而受到關注。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/5599/9494281" target="_blank">經濟日報</a></div>
+    </div>
+
+    <div class="news-item" id="article-taiwan-1">
+      <h3><a href="https://money.udn.com/money/story/5599/9494267" target="_blank" rel="noopener">英法主導逾40國討論荷莫茲「護航任務」，本周開盤五大關鍵國際要聞</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>荷莫茲海峽封鎖以來，全球貿易航線被迫大規模繞道好望角，顯著推高航運成本及交貨時間，尤其衝擊歐洲及東亞的能源進口國。英國與法國作為在中東仍具軍事存在的歐洲大國，積極主導多邊護航方案，試圖在美國深陷雙邊談判泥沼之際，由歐洲填補安全秩序的空缺。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>包括英國、法國在內逾40個國家將於5月12日召開國防部長會議，討論由歐洲主導的荷莫茲海峽護航任務細節，目標是在美伊停火穩定後護送商船安全通過。伊朗對此強烈抗議，稱多國護航計畫等同於升高局勢。這一外交與軍事動態標誌著歐洲在中東安全事務上罕見地從「依附美國」走向主動出擊，具有深遠的地緣政治含義。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>歷史上，1987至1988年間美國海軍護航「歐內斯特意志行動」成功保障了波斯灣航運，但當時是超級大國單邊主導；此次由歐洲牽頭的多邊護航機制若能成形，將是冷戰後歐洲軍事自主的重要里程碑，也預示著「後美國霸權」中東安全秩序的雛形。對全球航運業而言，若護航機制成功建立並降低通道風險，波羅的海乾散貨指數（BDI）及油輪運費率可能出現顯著回落，相關股票（如巨大航運商）的風險溢價亦將重估。台灣作為高度依賴中東能源進口（約85%原油來自中東）的經濟體，護航任務的成敗直接關係到台灣的能源安全成本與CPI走勢，對台灣中央銀行的貨幣政策決策亦具重要參考意義。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/5599/9494267" target="_blank">經濟日報</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section deep-analysis-section" id="section-deep">
+      <div class="topic-header">
+        <h2 class="topic-title">深度分析 <span class="deep-badge">IN-DEPTH</span></h2>
+      </div>
+      
+    <div class="news-item deep-item" id="article-deep-0">
+      <h3><a href="https://www.project-syndicate.org/commentary/iran-war-strategic-fallout-us-allies-middle-east-china-by-ian-bremmer-2026-05" target="_blank" rel="noopener">伊朗戰爭的戰略後座力：一場將重塑未來十年全球權力格局的地緣大洗牌</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>自2026年2月美國對伊朗發動軍事行動以來，中東地區陷入自1980年代兩伊戰爭以來最大規模的動盪。此次衝突不僅是單純的雙邊軍事對抗，更是在美國全球領導力公信力已受特朗普第一任期嚴重削弱的背景下爆發，使盟友與對手均面臨根本性的戰略重估壓力。Project Syndicate國際政治分析師Ian Bremmer在其深度評論中，將此次伊朗戰爭的地緣政治後座力定性為「冷戰結束以來規模最大的全球權力格局重組」。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Bremmer的分析指出，此次伊朗戰爭的最深遠影響並非戰場上的勝負，而是它徹底暴露了美國作為全球安全秩序保證人的不可預測性與不可靠性。無論是北約盟友、海灣合作委員會成員國，還是日本、韓國、台灣等印太夥伴，均在以新的眼光重新評估對美安全承諾的可信度。這種集體的戰略再評估，正在加速各地區建立獨立安全機制、推動防衛開支本地化，並重新打開與中國深化關係的窗口，其規模之大足以媲美1989年柏林牆倒塌後的秩序重建。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從歷史結構性轉折的角度分析，全球秩序的重大重組往往不是某場戰爭的即時結果，而是透過盟友信任崩解的累積效應緩慢發酵。1956年蘇伊士危機後，英法的中東影響力用了近十年才徹底退場；1973年石油危機後，歐洲開始系統性推動能源多元化，歷時二十年方見成效。若以此類比，伊朗戰爭所觸發的「去美元化加速」、「歐洲戰略自主深化」及「中國填補中東影響力真空」三大趨勢，其結構性影響可能需要2030年代才會全面顯現於國際政治經濟數據中。對機構投資人而言，最重要的中期訊號是：美元霸權的邊際侵蝕速度正在加快——人民幣結算石油比例上升、歐洲發展本地貨幣互換機制、海灣國家加速推進主權財富基金多元化——這些微觀數據的累積，最終將在外匯市場及美債需求面結構中留下不可逆的痕跡。</p>
+      </div>
+
+      <div class="section key-takeaway">
+        <div class="section-label">深度洞察</div>
+        <p>伊朗戰爭最根本的歷史意義，在於它將「美國是否仍是可靠的全球安全提供者」這個已潛伏多年的隱性問題，強制推上了所有國家的戰略決策桌面。這不是短期的外交危機，而是一場觸發長週期地緣政治重組的結構性斷裂。冷戰後美國所主導的「單極秩序」本質上依賴兩根支柱：美元的金融霸權與美軍的安全提供能力；伊朗戰爭的不可預測性，正在同時侵蝕這兩根支柱的公信力基礎。對亞太地區而言，台灣、日本、韓國等盟友面臨的核心困境是：既無法完全信任美國的安全承諾，又無法在短期內建立獨立的嚇阻能力，這種「安全真空」在2026至2030年間將成為區域不穩定的最大結構性來源。對金融市場而言，這意味著「地緣政治風險溢價」將從過去的「尾部風險」轉化為「長期底線成本」，資產定價模型需要系統性地提高地緣政治不確定性係數。從歷史先例來看，1971年尼克森衝擊（美元脫金）後，全球外匯市場重建秩序歷時近三年；若此次伊朗戰爭真的觸發美元信用的系統性重估，類似規模的市場調整週期恐怕也難以迴避。最終，真正的贏家可能不是任何一個參戰方，而是在混亂中保持戰略耐心的中國——北京正在用時間換取空間，等待美國在中東泥沼中自我消耗，屆時再以「負責任大國」的姿態出場，收割美國信譽崩解後留下的地緣政治紅利。機構投資人應將「中美秩序競爭加速」列為未來五年最重要的結構性主題，並在組合配置中增加對「去美元化受益資產」（黃金、硬資產、部分新興市場本幣債）及「防衛工業」的策略性配置比重。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.project-syndicate.org/commentary/iran-war-strategic-fallout-us-allies-middle-east-china-by-ian-bremmer-2026-05" target="_blank">Project Syndicate</a></div>
+    </div>
+
+    </section>
+
+
+    <div class="nav-bottom">
+      <a href="../briefings.html">← 返回所有期數</a>
+    </div>
+
+  </div>
+
+  <footer>© 2026 Daily Briefing · 每個工作日更新</footer>
+</body>
+</html>
