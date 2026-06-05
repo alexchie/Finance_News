@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026-06-05 · Daily Briefing</title>
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KJ8JBV99C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0KJ8JBV99C');
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #ffffff;
+      color: #111111;
+      line-height: 1.9;
+    }
+
+    header {
+      border-bottom: 2px solid #111;
+      padding: 2rem 2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    header h1 { font-size: 1.2rem; letter-spacing: 0.1em; }
+    header nav a {
+      text-decoration: none; color: #111;
+      margin-left: 2rem; font-size: 0.9rem;
+    }
+    header nav a:hover { text-decoration: underline; }
+
+    .article {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .breadcrumb {
+      font-size: 0.8rem; color: #aaa; margin-bottom: 2rem;
+    }
+    .breadcrumb a { color: #aaa; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* 期數標題 */
+    .issue-meta {
+      border-bottom: 2px solid #111;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .issue-meta .date {
+      font-size: 0.8rem; color: #aaa;
+      letter-spacing: 0.1em; margin-bottom: 0.5rem;
+    }
+    .issue-meta h2 {
+      font-size: 1.9rem; line-height: 1.3; margin-bottom: 0.8rem;
+    }
+    .issue-meta .summary {
+      font-size: 0.95rem; color: #444;
+      border-left: 3px solid #111;
+      padding-left: 1rem;
+    }
+
+    /* 今日概覽 */
+    .overview-section {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 3rem;
+    }
+    .overview-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 1rem;
+    }
+
+    /* 市場指數 */
+    .market-indices {
+      margin-bottom: 1.4rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .market-indices-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.7rem;
+    }
+    .market-indices-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.7rem;
+    }
+    @media (max-width: 600px) {
+      .market-indices-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .index-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      padding: 0.65rem 0.85rem;
+    }
+    .index-name {
+      font-size: 0.68rem;
+      color: #999;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.2rem;
+    }
+    .index-close {
+      font-size: 1rem;
+      font-weight: bold;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }
+    .index-change {
+      font-size: 0.7rem;
+      font-variant-numeric: tabular-nums;
+      margin-top: 0.12rem;
+    }
+    .index-change.positive { color: #2a7a2a; }
+    .index-change.negative { color: #c0392b; }
+    .index-change.neutral  { color: #999; }
+
+    .overview-regions {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .country-tag {
+      display: inline-block;
+      background: #111; color: #fff;
+      font-size: 0.65rem; padding: 0.1rem 0.45rem;
+      margin-right: 0.4rem;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
+    }
+    .region-tag {
+      background: #111; color: #fff;
+      font-size: 0.72rem; padding: 0.2rem 0.6rem;
+      letter-spacing: 0.05em;
+    }
+    .overview-toc { display: flex; flex-direction: column; gap: 0.3rem; }
+    .toc-row { display: flex; align-items: baseline; gap: 0.8rem; margin-top: 0.4rem; }
+    .toc-label {
+      font-size: 0.75rem; font-weight: bold;
+      color: #111; text-decoration: none;
+      min-width: 165px; flex-shrink: 0;
+    }
+    .toc-label:hover { text-decoration: underline; }
+    .toc-theme { font-size: 0.88rem; color: #555; }
+    .toc-row.deep .toc-label { color: #8B4513; }
+
+    /* 文章標題列表（概覽內） */
+    .toc-articles {
+      margin: 0.2rem 0 0.5rem 165px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    @media (max-width: 600px) {
+      .toc-articles { margin-left: 0; }
+    }
+    .toc-article-link {
+      font-size: 0.81rem;
+      color: #666;
+      text-decoration: none;
+      line-height: 1.5;
+    }
+    .toc-article-link::before { content: "· "; color: #bbb; }
+    .toc-article-link:hover { color: #111; text-decoration: underline; }
+
+    /* 主題區塊 */
+    .topic-section {
+      margin-bottom: 4rem;
+    }
+    .topic-header {
+      border-bottom: 1px solid #111;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    .topic-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: normal;
+      color: #555;
+    }
+
+    /* 單篇新聞 */
+    .news-item {
+      padding: 2rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .news-item h3 {
+      font-size: 1.15rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.4;
+    }
+    .news-item h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .news-item h3 a:hover {
+      text-decoration: underline;
+    }
+
+    /* 三個內容段落 */
+    .section {
+      margin-bottom: 1rem;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.3rem;
+    }
+    .section p {
+      font-size: 0.93rem;
+      color: #333;
+    }
+
+    /* 詳細分析特別標示 */
+    .section.analysis {
+      background: #f5f5f5;
+      border-left: 3px solid #111;
+      padding: 1rem 1.2rem;
+    }
+    .section.analysis .section-label {
+      color: #666;
+    }
+    .section.analysis p {
+      color: #222;
+    }
+
+    /* 深度洞察 */
+    .section.key-takeaway {
+      background: #fdf6f0;
+      border-left: 3px solid #8B4513;
+      padding: 1rem 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .section.key-takeaway .section-label {
+      color: #8B4513;
+    }
+    .section.key-takeaway p {
+      color: #222;
+    }
+
+    /* 深度分析 section */
+    .deep-analysis-section .topic-title {
+      color: #8B4513;
+    }
+    .deep-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      background: #8B4513;
+      color: #fff;
+      padding: 0.15rem 0.5rem;
+      margin-left: 0.8rem;
+      vertical-align: middle;
+      font-style: normal;
+      font-weight: normal;
+    }
+
+    .source {
+      font-size: 0.78rem;
+      color: #bbb;
+      margin-top: 1rem;
+    }
+    .source a { color: #bbb; text-decoration: none; }
+    .source a:hover { text-decoration: underline; }
+
+    /* 底部導覽 */
+    .nav-bottom {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .nav-bottom a { color: #111; text-decoration: none; }
+    .nav-bottom a:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid #ddd;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 3rem;
+    }
+  
+    .ticker-bar {
+      background: #111; color: #ccc; font-size: 0.72rem;
+      letter-spacing: 0.04em; display: flex; align-items: center; height: 2rem;
+    }
+    .ticker-date-fixed {
+      color: #fff; font-size: 0.67rem; white-space: nowrap;
+      padding: 0 1rem; border-right: 1px solid #333;
+      flex-shrink: 0; height: 100%; display: flex; align-items: center;
+    }
+    .ticker-scroll-area { overflow: hidden; white-space: nowrap; flex: 1; height: 100%; }
+    .ticker-track {
+      display: inline-block; animation: ticker-scroll 23s linear infinite;
+      padding-left: 1rem; height: 100%; line-height: 2rem;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ticker-item { display: inline-block; }
+    .ticker-label { color: #888; margin-right: 0.3rem; }
+    .ticker-sep { color: #444; margin: 0 0.3rem; }
+    .ticker-up   { color: #6fcf97; }
+    .ticker-down { color: #eb5757; }
+
+  </style>
+</head>
+<body>
+
+  <div class="ticker-bar"><div class="ticker-date-fixed">2026-06-04 收盤</div><div class="ticker-scroll-area"><div class="ticker-track"><span class="ticker-item"><span class="ticker-label">S&P 500</span>7,584.31 <span class="ticker-up">▲0.41%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>51,561.93 <span class="ticker-up">▲1.73%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>26,830.96 <span class="ticker-down">▼0.09%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>46,459.16 <span class="ticker-up">▲1.98%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>4,492.70 <span class="ticker-up">▲1.26%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>92.90 <span class="ticker-down">▼3.25%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>95.20 <span class="ticker-down">▼2.67%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>4,083.97 <span class="ticker-up">▲0.22%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>15,704.71 <span class="ticker-up">▲0.73%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>68,402.13 <span class="ticker-up">▲2.50%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>8,801.49 <span class="ticker-up">▲0.15%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">Bitcoin</span>63,724.82 <span class="ticker-down">▼0.45%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">S&P 500</span>7,584.31 <span class="ticker-up">▲0.41%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>51,561.93 <span class="ticker-up">▲1.73%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>26,830.96 <span class="ticker-down">▼0.09%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>46,459.16 <span class="ticker-up">▲1.98%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>4,492.70 <span class="ticker-up">▲1.26%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>92.90 <span class="ticker-down">▼3.25%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>95.20 <span class="ticker-down">▼2.67%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>4,083.97 <span class="ticker-up">▲0.22%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>15,704.71 <span class="ticker-up">▲0.73%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>68,402.13 <span class="ticker-up">▲2.50%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>8,801.49 <span class="ticker-up">▲0.15%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">Bitcoin</span>63,724.82 <span class="ticker-down">▼0.45%</span></span></div></div></div>
+
+  <header>
+    <h1><a href="../index.html" style="text-decoration:none;color:#111;">Daily Briefing</a></h1>
+    <nav>
+      <a href="../briefings.html">所有期數</a>
+      <a href="#">關於</a>
+    </nav>
+  </header>
+
+  <div class="article">
+
+    <div class="breadcrumb"><a href="../briefings.html">← 所有期數</a></div>
+
+    <div class="issue-meta">
+      <div class="date">2026-06-05 · 共 10 則</div>
+      <h2>AI估值泡沫疑慮升溫、SpaceX史上最大IPO登場，市場風格輪動加劇</h2>
+      <p class="summary">全球市場本週呈現明顯的風格輪動：AI晶片股因博通財測不如預期而拉回，資金轉向傳統「舊經濟」股票，道瓊創歷史新高而那斯達克承壓。與此同時，SpaceX以1.75兆美元估值衝刺史上最大IPO，成為AI敘事能否撐起天價估值的試金石。比特幣則因Strategy大規模拋售而重挫，加密市場與股市的背離進一步加深市場對風險資產分化的憂慮。</p>
+    </div>
+
+    
+    <div class="overview-section">
+      <div class="overview-label">今日概覽</div>
+      
+      <div class="market-indices">
+        <div class="market-indices-label">市場行情 · 2026-06-04 收盤</div>
+        <div class="market-indices-grid">
+          <div class="index-card">
+            <div class="index-name">S&P 500</div>
+            <div class="index-close">7,584.31</div>
+            <div class="index-change positive">▲0.41%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">道瓊</div>
+            <div class="index-close">51,561.93</div>
+            <div class="index-change positive">▲1.73%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">那斯達克</div>
+            <div class="index-close">26,830.96</div>
+            <div class="index-change negative">▼0.09%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">台灣加權</div>
+            <div class="index-close">46,459.16</div>
+            <div class="index-change positive">▲1.98%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">黃金</div>
+            <div class="index-close">4,492.70</div>
+            <div class="index-change positive">▲1.26%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">WTI</div>
+            <div class="index-close">92.90</div>
+            <div class="index-change negative">▼3.25%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">布蘭特</div>
+            <div class="index-close">95.20</div>
+            <div class="index-change negative">▼2.67%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">上證</div>
+            <div class="index-close">4,083.97</div>
+            <div class="index-change positive">▲0.22%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">深證</div>
+            <div class="index-close">15,704.71</div>
+            <div class="index-change positive">▲0.73%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">日經225</div>
+            <div class="index-close">68,402.13</div>
+            <div class="index-change positive">▲2.50%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">KOSPI</div>
+            <div class="index-close">8,801.49</div>
+            <div class="index-change positive">▲0.15%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">Bitcoin</div>
+            <div class="index-close">63,724.82</div>
+            <div class="index-change negative">▼0.45%</div>
+          </div>
+        </div>
+      </div>
+      <div class="overview-toc">
+        <div class="toc-row">
+          <a href="#section-macro" class="toc-label">金融市場（總經）</a>
+          <span class="toc-theme">AI疲態現形、道瓊創高、舊經濟重返主流</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">美國</span><a href="#article-macro-0" class="toc-article-link">AI行情出現疲態跡象，晶片股領跌，道瓊工業指數卻創歷史新高</a>
+          <span class="country-tag">美國</span><a href="#article-macro-1" class="toc-article-link">SpaceX目標估值1.75兆美元，衝刺史上最大股市掛牌</a>
+          <span class="country-tag">美國</span><a href="#article-macro-2" class="toc-article-link">比特幣因Strategy大規模拋售重挫，創2022年11月以來最大週跌幅</a>
+          <span class="country-tag">美國</span><a href="#article-macro-3" class="toc-article-link">科技公司透過可轉換債券將AI高波動性貨幣化</a>
+          <span class="country-tag">美國</span><a href="#article-macro-4" class="toc-article-link">川普「美國製造黃金時代」承諾破功，新廠投資支出下滑</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-corporate" class="toc-label">國際大公司重大新聞</a>
+          <span class="toc-theme">SpaceX千億IPO震撼市場</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">美國</span><a href="#article-corporate-0" class="toc-article-link">Anthropic年化營收衝破470億美元，IPO前夕創辦人對AI回報質疑不以為然</a>
+          <span class="country-tag">美國</span><a href="#article-corporate-1" class="toc-article-link">Lululemon下修全年展望，創辦人紛爭與產品失利雙重夾擊</a>
+          <span class="country-tag">法國</span><a href="#article-corporate-2" class="toc-article-link">迪士尼巴黎樂園揭露42億美元累積虧損，高人氣仍難抵初始投資黑洞</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-taiwan" class="toc-label">台灣財經</a>
+          <span class="toc-theme">台積電ADR逆勢上揚、費半重挫</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">台灣</span><a href="#article-taiwan-0" class="toc-article-link">費城半導體指數重挫，日月光、聯電ADR大跌；台積電ADR逆勢上漲近2%</a>
+          <span class="country-tag">台灣</span><a href="#article-taiwan-1" class="toc-article-link">中東局勢出現緩和跡象，提振美股道瓊與標普500，台灣出口導向產業間接受惠</a>
+          
+        </div>
+        <div class="toc-row deep">
+          <a href="#section-deep" class="toc-label">深度分析</a>
+          <span class="toc-theme"></span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">美國</span><a href="#article-deep-0" class="toc-article-link">美國國債市場的結構性衰敗亟需修復：高債務、市場割裂與貿易政策三重威脅全球安全資產</a>
+          
+        </div>
+      </div>
+    </div>
+
+
+    
+    <section class="topic-section" id="section-macro">
+      <div class="topic-header">
+        <h2 class="topic-title">金融市場（總經）</h2>
+      </div>
+      
+    <div class="news-item" id="article-macro-0">
+      <h3><a href="https://money.udn.com/money/story/123398/9547107" target="_blank" rel="noopener">AI行情出現疲態跡象，晶片股領跌，道瓊工業指數卻創歷史新高</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>過去一年半，以輝達為首的AI晶片股帶動那斯達克大幅攀升，科技股估值被推升至歷史高位。然而市場長期集中於少數AI概念股的現象引發部分分析師對輪動風險的警示。本週博通（Broadcom）公布季報，其AI晶片營收展望雖然亮眼，但未能超越市場極高的預期，引發獲利了結。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>週四美股出現明顯的風格輪動：投資人拋售科技股、轉進醫療保健及金融等傳統產業，道瓊工業指數在這些板塊帶動下再創歷史新高，而費城半導體指數大幅下挫，那斯達克微幅收黑。這種輪動現象顯示市場對AI估值的耐受度開始出現裂縫，「預期差」已成為晶片股的主要下行風險。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>歷史上，科技泡沫破裂前往往伴隨類似的「好消息卻跌」（Buy the rumor, sell the news）現象——2000年網路泡沫期間，市場在業績發布後的拋售比例明顯上升。目前費半指數本益比仍高達35-40倍，遠超歷史均值約25倍，調整空間不容忽視。值得注意的是，此次輪動並非系統性崩盤，道瓊創高顯示資金並未離場，而是在指數內部重新配置；這種「輪漲」結構實際上有助於延長牛市壽命。然而若後續幾家AI龍頭（如輝達、台積電）的財測也出現「低於超高預期」的情況，則可能引發更大幅度的評價重估。機構投資人應留意AI股的高Beta特性在波動放大時的尾部風險。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/123398/9547107" target="_blank">經濟日報</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-1">
+      <h3><a href="https://www.bbc.com/news/articles/cvgz237n40jo?at_medium=RSS&at_campaign=rss" target="_blank" rel="noopener">SpaceX目標估值1.75兆美元，衝刺史上最大股市掛牌</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>SpaceX由馬斯克於2002年創立，最初以降低太空發射成本為核心使命，近年來透過Starlink衛星網路服務大幅擴展商業版圖。公司多年來維持私有化狀態，估值隨AI浪潮快速攀升。此次IPO計畫籌資最高750億美元，超越沙烏地阿拉伯國家石油公司（Saudi Aramco）2019年的256億美元，成為人類歷史上最大規模的股票公開發行。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>SpaceX設定目標股價，隱含公司估值達1.75至1.78兆美元，高盛預測其AI相關營收（主要來自Starlink及Mythos平台）到2030年將成長百倍。馬斯克個人財富可能因此突破兆美元門檻，成為史上首位「兆元富翁」。此次IPO不僅是資本市場的重大事件，更是測試市場對AI+太空敘事估值包容度的重要指標。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>1.75兆美元的估值意味著SpaceX的市值已超越全球絕大多數上市企業，僅次於蘋果、微軟、輝達等少數巨頭。若以高盛的AI營收百倍成長預測折現，必須假設Starlink用戶數在2030年前突破5億、且每用戶年均貢獻顯著提升，這在技術上可行但商業執行風險極高。歷史上，類似的「終極敘事型IPO」（如Uber 2019年以820億美元估值上市後股價腰斬）提醒我們，私市估值往往在公開市場遭遇流動性折價。不過SpaceX與Uber最大的不同在於其已具備正向現金流的核心業務（Falcon 9發射）作為支撐，這使得其估值具有一定錨定基礎。對機構投資人而言，此次IPO的認購決策核心在於：如何評估Starlink在低軌衛星競爭（亞馬遜Kuiper、歐盟OneWeb）加劇下的護城河持久性。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.bbc.com/news/articles/cvgz237n40jo?at_medium=RSS&at_campaign=rss" target="_blank">BBC News</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-2">
+      <h3><a href="https://www.ft.com/content/06bb85c7-ab3c-4cc2-bdcf-679976b6e901" target="_blank" rel="noopener">比特幣因Strategy大規模拋售重挫，創2022年11月以來最大週跌幅</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Strategy（前身MicroStrategy）是全球最大比特幣企業持有者，其創辦人Michael Saylor自2020年起大規模將公司資產轉換為比特幣，並透過發債籌資持續加碼，持倉量超過22萬枚比特幣。由於其龐大持倉，Strategy的任何買賣動作都對加密市場價格形成顯著影響。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Strategy的大規模出售動作令加密市場交易者感到不安，比特幣本週跌勢加深，創2022年11月FTX崩潰以來最大單週跌幅。與此同時，美國股市主要指數持續創高，形成加密貨幣與傳統股市的罕見背離現象，顯示此輪加密下跌並非系統性風險偏好收縮，而是加密市場特有的結構性壓力。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>比特幣與標普500的相關係數在近兩年普遍維持在0.4-0.6的中度正相關區間，但本週兩者明顯背離，這在歷史上通常預示短期內其中一方會向另一方靠攏。2022年11月FTX事件後，比特幣在觸底約1.6萬美元後的六個月內反彈超過80%，顯示加密市場的流動性恢復能力相對強勁。然而本次拋壓源頭若真為Strategy的策略性減持而非被迫平倉，則後市的支撐邏輯相對完整。機構投資人應特別關注兩個信號：其一是鏈上數據顯示的長期持有者（LTH）行為是否出現大規模移動；其二是美聯儲利率路徑的變化，因高利率環境下比特幣的「無息資產折現」壓力仍是中期最大阻力。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/06bb85c7-ab3c-4cc2-bdcf-679976b6e901" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-3">
+      <h3><a href="https://www.ft.com/content/d6c1b19e-f28d-404c-b9c3-62f43848b9c1" target="_blank" rel="noopener">科技公司透過可轉換債券將AI高波動性貨幣化</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>可轉換債券（Convertible Bond）是企業融資的重要工具，其結構結合固定收益與股票期權特性，在市場波動率高漲時對發行人尤為有利——高波動率提升期權隱含價值，使發行人得以用更低票息換取更高溢價的轉換條件。近年AI概念推升科技股波動率至歷史高位，創造了可轉債套利的理想環境。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>根據Financial Times報導，科技集團正大量發行可轉換債券，本質上是將AI概念帶來的高股價波動性轉化為低成本融資工具。這種策略讓企業以「賣出波動率」的方式獲得資金，對沖基金則扮演套利方，買入可轉債並對沖股票部位。此一趨勢的擴大顯示企業高管對自身股票高估值的隱性確認。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>歷史上，可轉債發行量的激增往往是市場過熱的領先指標之一。2000年科技泡沫前夕，可轉債發行量創當時紀錄；2021年SPAC熱潮期間，類似工具同樣被大量運用。從結構性角度看，當企業選擇以可轉債而非傳統股票增發籌資，部分反映其認為當前股價已充分甚至過度反映未來成長預期，直接增發股票的稀釋成本過高。對機構投資人而言，這提供了兩個信號：一是相關企業管理層對AI業務未來現金流的信心可能不如市場定價所示那般篤定；二是可轉債市場的隱含波動率溢價可作為衡量AI概念股整體泡沫程度的另類指標，值得納入風險監測框架。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/d6c1b19e-f28d-404c-b9c3-62f43848b9c1" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-4">
+      <h3><a href="https://www.ft.com/content/573913be-f4e6-444e-9e55-65fe57f5286f" target="_blank" rel="noopener">川普「美國製造黃金時代」承諾破功，新廠投資支出下滑</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>川普自2025年重返白宮後，以高關稅與產業補貼政策力推製造業回流，訴諸「美國製造黃金時代」的政治敘事。然而製造業投資決策的時間周期通常長達3-5年，且高度依賴政策穩定性與人力成本可預期性，這使得關稅帶來的短期保護效果難以快速轉化為實質投資行動。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Financial Times報導指出，美國新廠建設支出已出現下滑，多位企業高管指向「不均衡的復甦」——部分受保護的傳統產業出現短暫訂單回升，但長期資本支出計畫因政策不確定性而遭到推遲或取消。這與川普政府對外宣稱的製造業復興形成鮮明對比，顯示高關稅政策的實際產業效果遠低於政治修辭。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>美聯儲費城分行的製造業調查數據長期顯示，關稅保護在短期內確能提升受保護產業的產能利用率，但若缺乏配套的勞動力培訓、供應鏈在地化及能源成本壓制政策，製造業回流的邊際效益會在6-12個月後迅速遞減。波士頓顧問集團（BCG）2024年的研究指出，美國製造業的單位人工成本較墨西哥高出約40%、較東南亞高出120-150%，這一結構性劣勢無法單憑關稅克服。更值得關注的是，關稅政策的朝令夕改——如對等關稅的多次暫停與恢復——已實質性地提高了企業的投資不確定性折現率，導致即便有意回流的企業也傾向於「觀望後再決策」。這對美國中期製造業就業與GDP成長的實質貢獻將持續低於官方預期。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/573913be-f4e6-444e-9e55-65fe57f5286f" target="_blank">Financial Times</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-corporate">
+      <div class="topic-header">
+        <h2 class="topic-title">國際大公司重大新聞</h2>
+      </div>
+      
+    <div class="news-item" id="article-corporate-0">
+      <h3><a href="https://techcrunch.com/2026/06/04/ahead-of-its-ipo-anthropics-daniela-amodei-shrugs-off-doubts-about-ais-returns/" target="_blank" rel="noopener">Anthropic年化營收衝破470億美元，IPO前夕創辦人對AI回報質疑不以為然</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Anthropic由前OpenAI研究副總裁Dario Amodei與姐姐Daniela Amodei於2021年共同創立，以「AI安全」為核心差異化定位，開發Claude系列大型語言模型。公司自2023年起獲得Amazon、Google等科技巨頭的大規模投資，估值持續飆升。在AI商業化回報受質疑的大環境下，Anthropic的快速成長成為業界焦點。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>TechCrunch報導，Anthropic宣布年化營收於2026年5月突破470億美元，相較2025年底的約90億美元呈現指數級躍升。聯合創辦人Daniela Amodei在IPO前夕公開回應市場對AI投資回報的質疑，表現出強烈信心。這一增速若能持續，意味著Anthropic將在極短時間內進入全球最高成長軟體公司的行列。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>470億美元的年化營收數字需要審慎解讀：「年化」通常基於最近單月或單季數據推算，可能高估持續增長的動能。然而即便打折計算，Anthropic從90億到470億的增速仍是驚人的——這主要反映企業客戶對Claude API的大規模採購，以及Amazon AWS深度整合後的通路放大效應。從競爭格局看，Anthropic與OpenAI的差異化競爭日趨明顯：前者主打企業安全合規，後者在消費端具更強品牌力。NSA採用Anthropic Mythos模型進行網路作戰的報導（FT同日刊出）一旦屬實，將既提升其政府端營收能見度，也帶來倫理爭議的公關風險。對機構投資人而言，Anthropic的IPO估值將是衡量AI基礎模型公司「基本面vs敘事溢價」最直接的定價錨點，其成功與否將深刻影響整個AI生態系的二級市場估值重估。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://techcrunch.com/2026/06/04/ahead-of-its-ipo-anthropics-daniela-amodei-shrugs-off-doubts-about-ais-returns/" target="_blank">TechCrunch</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-1">
+      <h3><a href="https://www.cnbc.com/2026/06/04/lululemon-lulu-earnings-q1-2026.html" target="_blank" rel="noopener">Lululemon下修全年展望，創辦人紛爭與產品失利雙重夾擊</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Lululemon是全球頂級運動休閒服飾品牌，以高端瑜伽褲起家，在過去十年成長為北美市值最高的服飾公司之一。然而自2025年起，公司與創辦人Chip Wilson的公開矛盾持續升溫——Wilson多次公開批評公司策略，對品牌形象造成持續性傷害，被視為北美頂級消費品牌中罕見的「創辦人毒化」案例。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Lululemon公布2026年第一季財報，同時下修全年業績展望，管理層在財報說明中明確點名「負面媒體評論」（主要指創辦人Wilson的公開批評）及新品表現不如預期為主因。公司坦承局勢在好轉之前可能繼續惡化，股價應聲重挫。這是少數企業在財報中直接承認創辦人關係問題對業績造成量化衝擊的案例。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>服飾品牌的核心競爭力在於「品牌光環」的維護，一旦負面輿論形成持續性損耗，其影響往往以年為單位延續。對照歷史案例：Abercrombie & Fitch在創辦人Mike Jeffries爭議期間（2013-2014年）股價跌幅超過60%，品牌重建耗費超過五年。Lululemon目前的困境更複雜之處在於同時面臨三重壓力：創辦人公關危機、產品創新乏力、以及美國中高端消費者在通膨壓力下的消費降級趨勢。從財務角度，公司的毛利率結構（約57-58%）仍屬優秀，現金流健康，這為品牌重建提供了時間緩衝。但若管理層未能在未來兩季拿出具說服力的新品策略並修復與Wilson的關係（或法律切割），則估值修復的催化劑將持續缺席，機構投資人宜保持觀望。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.cnbc.com/2026/06/04/lululemon-lulu-earnings-q1-2026.html" target="_blank">CNBC</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-2">
+      <h3><a href="https://www.theguardian.com/film/2026/jun/04/disney-paris-theme-park-deficit" target="_blank" rel="noopener">迪士尼巴黎樂園揭露42億美元累積虧損，高人氣仍難抵初始投資黑洞</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>迪士尼樂園巴黎（Disneyland Paris）於1992年開幕，是迪士尼在歐洲的唯一主題樂園，開幕初期即遭遇嚴重文化與財務衝突，被法國媒體稱為「文化車諾比」。歷經多次財務重組，迪士尼逐步提高持股比例並最終在2017年將其私有化，持續投入資金改造。近年樂園遊客人數回升，年訪客量達1,600萬人次，營收也創下歷史新高。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>The Guardian獨家分析揭露，儘管巴黎迪士尼樂園近年營收亮眼、訪客數創歷史新高，迪士尼截至目前仍有高達42億美元的累積投資未回收。這一數字凸顯了大型主題樂園投資的超長回收周期，以及初期過高資本支出所形成的永久性財務拖累。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>主題樂園屬於典型的重資本、長周期投資，行業平均投資回收期為15-25年，但巴黎迪士尼已開業逾三十年仍呈累積虧損，顯示其初始投資定價（及後續擴建支出）存在系統性高估。對比迪士尼旗下其他樂園：佛羅里達迪士尼世界的EBITDA利潤率約25-30%，香港迪士尼在政府補貼下才得以維持。巴黎案例的啟示在於：跨文化消費市場進入成本往往被嚴重低估，且一旦初始資本結構過於沉重，即便後續營運改善也難以改變累積損益的軌跡。這一案例對正在討論在英格蘭投資13億英鎊建設Universal UK的英國政府具有直接參考價值——公共資金補貼私人主題樂園的長期財務合理性值得深入評估。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.theguardian.com/film/2026/jun/04/disney-paris-theme-park-deficit" target="_blank">The Guardian</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-taiwan">
+      <div class="topic-header">
+        <h2 class="topic-title">台灣財經</h2>
+      </div>
+      
+    <div class="news-item" id="article-taiwan-0">
+      <h3><a href="https://money.udn.com/money/story/5599/9547131" target="_blank" rel="noopener">費城半導體指數重挫，日月光、聯電ADR大跌；台積電ADR逆勢上漲近2%</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>台灣半導體產業是全球供應鏈的核心節點，台積電、聯電、日月光等企業在美國存托憑證（ADR）市場的表現，既反映美國科技投資人對半導體產業的情緒，也對次日台灣本地股市的開盤方向形成重要的「定錨效應」。博通（Broadcom）日前公布AI晶片展望略遜預期，成為此波費半下跌的導火線。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>週四美股收盤，費城半導體指數（SOX）大幅下挫，連帶拖累日月光ADR與聯電ADR重挫。然而台積電ADR逆勢上漲近2%，報每股444.92美元，換算台幣後為每股2,800.06元，相對台北股市溢價率達17.4%。這顯示國際投資人持續對台積電在AI晶片製造的核心地位給予更高溢價，與其他半導體廠的分化程度正在擴大。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>台積電ADR溢價率達17.4%是一個值得高度關注的信號。歷史數據顯示，當ADR溢價率持續超過15%時，往往預示外資對台灣股市的增持意願強勁，但也帶來均值回歸的技術壓力。從基本面角度，台積電在先進封裝（CoWoS）與3奈米/2奈米製程的獨占地位，使其在AI晶片需求擴張週期中享有定價權，這是聯電（成熟製程為主）與日月光（封裝測試）所不具備的差異化護城河。然而費半整體走弱若演變為持續性趨勢，台積電的高溢價本益比（目前約30-35倍）在外資系統性降配半導體時也難以獨善其身。機構投資人應將台積電ADR溢價率作為外資情緒的日常監測指標，並留意台灣加權指數中外資買超/賣超的動向，作為短期方向判斷的輔助工具。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/5599/9547131" target="_blank">經濟日報</a></div>
+    </div>
+
+    <div class="news-item" id="article-taiwan-1">
+      <h3><a href="https://money.udn.com/money/story/123398/9547067" target="_blank" rel="noopener">中東局勢出現緩和跡象，提振美股道瓊與標普500，台灣出口導向產業間接受惠</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>美伊戰爭自2026年初以來持續擾動全球能源市場與風險情緒，霍爾木茲海峽的閉鎖風險使油價長期維持高位，對全球製造業成本與通膨形成持續性壓力。台灣作為高度外貿依存的小型開放經濟體，對全球景氣循環與地緣政治風險的敏感度遠高於內需型經濟體。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>美國總統川普釋出對伊朗談判的樂觀信號，並表示以黎局勢也在取得進展，此一地緣政治緩和預期帶動美股標普500與道瓊指數上揚，醫療保健與金融類股領漲。對台灣而言，中東局勢若持續改善，將帶來能源成本下行、全球製造業需求回暖的雙重利好，對台灣出口（尤其是電子與石化中游）構成間接正面效應。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>油價每下降10美元/桶，估算對台灣年度貿易成本的影響約在30-50億美元之間，對製造業毛利率的正面貢獻約0.5-1個百分點。歷史上，中東地緣風險的快速解除（如2003年伊拉克戰爭結束後的油價走低）往往帶動新興市場股市的短期強勁反彈，台灣因外資佔比高（外資持有台股市值約四成）而通常受益更為顯著。然而需要注意的是，川普政府的外交政策具有高度不確定性，當前釋出的樂觀信號能否轉化為實質性停火協議，存在相當變數。此外，即便中東局勢緩和，美聯儲的利率路徑仍是影響台灣資本流動的首要因素——若聯準會因通膨黏性而延遲降息，外資回流新興市場的力度將受到限制。台灣投資人宜在樂觀預期中保持對地緣政治反覆的情境準備。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/123398/9547067" target="_blank">經濟日報</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section deep-analysis-section" id="section-deep">
+      <div class="topic-header">
+        <h2 class="topic-title">深度分析 <span class="deep-badge">IN-DEPTH</span></h2>
+      </div>
+      
+    <div class="news-item deep-item" id="article-deep-0">
+      <h3><a href="https://www.economist.com/leaders/2026/06/04/americas-decaying-treasury-market-needs-a-fix" target="_blank" rel="noopener">美國國債市場的結構性衰敗亟需修復：高債務、市場割裂與貿易政策三重威脅全球安全資產</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>美國國債市場是全球金融體系的核心基礎設施，每日交易量超過9,000億美元，被視為全球最重要的「安全資產」（Safe Asset）與流動性避風港。然而過去數年，多起市場功能性失靈事件——包括2020年3月的國債市場流動性危機、2022年英國公債危機的溢出效應，以及近期美國財政赤字持續擴大——已引發各界對美國國債市場結構性脆弱性的深切關注。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>The Economist這篇分析文章指出，美國國債市場面臨三重相互強化的壓力：其一是美國財政赤字的結構性擴大（2026財年預算赤字預估超過2兆美元）持續推升供給；其二是做市商資本約束（受Basel III監管框架限制）使私部門吸收國債增量的能力下降，加劇市場在壓力期間的流動性乾涸風險；其三是川普政府激進的貿易政策削弱了外國政府（尤其是貿易順差國）再投資美元的意願，威脅到美國國債的傳統海外需求基礎。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>美國財政部當前的債務存量已突破36兆美元，佔GDP比例約124%，且在「大美麗法案」通過後預計在未來十年再增加3-5兆美元。外國官方部門對美國國債的持有比例自2014年的峰值（約34%）持續下滑至目前的約24%，主要原因包括：美元武器化（制裁工具化）帶來的儲備多元化需求，以及中國、沙烏地阿拉伯等貿易順差國減少美元再投資的戰略選擇。更深層的結構性問題在於：美國國債市場的「現金-期貨基差」（Cash-Futures Basis）交易策略高度集中於對沖基金，這一槓桿結構在壓力時刻（如2020年3月）可能形成系統性去槓桿的放大機制。解決方案被廣泛討論的包括：擴大聯準會常備回購機制（SRF）的覆蓋範圍、推動國債中央結算（Central Clearing）以降低交易對手風險、以及透過財政整合改善長期供需失衡。</p>
+      </div>
+
+      <div class="section key-takeaway">
+        <div class="section-label">深度洞察</div>
+        <p>美國國債市場的結構性問題不是短期波動，而是制度設計、財政政治與地緣格局三者長期交互演化的結果，其影響將以十年為單位重塑全球金融秩序。首先，美元「安全資產」的地位從來不是天賦，而是依賴美國財政紀律、深厚流動性與法治可信度的持續維護——三者任何一項的長期侵蝕都可能引發不可逆的定性轉變。其次，外國官方儲備從美國國債移出的趨勢一旦形成自我強化的預期，將推升美國長期利率並壓縮財政空間，形成「債務-利率」的惡性循環，其臨界點的計算遠比市場普遍預期的更難以精確掌握。第三，做市商資本約束是一個被嚴重低估的系統性脆弱點：巴塞爾III框架的槓桿率要求限制了銀行在壓力時期的做市能力，而對沖基金的基差交易在承擔流動性中介功能的同時，也累積了無法在危機時釋放的隱性槓桿。第四，川普的貿易政策正在無意間加速一個長期以來被視為「遠期風險」的情境：貿易順差國減少美元再投資，直接削減了美國國債的天然需求基礎，這與美國財政部持續擴大供給的方向形成對撞。第五，從制度設計角度，推動國債強制中央結算是目前最具可行性的中期修復方案——SEC已在推動相關改革，但實施時程與政治阻力仍存在高度不確定性。第六，對台灣、日本、南韓等持有大量美國國債的亞太盟邦而言，美國國債市場的結構性脆弱意味著其官方儲備的流動性風險正在悄然上升，這為亞太央行的儲備管理策略帶來需要重新評估的長期議題。最後，機構投資人應將「美國國債流動性溢價」納入固定收益組合的常態監測指標，並在壓力情境下測試若美債流動性再度枯竭（如2020年3月）時的投資組合韌性，而非假設美國國債在所有情境下都是完美的流動性緩衝。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.economist.com/leaders/2026/06/04/americas-decaying-treasury-market-needs-a-fix" target="_blank">The Economist</a></div>
+    </div>
+
+    </section>
+
+
+    <div class="nav-bottom">
+      <a href="../briefings.html">← 返回所有期數</a>
+    </div>
+
+  </div>
+
+  <footer>© 2026 Daily Briefing · 每個工作日更新</footer>
+</body>
+</html>
