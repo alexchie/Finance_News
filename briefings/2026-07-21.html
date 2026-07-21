@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026-07-21 · Daily Briefing</title>
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KJ8JBV99C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0KJ8JBV99C');
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #ffffff;
+      color: #111111;
+      line-height: 1.9;
+    }
+
+    header {
+      border-bottom: 2px solid #111;
+      padding: 2rem 2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    header h1 { font-size: 1.2rem; letter-spacing: 0.1em; }
+    header nav a {
+      text-decoration: none; color: #111;
+      margin-left: 2rem; font-size: 0.9rem;
+    }
+    header nav a:hover { text-decoration: underline; }
+
+    .article {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .breadcrumb {
+      font-size: 0.8rem; color: #aaa; margin-bottom: 2rem;
+    }
+    .breadcrumb a { color: #aaa; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* 期數標題 */
+    .issue-meta {
+      border-bottom: 2px solid #111;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .issue-meta .date {
+      font-size: 0.8rem; color: #aaa;
+      letter-spacing: 0.1em; margin-bottom: 0.5rem;
+    }
+    .issue-meta h2 {
+      font-size: 1.9rem; line-height: 1.3; margin-bottom: 0.8rem;
+    }
+    .issue-meta .summary {
+      font-size: 0.95rem; color: #444;
+      border-left: 3px solid #111;
+      padding-left: 1rem;
+    }
+
+    /* 今日概覽 */
+    .overview-section {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 3rem;
+    }
+    .overview-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 1rem;
+    }
+
+    /* 市場指數 */
+    .market-indices {
+      margin-bottom: 1.4rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .market-indices-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.7rem;
+    }
+    .market-indices-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.7rem;
+    }
+    @media (max-width: 600px) {
+      .market-indices-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .index-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      padding: 0.65rem 0.85rem;
+    }
+    .index-name {
+      font-size: 0.68rem;
+      color: #999;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.2rem;
+    }
+    .index-close {
+      font-size: 1rem;
+      font-weight: bold;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }
+    .index-change {
+      font-size: 0.7rem;
+      font-variant-numeric: tabular-nums;
+      margin-top: 0.12rem;
+    }
+    .index-change.positive { color: #2a7a2a; }
+    .index-change.negative { color: #c0392b; }
+    .index-change.neutral  { color: #999; }
+
+    .overview-regions {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .country-tag {
+      display: inline-block;
+      background: #111; color: #fff;
+      font-size: 0.65rem; padding: 0.1rem 0.45rem;
+      margin-right: 0.4rem;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
+    }
+    .region-tag {
+      background: #111; color: #fff;
+      font-size: 0.72rem; padding: 0.2rem 0.6rem;
+      letter-spacing: 0.05em;
+    }
+    .overview-toc { display: flex; flex-direction: column; gap: 0.3rem; }
+    .toc-row { display: flex; align-items: baseline; gap: 0.8rem; margin-top: 0.4rem; }
+    .toc-label {
+      font-size: 0.75rem; font-weight: bold;
+      color: #111; text-decoration: none;
+      min-width: 165px; flex-shrink: 0;
+    }
+    .toc-label:hover { text-decoration: underline; }
+    .toc-theme { font-size: 0.88rem; color: #555; }
+    .toc-row.deep .toc-label { color: #8B4513; }
+
+    /* 文章標題列表（概覽內） */
+    .toc-articles {
+      margin: 0.2rem 0 0.5rem 165px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    @media (max-width: 600px) {
+      .toc-articles { margin-left: 0; }
+    }
+    .toc-article-link {
+      font-size: 0.81rem;
+      color: #666;
+      text-decoration: none;
+      line-height: 1.5;
+    }
+    .toc-article-link::before { content: "· "; color: #bbb; }
+    .toc-article-link:hover { color: #111; text-decoration: underline; }
+
+    /* 主題區塊 */
+    .topic-section {
+      margin-bottom: 4rem;
+    }
+    .topic-header {
+      border-bottom: 1px solid #111;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    .topic-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: normal;
+      color: #555;
+    }
+
+    /* 單篇新聞 */
+    .news-item {
+      padding: 2rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .news-item h3 {
+      font-size: 1.15rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.4;
+    }
+    .news-item h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .news-item h3 a:hover {
+      text-decoration: underline;
+    }
+
+    /* 三個內容段落 */
+    .section {
+      margin-bottom: 1rem;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.3rem;
+    }
+    .section p {
+      font-size: 0.93rem;
+      color: #333;
+    }
+
+    /* 詳細分析特別標示 */
+    .section.analysis {
+      background: #f5f5f5;
+      border-left: 3px solid #111;
+      padding: 1rem 1.2rem;
+    }
+    .section.analysis .section-label {
+      color: #666;
+    }
+    .section.analysis p {
+      color: #222;
+    }
+
+    /* 深度洞察 */
+    .section.key-takeaway {
+      background: #fdf6f0;
+      border-left: 3px solid #8B4513;
+      padding: 1rem 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .section.key-takeaway .section-label {
+      color: #8B4513;
+    }
+    .section.key-takeaway p {
+      color: #222;
+    }
+
+    /* 深度分析 section */
+    .deep-analysis-section .topic-title {
+      color: #8B4513;
+    }
+    .deep-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      background: #8B4513;
+      color: #fff;
+      padding: 0.15rem 0.5rem;
+      margin-left: 0.8rem;
+      vertical-align: middle;
+      font-style: normal;
+      font-weight: normal;
+    }
+
+    .source {
+      font-size: 0.78rem;
+      color: #bbb;
+      margin-top: 1rem;
+    }
+    .source a { color: #bbb; text-decoration: none; }
+    .source a:hover { text-decoration: underline; }
+
+    /* 底部導覽 */
+    .nav-bottom {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .nav-bottom a { color: #111; text-decoration: none; }
+    .nav-bottom a:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid #ddd;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 3rem;
+    }
+  
+    .ticker-bar {
+      background: #111; color: #ccc; font-size: 0.72rem;
+      letter-spacing: 0.04em; display: flex; align-items: center; height: 2rem;
+    }
+    .ticker-date-fixed {
+      color: #fff; font-size: 0.67rem; white-space: nowrap;
+      padding: 0 1rem; border-right: 1px solid #333;
+      flex-shrink: 0; height: 100%; display: flex; align-items: center;
+    }
+    .ticker-scroll-area { overflow: hidden; white-space: nowrap; flex: 1; height: 100%; }
+    .ticker-track {
+      display: inline-block; animation: ticker-scroll 23s linear infinite;
+      padding-left: 1rem; height: 100%; line-height: 2rem;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ticker-item { display: inline-block; }
+    .ticker-label { color: #888; margin-right: 0.3rem; }
+    .ticker-sep { color: #444; margin: 0 0.3rem; }
+    .ticker-up   { color: #6fcf97; }
+    .ticker-down { color: #eb5757; }
+
+  </style>
+</head>
+<body>
+
+  <div class="ticker-bar"><div class="ticker-date-fixed">2026-07-20 收盤</div><div class="ticker-scroll-area"><div class="ticker-track"><span class="ticker-item"><span class="ticker-label">S&P 500</span>7,443.28 <span class="ticker-down">▼0.19%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>51,839.26 <span class="ticker-down">▼0.59%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>25,508.07 <span class="ticker-down">▼0.05%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>42,671.27 <span class="ticker-down">▼6.47%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>4,011.30 <span class="ticker-down">▼0.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>82.58 <span class="ticker-up">▲0.11%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>89.00 <span class="ticker-up">▲1.02%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>3,764.16 <span class="ticker-down">▼3.05%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>13,706.88 <span class="ticker-down">▼5.40%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>64,141.12 <span class="ticker-down">▼4.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>6,820.60 <span class="ticker-down">▼6.37%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">Bitcoin</span>65,146.43 <span class="ticker-up">▲0.70%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">S&P 500</span>7,443.28 <span class="ticker-down">▼0.19%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>51,839.26 <span class="ticker-down">▼0.59%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>25,508.07 <span class="ticker-down">▼0.05%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>42,671.27 <span class="ticker-down">▼6.47%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>4,011.30 <span class="ticker-down">▼0.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>82.58 <span class="ticker-up">▲0.11%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>89.00 <span class="ticker-up">▲1.02%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>3,764.16 <span class="ticker-down">▼3.05%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>13,706.88 <span class="ticker-down">▼5.40%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>64,141.12 <span class="ticker-down">▼4.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>6,820.60 <span class="ticker-down">▼6.37%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">Bitcoin</span>65,146.43 <span class="ticker-up">▲0.70%</span></span></div></div></div>
+
+  <header>
+    <h1><a href="../index.html" style="text-decoration:none;color:#111;">Daily Briefing</a></h1>
+    <nav>
+      <a href="../briefings.html">所有期數</a>
+      <a href="#">關於</a>
+    </nav>
+  </header>
+
+  <div class="article">
+
+    <div class="breadcrumb"><a href="../briefings.html">← 所有期數</a></div>
+
+    <div class="issue-meta">
+      <div class="date">2026-07-21 · 共 10 則</div>
+      <h2>美加關稅戰升溫、中東地緣風險推升油價，全球市場在財報季前夕瀰漫不確定性</h2>
+      <p class="summary">川普宣布對加拿大大多數商品加徵50%關稅，標誌著北美貿易摩擦進入新一輪升溫周期，同時美伊衝突持續推升油價至一個月高點，Brent原油突破90美元。在此背景下，摩根大通執行長戴蒙警告市場低估風險，美股三大指數回吐漲幅收跌，但費城半導體指數逆勢上揚，反映市場在財報季前對AI科技股仍存期待；台積電ADR小漲近1%，顯示台灣科技供應鏈在全球風險環境中仍具相對韌性。</p>
+    </div>
+
+    
+    <div class="overview-section">
+      <div class="overview-label">今日概覽</div>
+      
+      <div class="market-indices">
+        <div class="market-indices-label">市場行情 · 2026-07-20 收盤</div>
+        <div class="market-indices-grid">
+          <div class="index-card">
+            <div class="index-name">S&P 500</div>
+            <div class="index-close">7,443.28</div>
+            <div class="index-change negative">▼0.19%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">道瓊</div>
+            <div class="index-close">51,839.26</div>
+            <div class="index-change negative">▼0.59%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">那斯達克</div>
+            <div class="index-close">25,508.07</div>
+            <div class="index-change negative">▼0.05%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">台灣加權</div>
+            <div class="index-close">42,671.27</div>
+            <div class="index-change negative">▼6.47%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">黃金</div>
+            <div class="index-close">4,011.30</div>
+            <div class="index-change negative">▼0.03%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">WTI</div>
+            <div class="index-close">82.58</div>
+            <div class="index-change positive">▲0.11%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">布蘭特</div>
+            <div class="index-close">89.00</div>
+            <div class="index-change positive">▲1.02%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">上證</div>
+            <div class="index-close">3,764.16</div>
+            <div class="index-change negative">▼3.05%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">深證</div>
+            <div class="index-close">13,706.88</div>
+            <div class="index-change negative">▼5.40%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">日經225</div>
+            <div class="index-close">64,141.12</div>
+            <div class="index-change negative">▼4.03%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">KOSPI</div>
+            <div class="index-close">6,820.60</div>
+            <div class="index-change negative">▼6.37%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">Bitcoin</div>
+            <div class="index-close">65,146.43</div>
+            <div class="index-change positive">▲0.70%</div>
+          </div>
+        </div>
+      </div>
+      <div class="overview-toc">
+        <div class="toc-row">
+          <a href="#section-macro" class="toc-label">金融市場（總經）</a>
+          <span class="toc-theme">美加關稅戰與油價雙重衝擊市場</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">美國</span><a href="#article-macro-0" class="toc-article-link">川普對加拿大大多數商品祭出50%關稅，首度援引從未啟用的法律條款</a>
+          <span class="country-tag">美國</span><a href="#article-macro-1" class="toc-article-link">摩根大通執行長戴蒙警告：市場低估風險，當前價位下不會買進股票或美國公債</a>
+          <span class="country-tag">中東</span><a href="#article-macro-2" class="toc-article-link">伊朗戰事持續，Brent原油突破90美元創一個月新高</a>
+          <span class="country-tag">美國</span><a href="#article-macro-3" class="toc-article-link">Fed新主席Warsh拒絕預告利率走向，對沖基金策略面臨重大挑戰</a>
+          <span class="country-tag">英國</span><a href="#article-macro-4" class="toc-article-link">英國新首相伯納姆就任，財政政策走向牽動市場神經</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-corporate" class="toc-label">國際大公司重大新聞</a>
+          <span class="toc-theme">戴蒙示警、派拉蒙購併受阻、瑞安航空獲利重挫</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">英國</span><a href="#article-corporate-0" class="toc-article-link">摩根大通執行長戴蒙警告英國新首相：對銀行課稅將危及30億英鎊倫敦投資計畫</a>
+          <span class="country-tag">美國</span><a href="#article-corporate-1" class="toc-article-link">派拉蒙與華納兄弟1,100億美元購併案遭法院臨時暫停，好萊塢整合前景受挫</a>
+          <span class="country-tag">歐洲</span><a href="#article-corporate-2" class="toc-article-link">瑞安航空獲利重挫34%：伊朗戰爭打壓旅客需求，Brent原油超過90美元推升燃料成本</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-taiwan" class="toc-label">台灣財經</a>
+          <span class="toc-theme">台積電ADR逆勢小漲、費半帶動晶片股反彈</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">台灣</span><a href="#article-taiwan-0" class="toc-article-link">台積電ADR逆勢上漲近1%，日月光、聯電跌約4%，ADR市場漲跌分歧</a>
+          <span class="country-tag">美國</span><a href="#article-taiwan-1" class="toc-article-link">費城半導體逆勢走揚，散戶尋找AI下一個明星股，晶片股財報季前夕率先反彈</a>
+          
+        </div>
+        <div class="toc-row deep">
+          <a href="#section-deep" class="toc-label">深度分析</a>
+          <span class="toc-theme"></span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">美國</span><a href="#article-deep-0" class="toc-article-link">川普的伊朗困局：談判無法達成目標，政權更迭再度浮上檯面</a>
+          
+        </div>
+      </div>
+    </div>
+
+
+    
+    <section class="topic-section" id="section-macro">
+      <div class="topic-header">
+        <h2 class="topic-title">金融市場（總經）</h2>
+      </div>
+      
+    <div class="news-item" id="article-macro-0">
+      <h3><a href="https://www.theguardian.com/us-news/2026/jul/20/trump-canada-tariffs" target="_blank" rel="noopener">川普對加拿大大多數商品祭出50%關稅，首度援引從未啟用的法律條款</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>自2025年初川普重返白宮以來，美加貿易關係持續緊張。美國長期對加拿大的汽車、乳製品及酒類市場准入感到不滿，認為加拿大採取歧視性貿易措施。今年初雙方雖透過外交管道試圖緩和，但分歧從未真正彌合，加拿大亦曾對美國部分商品採取報復性關稅。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>白宮於7月20日宣布，川普將首度援引一項從未動用過的法律條款，對包括葡萄酒、乳製品、服飾、家具及水泥等多類加拿大商品加徵50%關稅，正式理由是加拿大在酒類、汽車和乳製品領域對美方採取不公平措施。此舉被視為自2025年以來美加貿易戰的最重大升級，市場普遍預期加拿大將採取對等報復措施，進一步衝擊北美供應鏈。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>歷史上，2018年川普援引232條款對鋼鋁加徵關稅時，加拿大迅速以約166億加幣的報復性關稅回應，最終雙方在2019年達成USMCA協議暫時化解。此次50%關稅力度遠超2018年，且援引從未啟用的條款，法律不確定性更高，市場難以預期談判時程。從宏觀角度看，加拿大是美國第二大貿易夥伴，2025年雙邊貿易額約達8,000億美元，50%關稅若全面實施，預計將推升美國汽車零部件、建材及農產品成本，增添通膨壓力，同時對加拿大製造業造成嚴重打擊，加元承壓風險上升。對全球供應鏈而言，北美一體化程度極高，此舉可能迫使企業重新評估在地生產策略，中長期影響不容低估。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.theguardian.com/us-news/2026/jul/20/trump-canada-tariffs" target="_blank">The Guardian</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-1">
+      <h3><a href="https://www.cnbc.com/2026/07/20/jpmorgan-chase-ceo-jamie-dimon-market-risk.html" target="_blank" rel="noopener">摩根大通執行長戴蒙警告：市場低估風險，當前價位下不會買進股票或美國公債</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>戴蒙長期以來是華爾街最具影響力的聲音之一，過去數年他曾多次對市場估值過高、地緣政治風險及財政赤字發出警告。摩根大通作為全球最大銀行，其執行長的公開表態向來被機構投資人視為重要參考訊號。近期美股在財報季前夕持續高位震盪，標普500本益比仍處於歷史偏高區間。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>戴蒙在最新公開聲明中表示，當前市場嚴重低估了戰爭、關稅及其他衝擊所帶來的風險，並明確表示在現有價位下，他不會買進股票或美國公債。這番言論與近期市場投資人傾向「忽視壞消息、押注復甦」的情緒形成鮮明對比，引發市場廣泛關注。此聲明恰逢美加關稅升溫及油價走高的雙重衝擊，對市場信心具有重要的警示意義。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>回顧歷史，戴蒙於2022年曾警告「經濟颶風」即將來臨，雖然當年股市確實大幅下跌，但其預警時機並非完全精準，顯示市場情緒與基本面之間存在時間差。目前標普500的席勒本益比（CAPE）仍在35倍以上，遠高於20世紀平均值約16倍。美國聯邦赤字持續擴大，10年期公債殖利率受到新任Fed主席Warsh「不預告利率走向」政策的影響而波動加劇，不確定性顯著上升。戴蒙的警告結合當前地緣政治（中東衝突、美加貿易戰）及貨幣政策不確定性，構成系統性風險的三重疊加，機構投資人應密切關注風險溢價是否存在重新定價的壓力，避免在市場高點過度暴露於股票或長天期固定收益資產。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.cnbc.com/2026/07/20/jpmorgan-chase-ceo-jamie-dimon-market-risk.html" target="_blank">CNBC</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-2">
+      <h3><a href="https://www.marketwatch.com/story/oil-prices-surge-stock-futures-dip-as-fighting-between-u-s-and-iran-intensifies-6fb37c79?mod=mw_rss_topstories" target="_blank" rel="noopener">伊朗戰事持續，Brent原油突破90美元創一個月新高</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>2026年上半年，美伊衝突持續升溫，葉門胡塞武裝對沙烏地阿拉伯的封鎖行動令波斯灣航運安全備受威脅。國際油價自2025年末因全球需求放緩而回落，但地緣政治風險溢價持續支撐油價。川普政府多次警告將對伊朗採取更強硬立場，市場對供應中斷風險保持高度敏感。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>國際油價於7月21日守住連續兩日漲勢，Brent原油突破每桶90美元，創近一個月新高。市場在美伊交火持續與外交斡旋並行的複雜局面中評估風險，川普誓言將讓伊朗為美軍士兵傷亡「付出數倍代價」，進一步壓縮外交解決空間。與此同時，汽油裂解差（crack spread）快速擴大，汽油價格漲幅超過原油本身，顯示煉製利潤已顯著改善。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從歷史數據看，每當波斯灣地緣政治明顯升溫，油價在短期內往往出現10-20%的風險溢價跳升。2019年沙烏地阿美煉油廠遭無人機攻擊後，油價單日漲幅超過15%。當前Brent突破90美元，若局勢持續惡化或霍爾木茲海峽受阻，市場普遍預估油價有機會測試100美元關卡。對宏觀面而言，油價走高將直接推升通膨預期，壓縮Fed降息空間，同時對依賴能源進口的亞洲經濟體（尤其是日本、南韓、台灣）造成額外成本壓力。航空業（如瑞安航空已出現利潤下滑）、物流業及製造業的燃料成本都將承受壓力，整體而言，持續高油價將成為全球企業獲利的重要逆風。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.marketwatch.com/story/oil-prices-surge-stock-futures-dip-as-fighting-between-u-s-and-iran-intensifies-6fb37c79?mod=mw_rss_topstories" target="_blank">MarketWatch</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-3">
+      <h3><a href="https://www.ft.com/content/a02aa9b1-85e0-4db7-afad-7da4b99b7a31?syn-25a6b1a6=1" target="_blank" rel="noopener">Fed新主席Warsh拒絕預告利率走向，對沖基金策略面臨重大挑戰</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>美聯儲新任主席Kevin Warsh於2026年接任後，採取了與前任鮑爾顯著不同的溝通風格，刻意淡化前瞻指引（forward guidance），主張讓市場依賴數據而非Fed的信號進行決策。前瞻指引自2008年金融危機後成為主要央行的核心工具，許多對沖基金的固定收益策略高度依賴對Fed政策路徑的預測。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>根據《金融時報》報導，Warsh推行的「靜默式革命」正在深刻改變市場運作方式，Fed不再像過去十年那樣頻繁釋放明確的利率路徑訊號，令對沖基金慣用的「Fed交易」策略失效。這一政策轉變使得美國公債市場波動性顯著上升，機構投資人在資產配置上的不確定性大幅增加，也部分解釋了為何戴蒙表示不願在當前價位買進美國公債。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>前瞻指引自2008年後成為壓低長端利率的重要工具，估計為美國股債市提供了相當規模的估值支撐。Warsh的政策轉向若持續，將使利率期貨市場的定價難度大幅上升，VIX及MOVE指數（衡量債券市場波動的指標）可能維持高位。歷史上，1994年Fed意外大幅升息曾引發全球債券市場「大屠殺」，主因便是市場事前缺乏充分的前瞻指引。當前環境下，若通膨因油價或關稅走高而反彈，而Warsh堅持不提供明確訊號，市場可能面臨類似1994年的突發性重新定價風險。對機構投資人而言，應降低對Fed溝通的依賴，強化自身宏觀模型，並增加固定收益部位的靈活性以因應波動。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/a02aa9b1-85e0-4db7-afad-7da4b99b7a31?syn-25a6b1a6=1" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-4">
+      <h3><a href="https://www.ft.com/content/ffbf8a50-e497-4ab6-a2d3-d94277f4a087?syn-25a6b1a6=1" target="_blank" rel="noopener">英國新首相伯納姆就任，財政政策走向牽動市場神經</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>安迪·伯納姆（Andy Burnham）在基爾·斯塔默（Keir Starmer）驚人辭職後，出乎意料地以前曼徹斯特市長身份接任英國首相，其左派色彩相對鮮明。英國目前面臨財政整頓壓力、生活成本危機及公共服務投資不足三重困境，市場對新政府的財政立場高度警惕。前防衛大臣約翰·希利（John Healey）被任命為財政大臣，被視為相對穩健的人選。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>伯納姆就任英國首相，承諾「團結與積極」並著力解決生活成本問題，包括研究提高免稅額等措施，但也坦言這些改變難度甚高。市場對新政府可能對銀行加稅表示擔憂，摩根大通執行長戴蒙已直接警告伯納姆：若對銀行課稅，將威脅摩根大通規劃中的30億英鎊倫敦新辦公室投資計畫。英鎊及英國公債市場對新政府政策走向保持密切觀察。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>英國在脫歐後，金融服務業對經濟貢獻佔GDP約12%，倫敦作為全球金融中心的地位雖有所動搖，但仍是歐洲最重要的金融樞紐。歷史上，1976年英國工黨政府因財政失控被迫向IMF求援、2022年特拉斯政府「迷你預算」引發英鎊崩跌及公債拋售，均顯示市場對英國財政政策極為敏感。伯納姆若推動激進的加稅方案，英鎊貶值及英國公債殖利率上升的風險不可忽視。短期內，市場將以財政大臣希利首次演說及預算案細節作為關鍵評估指標；若財政政策被判定為不可持續，英鎊匯率可能面臨2022年後的再度考驗。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/ffbf8a50-e497-4ab6-a2d3-d94277f4a087?syn-25a6b1a6=1" target="_blank">Financial Times</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-corporate">
+      <div class="topic-header">
+        <h2 class="topic-title">國際大公司重大新聞</h2>
+      </div>
+      
+    <div class="news-item" id="article-corporate-0">
+      <h3><a href="https://www.ft.com/content/b41aea5a-e374-49ef-9d74-938916de7dec?syn-25a6b1a6=1" target="_blank" rel="noopener">摩根大通執行長戴蒙警告英國新首相：對銀行課稅將危及30億英鎊倫敦投資計畫</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>摩根大通是英國最重要的外資金融機構之一，目前正規劃在倫敦建設一座大型新辦公室，預計投資金額達30億英鎊，涉及數千個高薪就業機會。英國新任首相伯納姆在競選期間曾暗示可能對大型金融機構加稅，以填補公共服務資金缺口，引發金融業強烈關注。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>戴蒙直接向伯納姆發出警告，表示若英國政府對銀行業實施稅務加重，摩根大通將重新評估其30億英鎊倫敦辦公室的投資計畫。這是一個罕見的公開對抗，顯示全球頂級金融機構對英國財政政策走向的高度警惕。此舉也展現出大型跨國企業在政策博弈中的籌碼，為英國新政府的財政決策帶來額外壓力。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>跨國企業以投資威脅作為政策談判籌碼，在歷史上並非罕見，但出自全球最大銀行執行長之口，且針對剛上任的新政府，其警示意義格外強烈。倫敦金融城在2016年脫歐後已陸續流失部分業務至法蘭克福、都柏林及阿姆斯特丹，根據英國財政部數據，金融服務業每年貢獻逾750億英鎊稅收，是政府不可輕易割捨的稅基。若伯納姆政府堅持對銀行加稅，可能進一步加速金融機構將業務遷往更友善的稅務環境，形成「課稅越多、稅基越小」的反效果。從更廣的角度看，這一事件反映出全球資本流動對財政政策越來越敏感，主要經濟體在財政整頓與吸引投資之間的平衡愈加困難，英國新政府的處理方式將成為其他歐洲國家的重要參考案例。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/b41aea5a-e374-49ef-9d74-938916de7dec?syn-25a6b1a6=1" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-1">
+      <h3><a href="https://www.cnbc.com/2026/07/20/paramount-wbd-merger-delay.html" target="_blank" rel="noopener">派拉蒙與華納兄弟1,100億美元購併案遭法院臨時暫停，好萊塢整合前景受挫</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>派拉蒙與華納兄弟（Warner Bros. Discovery）的合併案估值高達約1,100億美元，被視為近年好萊塢最大規模的媒體整合案。兩大公司面臨串流媒體競爭激烈、傳統有線電視訂戶快速流失的雙重困境，此次合併旨在整合內容資產、擴大規模以對抗Netflix及Disney+等競爭對手。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>加州聯邦法院於7月20日裁定，依數個州檢察長提出的反壟斷訴訟，對此合併案發出臨時限制令（Temporary Restraining Order），理由是該案可能損害電影院業者、基本有線電視分銷商及消費者利益。這是美國司法部門在媒體整合案上採取主動干預的重要訊號，也使派拉蒙與華納兄弟股價承壓，市場對最終成交的信心顯著下降。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從歷史先例看，美國媒體整合案遭監管阻擋並不罕見：2018年AT&T收購時代華納歷經司法部訴訟，最終雖獲批准，但歷時數年且面臨嚴格行為限制；2019年迪士尼收購21世紀福斯亦需出售資產方獲通過。此次各州檢察長聯合出擊，顯示反壟斷執法重心正從聯邦下移至州層級，是監管環境趨嚴的新信號。若合併最終受阻或大幅修改，兩家公司將各自面臨更大的財務壓力，在串流競爭中單打獨鬥的劣勢將更明顯。從投資角度而言，媒體整合套利交易的風險溢價已顯著上升，同類型的大型傳媒合併案（如Comcast與其他平台的潛在整合）也可能因此面臨更嚴格的監管審查。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.cnbc.com/2026/07/20/paramount-wbd-merger-delay.html" target="_blank">CNBC</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-2">
+      <h3><a href="https://www.bbc.co.uk/news/articles/cn8nldwj12jo?at_medium=RSS&at_campaign=rss" target="_blank" rel="noopener">瑞安航空獲利重挫34%：伊朗戰爭打壓旅客需求，Brent原油超過90美元推升燃料成本</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>瑞安航空（Ryanair）是歐洲最大的低成本航空公司，以超低票價及高效率運營著稱，其獲利高度依賴燃料成本控制及客艙高載客率。2026年中東地緣政治持續升溫，特別是美伊衝突擴大，令歐洲旅客在夏季旺季出行決策趨於保守，部分航線需求明顯下滑。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>瑞安航空公布第一季財報，淨利潤較去年同期下滑34%，主要歸因於中東局勢惡化導致旅客延遲訂票，以及燃料成本因油價走高而顯著增加。執行長麥可·奧利瑞（Michael O'Leary）雖強調並非旅客不足，而是預訂時間縮短導致票價難以拉升，但同時警告「困難的冬季」將至，令市場對整個航空業下半年展望感到憂慮。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>航空業是對油價最敏感的行業之一，燃料成本通常佔低成本航空總成本的25-30%。Brent原油每上漲10美元，估計將對瑞安航空年度成本增加逾3億歐元（按其規模估算）。歷史上，2008年油價飆升至每桶147美元時，全球多家航空公司瀕臨破產，包括歐洲的XL航空及美國的ATA航空。雖然當前油價水準與2008年高峰仍有距離，但若中東局勢持續惡化推升油價至100美元以上，且旅客信心未能快速回復，中小型航空公司的財務壓力將大幅上升。此外，高油價環境下，擁有較完善燃油對沖機制的大型航空公司（如漢莎、法航荷航集團）在競爭中的相對優勢將更加凸顯，航空業的競爭格局可能加速洗牌。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.bbc.co.uk/news/articles/cn8nldwj12jo?at_medium=RSS&at_campaign=rss" target="_blank">BBC News</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-taiwan">
+      <div class="topic-header">
+        <h2 class="topic-title">台灣財經</h2>
+      </div>
+      
+    <div class="news-item" id="article-taiwan-0">
+      <h3><a href="https://money.udn.com/money/story/5599/9640388" target="_blank" rel="noopener">台積電ADR逆勢上漲近1%，日月光、聯電跌約4%，ADR市場漲跌分歧</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>台灣半導體相關企業在美國存託憑證（ADR）市場的表現，是全球投資人評估台灣科技供應鏈健康度的重要指標。台積電作為全球最先進晶片製造商，其ADR走勢高度連動於AI算力需求及美國大型科技公司的資本支出預期。日月光投控及聯電則分別代表封裝測試及成熟製程晶片的市場動向。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>7月20日，台積電ADR收盤上漲近1%，報每股402.30美元，折合新台幣後約2,596.77元，對台北交易股票的溢價率高達11.93%，顯示海外投資人對台積電長線競爭力仍具信心。然而，日月光及聯電ADR分別下跌約4%，反映市場對封測及成熟製程晶片需求的相對保守態度，台灣科技股在全球風險情緒走弱背景下呈現結構性分化。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>台積電ADR溢價率近12%顯示海外需求依然旺盛，這與其在先進製程（3奈米及2奈米）上幾乎無可替代的地位密切相關。根據市場研究機構TrendForce數據，台積電在全球先進晶片製造市場的份額超過60%，AI相關HPC晶片需求持續推升其先進製程的產能利用率。相比之下，日月光及聯電反映的是下游消費電子及汽車等成熟需求的疲軟，中國汽車市場銷售年減20%（本日另一重要新聞）已對成熟製程產能需求構成明顯壓力。投資人應留意，在全球宏觀不確定性升溫的環境中，台灣半導體股票的「啞鈴效應」正在加劇：先進製程（台積電）持續受追捧，而成熟製程及封測業者則面臨需求疲弱與中國競爭雙重壓力，選股的結構性差異將成為未來一年台灣科技股報酬的關鍵分水嶺。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/5599/9640388" target="_blank">經濟日報</a></div>
+    </div>
+
+    <div class="news-item" id="article-taiwan-1">
+      <h3><a href="https://money.udn.com/money/story/5599/9640389" target="_blank" rel="noopener">費城半導體逆勢走揚，散戶尋找AI下一個明星股，晶片股財報季前夕率先反彈</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>自2023年以來，以輝達（Nvidia）為首的AI晶片股引領全球股市上漲，帶動費城半導體指數（SOX）累計漲幅驚人。然而進入2026年，隨著AI巨頭估值偏高、獲利成長預期是否可持續引發質疑，部分資金開始轉向尋找「下一個AI受益者」。華爾街日報近期亦報導散戶積極尋找新科技明星的趨勢。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>7月20日美股三大指數收低，但費城半導體指數逆勢收漲，晶片股在大型科技公司財報公布前反彈，顯示市場對半導體業獲利仍抱持樂觀期待。同時，市場關注中國AI模型（如Moonshot AI的Kimi K3）的低成本策略是否反而有利於Nvidia、Micron等硬體廠商，因為低價AI模型可能激勵企業更廣泛部署AI工作負載，從而提升晶片需求。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從歷史規律看，費城半導體指數在財報季前往往呈現「預期買進、事實賣出」的特徵，但若財報實際超預期，則可形成強勁的二次上漲動力。當前財報季的焦點在於：大型科技公司（微軟、Alphabet、Meta等）的AI基礎設施資本支出是否持續增長，這將直接決定台積電及美國晶片設備廠的訂單能見度。中國低成本AI模型的普及雖短期衝擊軟體層的高利潤率，但歷史顯示每當AI應用層門檻降低，基礎設施層（晶片、伺服器）的需求往往呈現「Jevons悖論」式增長——效率提升反而帶動整體使用量大幅擴張。對台灣投資人而言，此趨勢進一步鞏固台積電在先進封裝（CoWoS）及先進製程上的長線需求基礎，同時也提示AI應用普及化可能為台灣ODM/OEM廠商帶來新的成長機會。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/5599/9640389" target="_blank">經濟日報</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section deep-analysis-section" id="section-deep">
+      <div class="topic-header">
+        <h2 class="topic-title">深度分析 <span class="deep-badge">IN-DEPTH</span></h2>
+      </div>
+      
+    <div class="news-item deep-item" id="article-deep-0">
+      <h3><a href="https://www.ft.com/content/59f83b04-3c5a-41f3-b0b6-9238dd4186b8?syn-25a6b1a6=1" target="_blank" rel="noopener">川普的伊朗困局：談判無法達成目標，政權更迭再度浮上檯面</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>美伊關係自2018年川普退出伊核協議（JCPOA）後持續惡化，2020年蘇萊曼尼將軍被暗殺進一步加劇雙方敵意。2026年衝突升溫至新高點，美軍在中東地區出現士兵傷亡，川普政府面臨國內輿論及國會壓力，被迫尋求更強硬的對伊立場，但外交管道成效有限，波斯灣局勢陷入複雜膠著。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>《金融時報》深度分析指出，美國透過外交談判無法實現其對伊朗的核心目標——即伊朗放棄核計畫、停止支持代理武裝及接受其在中東影響力的大幅削減。在此背景下，「政權更迭」（regime change）選項正重回美國政策辯論核心。然而，歷史上強行推動中東政權更迭的代價極為慘重，伊拉克戰爭與利比亞干預的教訓清晰表明，後Saddam或後Gaddafi的權力真空往往比原有政權更難管理。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>美國對伊政策陷入「談判無效、軍事代價高昂、政權更迭風險巨大」的三重困境，此即文章所稱「blind alley」（死胡同）。伊朗擁有約8,000萬人口、複雜的地緣政治網絡及深厚的反美民族情緒，其核計畫濃縮鈾豐度據報已接近武器級，技術上已幾乎具備核威懾能力，使傳統的壓迫式外交更加棘手。從市場影響角度，伊朗持有全球約9%的石油探明儲量，霍爾木茲海峽是全球約20%石油貿易的咽喉要道，任何全面衝突均將造成系統性的能源供應衝擊。</p>
+      </div>
+
+      <div class="section key-takeaway">
+        <div class="section-label">深度洞察</div>
+        <p>伊朗困局揭示了美國中東政策的一個根本性結構矛盾：美國擁有壓倒性軍事優勢，卻無法將其轉化為政治解決方案，因為伊朗政權的存續並非依賴對外部攻擊的脆弱性，而是建立在深厚的意識形態動員與國內恐怖平衡之上。歷史上，2003年伊拉克戰爭的「震懾行動」在三週內推翻薩達姆政權，卻引爆長達十年的教派內戰及伊斯蘭國崛起，說明中東政權更迭的「後戰爭治理赤字」往往遠比軍事勝利更難克服。伊朗案例更為複雜：伊朗改革派與保守派之間的內部張力從未消失，但美國的持續施壓反而為強硬派提供了凝聚民心的外部威脅敘事，歷史上1953年CIA支持的政變雖成功推翻摩薩台，卻種下了1979年伊斯蘭革命的長期仇恨根源。對金融市場而言，美伊衝突的最壞情景並非一次性的價格衝擊，而是持續數年的「低強度衝突+高油價」組合——這種情景類似1980年代兩伊戰爭對全球能源供應的長期擾動，將系統性壓縮全球製造業利潤率並維持通膨黏性，令主要央行的貨幣政策空間持續受限。機構投資人應將此視為一個「肥尾風險」（fat-tail risk）進行對沖，而非純粹的短期地緣政治事件，能源資產及黃金的戰略配置比例值得重新審視。從更宏觀的視角看，此困局也折射出美國全球霸權進入收縮期的深層結構性問題：軍事主導地位難以掩蓋外交工具的老化與盟友體系的鬆動，如何在維持嚇阻的同時建構有效的多邊外交框架，將是未來美國對外政策最核心的課題，其答案將深刻影響未來十年的全球地緣政治與金融市場格局。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/59f83b04-3c5a-41f3-b0b6-9238dd4186b8?syn-25a6b1a6=1" target="_blank">Financial Times</a></div>
+    </div>
+
+    </section>
+
+
+    <div class="nav-bottom">
+      <a href="../briefings.html">← 返回所有期數</a>
+    </div>
+
+  </div>
+
+  <footer>© 2026 Daily Briefing · 每個工作日更新</footer>
+</body>
+</html>
