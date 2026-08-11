@@ -3,8 +3,9 @@ import calendar
 import feedparser
 import os
 import json
+import sys
 import time
-from datetime import date
+from datetime import date, timedelta
 
 # ── 設定區 ────────────────────────────────────────
 # 安全做法：從環境變數讀取，不要直接寫在程式碼裡
@@ -150,6 +151,7 @@ def _fetch_stooq(yf_symbol, name):
         rows = list(csv.DictReader(io.StringIO(text)))
         rows = sorted(rows, key=lambda r: r["Date"])
         rows = [r for r in rows if r.get("Close") and r["Close"] != "N/D"]
+        rows = [r for r in rows if r["Date"] < str(date.today())]  # 排除今日（UTC）未收盤資料
         if not rows:
             return None
         close = round(float(rows[-1]["Close"]), 2)
@@ -193,11 +195,15 @@ def fetch_market_data():
         ("^KS11",     "KOSPI"),
         ("BTC-USD",   "Bitcoin"),
     ]
+    # 明確指定日期範圍：end 為 exclusive，確保絕對不含「今日（UTC）」的未收盤資料
+    fetch_end   = date.today()
+    fetch_start = fetch_end - timedelta(days=10)   # 往前 10 天，涵蓋週末＋連假
+
     results = []
     for symbol, name in INDICES:
         entry = None
         try:
-            hist = yf.Ticker(symbol).history(period="5d")
+            hist = yf.Ticker(symbol).history(start=str(fetch_start), end=str(fetch_end))
             hist = hist.dropna(subset=["Close"])
             if len(hist) >= 2:
                 close    = round(float(hist.iloc[-1]["Close"]), 2)
@@ -1161,7 +1167,7 @@ def send_newsletter(data, market_data, subject):
 
     if not api_key or not list_id or not sender_email:
         print("   ⚠️  未設定 Brevo 環境變數，略過寄信。")
-        return
+        return False
 
     headers = {"api-key": api_key, "Content-Type": "application/json"}
 
@@ -1307,7 +1313,43 @@ def update_briefings_list():
         f.write(briefings_html)
 
 
+def _send_only_mode():
+    """讀取當日資料（JSON 或 HTML fallback），直接呼叫 send_newsletter()。"""
+    import re as _re
+    json_path = f"briefings/{TODAY}.json"
+    html_path = f"briefings/{TODAY}.html"
+
+    if os.path.exists(json_path):
+        with open(json_path, encoding="utf-8") as f:
+            payload = json.load(f)
+        data        = payload["data"]
+        market_data = payload["market_data"]
+    elif os.path.exists(html_path):
+        # Fallback：從 HTML 解析標題，不含文章列表與市場數據
+        print(f"   ⚠️  {json_path} 不存在，改從 HTML 解析標題...")
+        with open(html_path, encoding="utf-8") as f:
+            html_content = f.read()
+        m = _re.search(r'<div class="issue-meta">.*?<h2>(.+?)</h2>', html_content, _re.DOTALL)
+        issue_title = m.group(1).strip() if m else TODAY
+        data        = {"issue_title": issue_title, "topics": []}
+        market_data = None
+    else:
+        print(f"❌ 找不到 {json_path} 也找不到 {html_path}")
+        sys.exit(1)
+
+    subject = f"Daily Finance News {TODAY} · {data['issue_title'][:25]}…"
+    print(f"\n⑥ 發送電子報（send-only 模式）...")
+    ok = send_newsletter(data, market_data, subject)
+    if not ok:
+        sys.exit(1)
+    print("\n✅ 完成！")
+
+
 def main():
+    if "--send-only" in sys.argv:
+        _send_only_mode()
+        return
+
     if not API_KEY:
         print("❌ 找不到 ANTHROPIC_API_KEY，請先設定環境變數")
         print("   執行：export ANTHROPIC_API_KEY='你的key'")
@@ -1346,6 +1388,12 @@ def main():
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"   ✓ 生成：{OUTPUT_PATH}")
+
+    json_path = f"briefings/{TODAY}.json"
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"data": data, "market_data": market_data}, f,
+                  ensure_ascii=False, indent=2)
+    print(f"   ✓ 資料儲存：{json_path}")
 
     print("\n⑤ 更新首頁與列表頁...")
     update_index(data, total_count, market_data)

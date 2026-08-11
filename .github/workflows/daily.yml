@@ -26,13 +26,11 @@ jobs:
       - name: 安裝套件
         run: pip install anthropic feedparser yfinance
 
-      - name: 執行生成腳本
+      - name: 生成每日簡報
         env:
-          ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
-          GA_MEASUREMENT_ID:  ${{ secrets.GA_MEASUREMENT_ID }}
-          BREVO_API_KEY:      ${{ secrets.BREVO_API_KEY }}
-          BREVO_LIST_ID:      ${{ secrets.BREVO_LIST_ID }}
-          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
+          # 不傳 BREVO_* → send_newsletter() 內的 guard 自動略過寄信
         run: python generate.py
 
       - name: Commit 並推送新檔案
@@ -42,3 +40,30 @@ jobs:
           git add -A
           git diff --staged --quiet || git commit -m "📰 每日情報 ${{ env.TODAY || 'auto' }}"
           git push
+
+  send:
+    needs: [generate]
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: 取得 repo 內容（含 generate job 的新 commit）
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: 設定 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝套件
+        run: pip install anthropic feedparser yfinance
+
+      - name: 寄送電子報
+        env:
+          BREVO_API_KEY:      ${{ secrets.BREVO_API_KEY }}
+          BREVO_LIST_ID:      ${{ secrets.BREVO_LIST_ID }}
+          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
+        run: python generate.py --send-only
