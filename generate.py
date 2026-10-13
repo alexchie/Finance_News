@@ -379,6 +379,32 @@ def analyze_with_claude(topic_articles, deep_articles):
         raise
 
 
+_ARTICLE_DEFAULTS = {
+    "title": "（無標題）",
+    "country": "",
+    "background": "",
+    "content": "",
+    "analysis": "",
+    "source_name": "原文",
+    "source_url": "#",
+}
+
+
+def normalize_data(data):
+    """補齊 Claude 偶爾漏掉的欄位（例如 source_url），避免整份簡報因 KeyError 中斷"""
+    for topic in data.get("topics", []):
+        is_deep = topic.get("topic_name") == "深度分析"
+        for a in topic.get("articles", []):
+            for key, default in _ARTICLE_DEFAULTS.items():
+                if not a.get(key):
+                    if key != "country":
+                        print(f"   ⚠ 「{a.get('title', '?')}」缺少欄位 {key}，以預設值補上")
+                    a[key] = default
+            if is_deep and not a.get("key_takeaway"):
+                a["key_takeaway"] = ""
+    return data
+
+
 def generate_article_html(article, article_id=None):
     """把單篇文章轉成 HTML（標題為可點擊連結）"""
     id_attr = f' id="{article_id}"' if article_id else ""
@@ -1332,7 +1358,7 @@ def main():
     deep_articles = fetch_deep_analysis_articles()
 
     print("\n③ 呼叫 Claude 分析（約 15-30 秒）...")
-    data = analyze_with_claude(topic_articles, deep_articles)
+    data = normalize_data(analyze_with_claude(topic_articles, deep_articles))
     print(f"   ✓ 分析完成，標題：{data['issue_title']}")
 
     print("\n④ 生成 HTML...")
