@@ -1,5 +1,6 @@
 import anthropic
 import calendar
+from macro_calendar import fetch_macro_calendar, build_calendar_html
 import feedparser
 import os
 import json
@@ -976,7 +977,7 @@ def generate_html(data, market_data=None):
 
     return html
 
-def update_index(data, total_count, market_data=None):
+def update_index(data, total_count, market_data=None, macro_cal=None):
     """
     重寫 index.html 的四個動態區塊（以 DYNAMIC comment 錨點識別）：
       TICKER  — 頂部市場行情快訊
@@ -1091,9 +1092,19 @@ def update_index(data, total_count, market_data=None):
         '      <!-- DYNAMIC:SUBSCRIBE:END -->'
     )
 
-    # ── 讀取並替換五個動態區塊 ────────────────────────
+    # ── CALENDAR 區塊（首頁最下方的總經行事曆）────────
+    # 所有來源都失敗時保留前一天的行事曆，不要清空
+    keep_old_calendar = not macro_cal or (not macro_cal["events"] and macro_cal["failed"])
+    new_calendar = None if keep_old_calendar else build_calendar_html(macro_cal)
+
+    # ── 讀取並替換動態區塊 ────────────────────────────
     with open("index.html", "r", encoding="utf-8") as f:
         content = f.read()
+
+    if "<!-- DYNAMIC:CALENDAR:START -->" not in content:
+        content = content.replace(
+            "  <footer>",
+            "  <!-- DYNAMIC:CALENDAR:START -->\n  <!-- DYNAMIC:CALENDAR:END -->\n\n  <footer>", 1)
 
     for anchor, new_block in [
         ("TICKER",    new_ticker),
@@ -1101,10 +1112,13 @@ def update_index(data, total_count, market_data=None):
         ("STATS",     new_stats),
         ("LATEST",    new_latest),
         ("RECENT",    new_recent),
+        ("CALENDAR",  new_calendar),
     ]:
+        if new_block is None:
+            continue
         content = re.sub(
             rf'<!-- DYNAMIC:{anchor}:START -->.*?<!-- DYNAMIC:{anchor}:END -->',
-            new_block,
+            lambda _m, b=new_block: b,
             content,
             flags=re.DOTALL,
         )
@@ -1373,12 +1387,20 @@ def main():
         f.write(html)
     print(f"   ✓ 生成：{OUTPUT_PATH}")
 
-    print("\n⑤ 更新首頁與列表頁...")
-    update_index(data, total_count, market_data)
+    print("\n⑤ 抓取總經行事曆...")
+    try:
+        macro_cal = fetch_macro_calendar()
+        print(f"   ✓ 未來兩週共 {len(macro_cal['events'])} 筆")
+    except Exception as e:
+        macro_cal = None
+        print(f"   ⚠ 總經行事曆取得失敗：{e}")
+
+    print("\n⑥ 更新首頁與列表頁...")
+    update_index(data, total_count, market_data, macro_cal)
     update_briefings_list()
     print("   ✓ 首頁與列表頁已更新")
 
-    print("\n⑥ 發送電子報...")
+    print("\n⑦ 發送電子報...")
     send_newsletter(data, market_data, f"Daily Finance News {TODAY} · {data['issue_title'][:25]}…")
 
     print(f"\n✅ 全部完成！")
