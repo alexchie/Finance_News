@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026-11-15 · Daily Briefing</title>
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KJ8JBV99C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0KJ8JBV99C');
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #ffffff;
+      color: #111111;
+      line-height: 1.9;
+    }
+
+    header {
+      border-bottom: 2px solid #111;
+      padding: 2rem 2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    header h1 { font-size: 1.2rem; letter-spacing: 0.1em; }
+    header nav a {
+      text-decoration: none; color: #111;
+      margin-left: 2rem; font-size: 0.9rem;
+    }
+    header nav a:hover { text-decoration: underline; }
+
+    .article {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .breadcrumb {
+      font-size: 0.8rem; color: #aaa; margin-bottom: 2rem;
+    }
+    .breadcrumb a { color: #aaa; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* 期數標題 */
+    .issue-meta {
+      border-bottom: 2px solid #111;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .issue-meta .date {
+      font-size: 0.8rem; color: #aaa;
+      letter-spacing: 0.1em; margin-bottom: 0.5rem;
+    }
+    .issue-meta h2 {
+      font-size: 1.9rem; line-height: 1.3; margin-bottom: 0.8rem;
+    }
+    .issue-meta .summary {
+      font-size: 0.95rem; color: #444;
+      border-left: 3px solid #111;
+      padding-left: 1rem;
+    }
+
+    /* 今日概覽 */
+    .overview-section {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 3rem;
+    }
+    .overview-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 1rem;
+    }
+
+    /* 市場指數 */
+    .market-indices {
+      margin-bottom: 1.4rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .market-indices-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.7rem;
+    }
+    .market-indices-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.7rem;
+    }
+    @media (max-width: 600px) {
+      .market-indices-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .index-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      padding: 0.65rem 0.85rem;
+    }
+    .index-name {
+      font-size: 0.68rem;
+      color: #999;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.2rem;
+    }
+    .index-close {
+      font-size: 1rem;
+      font-weight: bold;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }
+    .index-change {
+      font-size: 0.7rem;
+      font-variant-numeric: tabular-nums;
+      margin-top: 0.12rem;
+    }
+    .index-change.positive { color: #2a7a2a; }
+    .index-change.negative { color: #c0392b; }
+    .index-change.neutral  { color: #999; }
+
+    .overview-regions {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .country-tag {
+      display: inline-block;
+      background: #111; color: #fff;
+      font-size: 0.65rem; padding: 0.1rem 0.45rem;
+      margin-right: 0.4rem;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
+    }
+    .region-tag {
+      background: #111; color: #fff;
+      font-size: 0.72rem; padding: 0.2rem 0.6rem;
+      letter-spacing: 0.05em;
+    }
+    .overview-toc { display: flex; flex-direction: column; gap: 0.3rem; }
+    .toc-row { display: flex; align-items: baseline; gap: 0.8rem; margin-top: 0.4rem; }
+    .toc-label {
+      font-size: 0.75rem; font-weight: bold;
+      color: #111; text-decoration: none;
+      min-width: 165px; flex-shrink: 0;
+    }
+    .toc-label:hover { text-decoration: underline; }
+    .toc-theme { font-size: 0.88rem; color: #555; }
+    .toc-row.deep .toc-label { color: #8B4513; }
+
+    /* 文章標題列表（概覽內） */
+    .toc-articles {
+      margin: 0.2rem 0 0.5rem 165px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    @media (max-width: 600px) {
+      .toc-articles { margin-left: 0; }
+    }
+    .toc-article-link {
+      font-size: 0.81rem;
+      color: #666;
+      text-decoration: none;
+      line-height: 1.5;
+    }
+    .toc-article-link::before { content: "· "; color: #bbb; }
+    .toc-article-link:hover { color: #111; text-decoration: underline; }
+
+    /* 主題區塊 */
+    .topic-section {
+      margin-bottom: 4rem;
+    }
+    .topic-header {
+      border-bottom: 1px solid #111;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    .topic-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: normal;
+      color: #555;
+    }
+
+    /* 單篇新聞 */
+    .news-item {
+      padding: 2rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .news-item h3 {
+      font-size: 1.15rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.4;
+    }
+    .news-item h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .news-item h3 a:hover {
+      text-decoration: underline;
+    }
+
+    /* 三個內容段落 */
+    .section {
+      margin-bottom: 1rem;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.3rem;
+    }
+    .section p {
+      font-size: 0.93rem;
+      color: #333;
+    }
+
+    /* 詳細分析特別標示 */
+    .section.analysis {
+      background: #f5f5f5;
+      border-left: 3px solid #111;
+      padding: 1rem 1.2rem;
+    }
+    .section.analysis .section-label {
+      color: #666;
+    }
+    .section.analysis p {
+      color: #222;
+    }
+
+    /* 深度洞察 */
+    .section.key-takeaway {
+      background: #fdf6f0;
+      border-left: 3px solid #8B4513;
+      padding: 1rem 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .section.key-takeaway .section-label {
+      color: #8B4513;
+    }
+    .section.key-takeaway p {
+      color: #222;
+    }
+
+    /* 深度分析 section */
+    .deep-analysis-section .topic-title {
+      color: #8B4513;
+    }
+    .deep-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      background: #8B4513;
+      color: #fff;
+      padding: 0.15rem 0.5rem;
+      margin-left: 0.8rem;
+      vertical-align: middle;
+      font-style: normal;
+      font-weight: normal;
+    }
+
+    .source {
+      font-size: 0.78rem;
+      color: #bbb;
+      margin-top: 1rem;
+    }
+    .source a { color: #bbb; text-decoration: none; }
+    .source a:hover { text-decoration: underline; }
+
+    /* 底部導覽 */
+    .nav-bottom {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .nav-bottom a { color: #111; text-decoration: none; }
+    .nav-bottom a:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid #ddd;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 3rem;
+    }
+  
+    .ticker-bar {
+      background: #111; color: #ccc; font-size: 0.72rem;
+      letter-spacing: 0.04em; display: flex; align-items: center; height: 2rem;
+    }
+    .ticker-date-fixed {
+      color: #fff; font-size: 0.67rem; white-space: nowrap;
+      padding: 0 1rem; border-right: 1px solid #333;
+      flex-shrink: 0; height: 100%; display: flex; align-items: center;
+    }
+    .ticker-scroll-area { overflow: hidden; white-space: nowrap; flex: 1; height: 100%; }
+    .ticker-track {
+      display: inline-block; animation: ticker-scroll 23s linear infinite;
+      padding-left: 1rem; height: 100%; line-height: 2rem;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ticker-item { display: inline-block; }
+    .ticker-label { color: #888; margin-right: 0.3rem; }
+    .ticker-sep { color: #444; margin: 0 0.3rem; }
+    .ticker-up   { color: #6fcf97; }
+    .ticker-down { color: #eb5757; }
+
+  </style>
+</head>
+<body>
+
+  <div class="ticker-bar"><div class="ticker-date-fixed">2026-11-13 收盤</div><div class="ticker-scroll-area"><div class="ticker-track"><span class="ticker-item"><span class="ticker-label">S&P 500</span>7,561.67 <span class="ticker-down">▼0.40%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>52,347.55 <span class="ticker-up">▲0.10%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>25,136.27 <span class="ticker-down">▼0.91%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>43,675.12 <span class="ticker-up">▲1.35%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>3,886.30 <span class="ticker-up">▲0.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>88.56 <span class="ticker-down">▼0.20%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>95.84 <span class="ticker-up">▲0.02%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>3,634.35 <span class="ticker-down">▼0.59%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>10,968.79 <span class="ticker-down">▼2.05%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>61,142.35 <span class="ticker-up">▲0.53%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>5,290.53 <span class="ticker-down">▼0.98%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">Bitcoin</span>64,074.08 <span class="ticker-down">▼6.12%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">S&P 500</span>7,561.67 <span class="ticker-down">▼0.40%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">道瓊</span>52,347.55 <span class="ticker-up">▲0.10%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">那斯達克</span>25,136.27 <span class="ticker-down">▼0.91%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">台灣加權</span>43,675.12 <span class="ticker-up">▲1.35%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">黃金</span>3,886.30 <span class="ticker-up">▲0.03%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">WTI</span>88.56 <span class="ticker-down">▼0.20%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">布蘭特</span>95.84 <span class="ticker-up">▲0.02%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">上證</span>3,634.35 <span class="ticker-down">▼0.59%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">深證</span>10,968.79 <span class="ticker-down">▼2.05%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">日經225</span>61,142.35 <span class="ticker-up">▲0.53%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">KOSPI</span>5,290.53 <span class="ticker-down">▼0.98%</span></span><span class="ticker-sep">·</span><span class="ticker-item"><span class="ticker-label">Bitcoin</span>64,074.08 <span class="ticker-down">▼6.12%</span></span></div></div></div>
+
+  <header>
+    <h1><a href="../index.html" style="text-decoration:none;color:#111;">Daily Briefing</a></h1>
+    <nav>
+      <a href="../briefings.html">所有期數</a>
+      <a href="#">關於</a>
+    </nav>
+  </header>
+
+  <div class="article">
+
+    <div class="breadcrumb"><a href="../briefings.html">← 所有期數</a></div>
+
+    <div class="issue-meta">
+      <div class="date">2026-11-15 · 共 10 則</div>
+      <h2>英國利率升勢未止、Nvidia治理危機深化、美國基礎設施暴露脆弱性，全球市場同步承壓</h2>
+      <p class="summary">英國央行首席經濟學家明確預告未來數月仍需連續升息，令市場對利率長期維持高位的預期進一步鞏固；與此同時，Nvidia因Jensen Huang去職引發的公司治理風暴持續擴大，逾11.5萬人聯署要求其回任，AI供應鏈信心受衝擊。美國方面，FAA全國航班停飛事件與Microsoft全球服務中斷，接連揭示關鍵基礎設施的系統性脆弱，疊加APEC三方峰會地緣政治緊張，全球機構投資人面臨多重風險同步升溫的罕見格局。</p>
+    </div>
+
+    
+    <div class="overview-section">
+      <div class="overview-label">今日概覽</div>
+      
+      <div class="market-indices">
+        <div class="market-indices-label">市場行情 · 2026-11-13 收盤</div>
+        <div class="market-indices-grid">
+          <div class="index-card">
+            <div class="index-name">S&P 500</div>
+            <div class="index-close">7,561.67</div>
+            <div class="index-change negative">▼0.40%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">道瓊</div>
+            <div class="index-close">52,347.55</div>
+            <div class="index-change positive">▲0.10%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">那斯達克</div>
+            <div class="index-close">25,136.27</div>
+            <div class="index-change negative">▼0.91%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">台灣加權</div>
+            <div class="index-close">43,675.12</div>
+            <div class="index-change positive">▲1.35%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">黃金</div>
+            <div class="index-close">3,886.30</div>
+            <div class="index-change positive">▲0.03%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">WTI</div>
+            <div class="index-close">88.56</div>
+            <div class="index-change negative">▼0.20%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">布蘭特</div>
+            <div class="index-close">95.84</div>
+            <div class="index-change positive">▲0.02%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">上證</div>
+            <div class="index-close">3,634.35</div>
+            <div class="index-change negative">▼0.59%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">深證</div>
+            <div class="index-close">10,968.79</div>
+            <div class="index-change negative">▼2.05%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">日經225</div>
+            <div class="index-close">61,142.35</div>
+            <div class="index-change positive">▲0.53%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">KOSPI</div>
+            <div class="index-close">5,290.53</div>
+            <div class="index-change negative">▼0.98%</div>
+          </div>
+          <div class="index-card">
+            <div class="index-name">Bitcoin</div>
+            <div class="index-close">64,074.08</div>
+            <div class="index-change negative">▼6.12%</div>
+          </div>
+        </div>
+      </div>
+      <div class="overview-toc">
+        <div class="toc-row">
+          <a href="#section-macro" class="toc-label">金融市場（總經）</a>
+          <span class="toc-theme">英國持續升息、AI股波動加劇</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">英國</span><a href="#article-macro-0" class="toc-article-link">英國央行首席經濟學家：未來數月可能需要再度升息以對抗通膨</a>
+          <span class="country-tag">英國</span><a href="#article-macro-1" class="toc-article-link">英國快速升息幾乎無法避免，家庭將承擔主要代價</a>
+          <span class="country-tag">美國</span><a href="#article-macro-2" class="toc-article-link">Nvidia治理危機：董事會獨立性遭質疑，公司面臨訴訟風險</a>
+          <span class="country-tag">美國</span><a href="#article-macro-3" class="toc-article-link">美國全國航班停飛事件：老舊航管基礎設施的系統性危機</a>
+          <span class="country-tag">美國</span><a href="#article-macro-4" class="toc-article-link">Trump Media集團面臨10億美元債務危機，比特幣押注褪色</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-corporate" class="toc-label">國際大公司重大新聞</a>
+          <span class="toc-theme">Nvidia治理危機與Tesla Cybercab開放預購</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">美國</span><a href="#article-corporate-0" class="toc-article-link">馬斯克等科技界領袖聯署請願，要求Nvidia董事會讓黃仁勳回任</a>
+          <span class="country-tag">美國</span><a href="#article-corporate-1" class="toc-article-link">Microsoft全球大規模服務中斷後宣布完全恢復，Outlook、Teams、Copilot受波及</a>
+          <span class="country-tag">美國</span><a href="#article-corporate-2" class="toc-article-link">Tesla正式開放Cybercab個人使用預購，月費299美元，地區限制引爭議</a>
+          
+        </div>
+        <div class="toc-row">
+          <a href="#section-taiwan" class="toc-label">台灣財經</a>
+          <span class="toc-theme">黃仁勳風波衝擊台灣科技供應鏈</span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">台灣</span><a href="#article-taiwan-0" class="toc-article-link">輝達兩大股東呼籲董事會將黃仁勳回任納入考量，台灣供應鏈震盪持續</a>
+          <span class="country-tag">台灣</span><a href="#article-taiwan-1" class="toc-article-link">美中俄三方領袖將在APEC期間舉行峰會，核武與伊朗局勢成優先議題</a>
+          
+        </div>
+        <div class="toc-row deep">
+          <a href="#section-deep" class="toc-label">深度分析</a>
+          <span class="toc-theme"></span>
+        </div>
+        <div class="toc-articles"><span class="country-tag">美國</span><a href="#article-deep-0" class="toc-article-link">AI熱潮能否產生足夠收益以自我維繫？華爾街開始擔憂</a>
+          
+        </div>
+      </div>
+    </div>
+
+
+    
+    <section class="topic-section" id="section-macro">
+      <div class="topic-header">
+        <h2 class="topic-title">金融市場（總經）</h2>
+      </div>
+      
+    <div class="news-item" id="article-macro-0">
+      <h3><a href="https://www.theguardian.com/business/2026/nov/14/interest-rate-rises-inflation-bank-of-england-chief-economist" target="_blank" rel="noopener">英國央行首席經濟學家：未來數月可能需要再度升息以對抗通膨</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>英國央行（Bank of England）本月初已將基準利率升至4%，為2008年金融危機以來最高水準。自2021年底開始的升息循環，英國面臨能源危機、勞動市場緊俏及脫歐後供應鏈重組等多重通膨壓力，核心通膨長期高於目標值2%。首席經濟學家Huw Pill長期在貨幣政策委員會（MPC）扮演鷹派代表，其公開言論具有極強的政策前瞻指引效力。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Pill在最新講話中明確表示「We have further to go」，暗示12月及2027年初仍可能各有一次升息，市場對於終端利率（terminal rate）的預期因此上移。此舉對英國房市、高負債家庭及浮動利率貸款借款人形成直接壓力，英鎊匯率短線受支撐，但長端英國公債（Gilts）殖利率同步上揚，壓縮政府財政空間。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>歷史上，央行在通膨黏性超預期時傾向過度升息，英國1990年代ERM危機與2007-2008年週期均顯示後滯效應（lagged effect）可能長達12-18個月。目前英國抵押貸款中約35%為浮動利率或短期固定利率，每提高1碼（25bp）對家庭可支配收入的衝擊約達每年45億英鎊。若終端利率升至4.75%，OBR預估英國2027年GDP成長率將被壓低0.4個百分點。機構投資人應密切關注英國房價指數（Nationwide、Halifax）與零售銷售數據，以判斷消費下行的傳導速度，並評估Gilts與英鎊的反向波動風險。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.theguardian.com/business/2026/nov/14/interest-rate-rises-inflation-bank-of-england-chief-economist" target="_blank">The Guardian</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-1">
+      <h3><a href="https://www.theguardian.com/business/2026/nov/14/interest-rate-rise-phillip-inman-inflation-economy" target="_blank" rel="noopener">英國快速升息幾乎無法避免，家庭將承擔主要代價</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>英國通膨在2026年再度出現黏性回升跡象，主要受能源補貼退出、服務業工資增速持續高於5%及英鎊走弱帶動進口物價上升影響。英國央行最新預測顯示，若不再次升息，通膨在2027年中前難以回到2%目標。政府財政因前幾年大規模補貼支出已相當緊繃，貨幣政策成為控制通膨的主要工具。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>《衛報》分析指出，本輪升息的代價將高度集中於中低收入家庭，因其負債比例較高且持有的金融資產緩衝較少。若央行過度緊縮，現有僅剩微薄正成長的經濟體將面臨陷入衰退的風險，形成「升息兩難」：不升通膨持續，升息則壓垮成長。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>對照2022-2023年美國聯準會升息循環，美國因勞動市場韌性較強得以實現「軟著陸」，但英國缺乏同等深度的企業獲利緩衝與消費者儲蓄池。英國個人債務對GDP比率約為83%，高於歐元區平均的68%，對利率敏感度顯著更高。從資產配置角度，英國股市中金融股（銀行、保險）短期受益於利差擴大，但REITs及消費零售板塊面臨下行壓力。歷史數據顯示，英國在利率升至4%以上的環境中，住宅交易量平均下滑20-25%，這對建材、房仲及金融服務類股均構成中期利空。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.theguardian.com/business/2026/nov/14/interest-rate-rise-phillip-inman-inflation-economy" target="_blank">The Guardian</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-2">
+      <h3><a href="https://www.ft.com/content/4aba8386-35cc-463b-a79c-a0c85c362c89?syn-25a6b1a6=1" target="_blank" rel="noopener">Nvidia治理危機：董事會獨立性遭質疑，公司面臨訴訟風險</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Nvidia執行長Jensen Huang（黃仁勳）近期因婚外情風波及涉嫌與受中國情報機構監控人士的親密關係曝光，於2026年11月初被董事會要求去職。Nvidia自2022年以來已成為全球AI基礎設施的核心供應商，市值一度突破3兆美元，Jensen Huang個人幾乎是公司技術方向與文化的化身，其去職具有深遠的投資者信心意涵。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>FT指出Nvidia董事會的獨立性長期存疑，多名董事與Jensen Huang存在長期商業關係，質疑其是否能在事件發生後做出真正獨立的治理決策。更嚴重的問題是，公司的高管責任保險（D&O Insurance）對於因高管個人行為導致的損害可能存在覆蓋缺口，使Nvidia直接暴露於股東集體訴訟風險之下。此事件對AI產業整體的供應鏈信心與估值體系均形成衝擊。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從公司治理歷史先例看，高度依賴創辦人個人魅力的科技公司在創辦人去職後，股價往往在6-12個月內出現20-40%的修正（如Steve Jobs 2011年離世後蘋果短期下跌，或Travis Kalanick離開Uber後的估值重塑）。Nvidia的特殊風險在於其技術路線圖（CUDA生態、Blackwell架構）高度由Jensen Huang主導，繼任者能否維持客戶信任是關鍵不確定性。115,000人的聯署請願雖具象徵意義，但在法律與公司治理層面無約束力，董事會的後續行動才是市場觀察焦點。機構投資人應評估Nvidia在無創辦人領導下的技術溢價（founder premium）縮水幅度，並重新檢視對AMD、Intel及台積電等替代供應鏈的配置比重。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/4aba8386-35cc-463b-a79c-a0c85c362c89?syn-25a6b1a6=1" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-3">
+      <h3><a href="https://www.ft.com/content/f66f9811-59a2-4e52-a944-c7ed81dabc50?syn-25a6b1a6=1" target="_blank" rel="noopener">美國全國航班停飛事件：老舊航管基礎設施的系統性危機</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>美國聯邦航空管理局（FAA）的航空交通管制（ATC）系統長期依賴1970-80年代建置的硬體與軟體，多年來國會未能通過足夠預算進行系統性現代化升級。此前2023年FAA NOTAM系統當機已導致全國短暫停飛，顯示問題具有結構性而非偶發性。美國每日處理超過45,000架次商業航班，任何系統中斷的經濟代價極為巨大。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>2026年11月13日，FAA通訊系統故障導致全美航班暫停起飛逾4小時，造成數千架次延誤或取消。交通部長將事件歸咎於承包商在偏遠設施進行的「例行設備升級」，FAA局長則強調無AI相關因素介入。事件不僅造成直接經濟損失（航空公司、旅客、貨運業），更引爆兩黨對基礎設施投資不足的政治責任追究。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>美國交通部估計，航班延誤每年造成的直接經濟損失約為280億美元，若加計乘數效應（商務旅行損失、供應鏈中斷）可達600億美元以上。美國ATC系統現代化計畫（NextGen）自2007年啟動至今投入超過80億美元，但進度嚴重落後，主因是政府預算週期短與技術整合複雜性之間的結構性矛盾。從投資角度，此事件短期利空主要航空公司（達美、美聯航、美航），但中長期可能加速國會撥款推進ATC升級，利好相關國防及航空電子承包商（如Raytheon、L3Harris）。地緣政治層面，美國關鍵基礎設施脆弱性的曝光也引發國家安全層面的討論，可能帶動網路安全及關鍵基礎設施防護領域的預算增加。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/f66f9811-59a2-4e52-a944-c7ed81dabc50?syn-25a6b1a6=1" target="_blank">Financial Times</a></div>
+    </div>
+
+    <div class="news-item" id="article-macro-4">
+      <h3><a href="https://www.ft.com/content/ada459c4-5f43-4a4a-bc6c-90de8897a4f0?syn-25a6b1a6=1" target="_blank" rel="noopener">Trump Media集團面臨10億美元債務危機，比特幣押注褪色</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Trump Media & Technology Group（TMTG）旗下擁有社群媒體平台Truth Social，其股票（DJT）自2026年初高點已大幅回落，與比特幣價格高度相關的企業財務策略在加密貨幣市場降溫後遭遇重挫。TMTG以特殊目的收購公司（SPAC）方式於2024年上市，本身獲利能力有限，高度依賴市場情緒與政治敘事維繫股價。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>FT報導指出，TMTG面臨約10億美元的債務到期壓力，而公司股價與比特幣價格雙雙下跌，使其原本寄望於加密資產增值的財務策略難以為繼。公司可能被迫出售資產或以高成本重新融資，兩者對現有股東均不利。此事件揭示了政治概念股與加密資產的高相關性泡沫風險。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>TMTG的財務結構是典型的「敘事驅動型估值」（narrative-driven valuation），其P/S（市銷率）在上市初期一度超過500倍，遠超任何可合理化的基本面。歷史上，SPAC概念股在初期熱潮後平均在18個月內回吐70%以上漲幅（參考2021-2022年SPAC泡沫），TMTG的軌跡與此高度吻合。從宏觀角度，此案例凸顯了高利率環境下零收益概念股的死亡螺旋：股價下跌→抵押品縮水→再融資成本上升→資產出售壓力→股價進一步下跌。機構投資人應將TMTG視為高風險投機性資產，並警惕其股價波動對比特幣情緒的反向傳染效應；同時，此事件也是2026年「政治概念股」整體降溫的縮影，對類似結構的媒體或加密概念公司具有警示意義。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.ft.com/content/ada459c4-5f43-4a4a-bc6c-90de8897a4f0?syn-25a6b1a6=1" target="_blank">Financial Times</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-corporate">
+      <div class="topic-header">
+        <h2 class="topic-title">國際大公司重大新聞</h2>
+      </div>
+      
+    <div class="news-item" id="article-corporate-0">
+      <h3><a href="https://techcrunch.com/2026/11/14/elon-musk-other-tech-execs-sign-petition-calling-on-nvidia-to-reinstate-jensen-huang/" target="_blank" rel="noopener">馬斯克等科技界領袖聯署請願，要求Nvidia董事會讓黃仁勳回任</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Nvidia執行長Jensen Huang因個人醜聞被董事會要求去職，事件震驚全球科技與投資圈。黃仁勳自1993年共同創辦Nvidia，主導公司從繪圖晶片轉型為AI計算核心供應商，在AI產業生態系的影響力無人可比。其去職使Nvidia股價承壓，並引發客戶對產品路線圖延續性的疑慮。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>截至2026年11月14日週六下午，由Elon Musk帶頭、多位頂尖科技高管連署的請願書已累積逾115,000個簽名，要求Nvidia董事會重新考慮讓黃仁勳回任。此事件不僅是公司治理議題，更折射出科技業對「創辦人即公司」文化的深層依賴，以及市場對Nvidia繼任領導人能否駕馭當前AI競爭格局的強烈疑慮。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從公司治理角度，大規模公眾請願對上市公司董事會的法律約束力幾乎為零，但其市場信號價值極高，說明主要利害關係人（包括客戶、合作夥伴及部分機構股東）對現任董事會的決策正當性存有質疑。歷史比較案例包括：Steve Jobs 1985年被迫離開蘋果後公司進入長達11年的停滯，直至1997年其回歸方才逆轉，期間蘋果市占率從約15%跌至約4%。若Nvidia無法在90天內提出具市場公信力的繼任方案，其CUDA生態系的護城河可能因客戶轉向AMD ROCm或Google TPU而加速侵蝕。從投資組合管理角度，此時應提高對Nvidia替代品（AMD、博通、Marvell）的配置，並密切追蹤大型AI客戶（微軟、谷歌、Meta）的採購訂單是否出現多元化信號。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://techcrunch.com/2026/11/14/elon-musk-other-tech-execs-sign-petition-calling-on-nvidia-to-reinstate-jensen-huang/" target="_blank">TechCrunch</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-1">
+      <h3><a href="https://www.bbc.co.uk/news/articles/c6rrg51rkz09o?at_medium=RSS&at_campaign=rss" target="_blank" rel="noopener">Microsoft全球大規模服務中斷後宣布完全恢復，Outlook、Teams、Copilot受波及</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Microsoft是全球最大的企業雲端服務提供商之一，Azure雲端平台、Microsoft 365及Teams在全球擁有數以億計的商業用戶。近年來隨著企業加速數位轉型與混合辦公模式普及，對雲端協作工具的依賴程度大幅提升，任何重大服務中斷都會對全球商業運營造成連鎖影響。2024年CrowdStrike事件已引發監管機構對關鍵數位基礎設施單點故障風險的高度關注。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Microsoft宣布在長達約一天的全球服務中斷後，Outlook、Teams及Copilot等核心服務已完全恢復。此次中斷影響範圍廣泛，涵蓋企業電子郵件、視訊會議及AI助理工具，對依賴這些服務的金融機構、跨國企業及政府部門造成顯著運營干擾。事件再次引發外界對超大型科技平台（Hyperscaler）集中風險的討論。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>根據Gartner數據，企業IT宕機每小時平均成本約為56萬美元，對於高度依賴Microsoft 365的大型金融機構，一天的服務中斷損失可能達數千萬美元。從監管趨勢看，歐盟《數位運營韌性法》（DORA）已於2025年1月生效，要求金融機構評估第三方數位服務供應商的集中風險，Microsoft此次事件可能成為監管機構要求企業審查業務連續性計畫（BCP）的催化劑。長期而言，此類事件雖對Microsoft股價短期有負面影響，但往往反而加速企業採購更完整的雲端韌性方案，對Microsoft自身的高可用性服務套件（如Azure Site Recovery）具有反直覺的正面帶動效果。機構投資人應評估其科技供應商集中度，並關注多雲策略（multi-cloud）相關服務商如HashiCorp及Cloudflare的配置機會。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.bbc.co.uk/news/articles/c6rrg51rkz09o?at_medium=RSS&at_campaign=rss" target="_blank">BBC News</a></div>
+    </div>
+
+    <div class="news-item" id="article-corporate-2">
+      <h3><a href="https://techcrunch.com/2026/11/14/tesla-opens-cybercab-pre-orders-for-personal-use-with-geo-restrictions-and-a-299-monthly-fee/" target="_blank" rel="noopener">Tesla正式開放Cybercab個人使用預購，月費299美元，地區限制引爭議</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Tesla的Cybercab是馬斯克構建「Robotaxi網路」宏大計畫中的核心產品，其商業模式設計為讓車主在不使用車輛時將其部署於自動駕駛計程車網路中賺取收入。Tesla的完全自動駕駛（FSD）技術雖已迭代多個版本，但仍處於受監管的「有監督」自動駕駛階段，距離無人監督的完全自動駕駛仍有監管及技術距離。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Tesla宣布開放Cybercab「個人使用」預購，月費定為299美元，並附帶地理區域限制。值得注意的是，馬斯克本人公開表示月費「太高」，此舉罕見地在產品發布之際即自我否定定價策略，引發市場對其商業模式成熟度的質疑。現階段的地理限制也顯示其自動駕駛監管批准進度仍落後於原定時程。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>Tesla Cybercab的商業模式成立需要兩個前提：一是FSD達到SAE Level 4（無監督）自動駕駛的監管批准，二是足夠的車隊密度以維持經濟效益。目前美國各州對Level 4自動駕駛的監管標準不一，加州、德州等主要市場的批准時程具有高度不確定性。從競爭格局看，Waymo（Alphabet旗下）已在舊金山、洛杉磯等城市實現商業化Robotaxi運營，Tesla的後發劣勢在於車隊管理基礎設施較薄弱。月費定價模型（訂閱制）相較於Waymo的按次計費（pay-per-ride）模型，對消費者的吸引力有待市場驗證。若Tesla未能在2027年底前取得主要市場的監管許可，其Robotaxi敘事對股價的支撐將顯著減弱，市場可能重新以傳統汽車製造商的倍數（P/E 10-15倍）而非科技平台倍數（P/E 50倍以上）為Tesla估值。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://techcrunch.com/2026/11/14/tesla-opens-cybercab-pre-orders-for-personal-use-with-geo-restrictions-and-a-299-monthly-fee/" target="_blank">TechCrunch</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section" id="section-taiwan">
+      <div class="topic-header">
+        <h2 class="topic-title">台灣財經</h2>
+      </div>
+      
+    <div class="news-item" id="article-taiwan-0">
+      <h3><a href="https://money.udn.com/money/story/123398/9879319" target="_blank" rel="noopener">輝達兩大股東呼籲董事會將黃仁勳回任納入考量，台灣供應鏈震盪持續</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>Nvidia執行長黃仁勳（Jensen Huang）為台裔美國人，其在台北COMPUTEX（國際電腦展）等場合具有指標性地位，與台灣半導體供應鏈的關係極為深厚。台積電（TSMC）是Nvidia最先進製程晶片（Blackwell架構採用CoWoS先進封裝）的獨家製造商，兩家公司的命運高度綁定。黃仁勳的個人醜聞在台灣引發廣泛關注，兼具商業與政治敏感性。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>Nvidia兩大機構股東公開呼籲董事會在評估未來領導人時，應將「黃仁勳可能回任」列為選項之一，同時路透刊出的親密照片顯示黃仁勳在2024年台北COMPUTEX期間與涉嫌具有中國情報關聯的黃樂的互動細節，使事件增添了地緣政治與國家安全維度。對台灣而言，此事件既衝擊科技業信心，也可能影響美國對台灣半導體廠商的出口管制政策討論。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>台積電對Nvidia的營收貢獻估計佔其高階HPC（高效能運算）封裝業務的15-20%，若Nvidia領導層動盪導致Blackwell下一代晶片（如GB300）的推進時程延誤，將直接衝擊台積電2027年的CoWoS產能利用率。從台灣整體半導體供應鏈看，聯發科、日月光、鴻海等公司均與Nvidia有不同程度的業務往來，市場估計Nvidia相關業務佔台灣半導體出口的直接與間接比重已超過8%。地緣政治層面更為關鍵：黃仁勳涉嫌與具有中國情報關係人士的互動，可能成為美國國會強化對AI晶片出口管制的論述依據，間接影響台灣廠商向中國市場銷售的合規風險。機構投資人應追蹤美國商務部是否就此事件擴大晶片出口限制，並評估台灣科技股在此不確定性下的風險溢酬調整。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/123398/9879319" target="_blank">經濟日報</a></div>
+    </div>
+
+    <div class="news-item" id="article-taiwan-1">
+      <h3><a href="https://money.udn.com/money/story/5599/9879317" target="_blank" rel="noopener">美中俄三方領袖將在APEC期間舉行峰會，核武與伊朗局勢成優先議題</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>亞太經濟合作會議（APEC）原為以貿易與經濟合作為主軸的多邊論壇，但近年來已成為大國領袖進行場邊外交的重要平台。2026年APEC在中國舉行，美中俄三方領袖同台本身即具有高度象徵意義，反映在烏克蘭戰爭延宕及伊朗核問題升溫的背景下，主要大國尋求直接對話管道的迫切性。台灣雖為APEC成員（以「中華台北」名義），但在此類大國峰會中的存在感有限，台海議題能否進入三方議程受到高度關注。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>報導指出，美中俄三方領袖峰會預計於19日舉行，核武條約（可能涉及延長或替代《新削減戰略武器條約》）與美國對伊朗的軍事行動將是優先討論議題。另據FT報導，美國方面同時在探索以頓巴斯撤軍換取烏克蘭獲得北約成員資格的可能方案，三大議題交織構成複雜的全球安全重組格局。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>對金融市場而言，美中俄三方對話若產生實質性去緊張化信號，可能帶動全球風險資產短期反彈，尤其是對地緣政治溢酬敏感的能源商品（石油、天然氣）及國防股。然而，歷史上大國峰會往往止於溝通而少有實質協議，市場對「峰會溢酬」的反應通常在事前1-2週最為明顯，峰會後容易出現「賣事實」效應。對台灣特別重要的是：若美中在此峰會中達成任何涉及台海的默契或讓步，台灣海峽局勢的穩定預期將直接影響外資對台股的配置意願。歷史數據顯示，每當台海緊張情勢指數上升10個基點，台股外資淨流出平均增加約5億美元。機構投資人應密切關注峰會後雙方官方聲明的遣詞用句，尤其是涉及台灣、科技出口管制及軍事熱線的具體表述。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://money.udn.com/money/story/5599/9879317" target="_blank">經濟日報</a></div>
+    </div>
+
+    </section>
+
+    <section class="topic-section deep-analysis-section" id="section-deep">
+      <div class="topic-header">
+        <h2 class="topic-title">深度分析 <span class="deep-badge">IN-DEPTH</span></h2>
+      </div>
+      
+    <div class="news-item deep-item" id="article-deep-0">
+      <h3><a href="https://www.economist.com/briefing/2026/11/12/can-the-ai-boom-make-enough-money-to-sustain-itself" target="_blank" rel="noopener">AI熱潮能否產生足夠收益以自我維繫？華爾街開始擔憂</a></h3>
+
+      <div class="section">
+        <div class="section-label">事件背景</div>
+        <p>自2022年底ChatGPT掀起生成式AI浪潮以來，全球科技業對AI基礎設施的資本支出呈指數級增長。微軟、谷歌、Meta、亞馬遜等超大型科技公司合計年度AI相關資本支出已超過2,000億美元，以Nvidia GPU為核心的AI算力需求成為帶動整個半導體產業週期的主引擎。然而，隨著2025-2026年AI應用的商業化成果逐漸可量化，投資報酬率的問題開始浮上檯面，華爾街分析師與機構投資人開始系統性地質疑這輪AI投資週期的可持續性。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">事件內容及意義</div>
+        <p>《經濟學人》這篇深度分析聚焦於一個根本問題：AI基礎設施的龐大投資是否能產生相應的商業回報？文章指出，儘管AI工具在生產力提升方面展現潛力，但大多數企業的AI投資回收期（payback period）遠比預期長，且真正能將AI轉化為可量化營收增長的企業佔比仍然偏低。華爾街開始擔憂這輪週期可能重蹈2000年代初網際網路泡沫的覆轍：基礎設施過度投資在前，商業模式成熟在後，中間存在危險的「估值懸空期」。</p>
+      </div>
+
+      <div class="section analysis">
+        <div class="section-label">詳細分析及研究</div>
+        <p>從歷史比較來看，1990年代末電信業光纖基礎設施的過度建設導致2001-2003年的「電信崩潰」，當時全球光纖容量利用率一度低於3%，大量投資化為烏有。AI算力的類比是：當前Nvidia H100/H200/B100 GPU的部署速度是否已超出實際AI應用的算力消化能力？根據Goldman Sachs的估算，全球企業AI投資的平均內部報酬率（IRR）目前約為8-12%，遠低於科技公司通常要求的25%以上門檻。這一數字若無法在未來18-24個月內顯著改善，資本支出將面臨大幅縮減的壓力，對Nvidia、台積電、記憶體廠商的需求前景將構成系統性衝擊。</p>
+      </div>
+
+      <div class="section key-takeaway">
+        <div class="section-label">深度洞察</div>
+        <p>AI泡沫的核心問題不在於技術本身是否有價值，而在於技術成熟時程與資本市場耐心之間的結構性錯配。歷史上每一次重大科技投資週期——無論是1860年代的鐵路熱、1990年代末的網際網路泡沫、還是2000年代的頁岩油革命——都遵循相似的模式：先是基礎設施投資超前，隨後出現估值修正，最終倖存者在廢墟中建立真正持久的商業帝國。關鍵差異在於修正的幅度與速度：網際網路泡沫破裂後，納斯達克指數從高點下跌78%，但亞馬遜、谷歌等公司在泡沫後才真正崛起，說明「技術正確，時間錯誤」是最危險的投資陷阱。對AI週期而言，當前最關鍵的領先指標是：超大型科技公司（Hyperscaler）的AI服務營收增速是否能趕上其資本支出增速，兩者之間的差距（投資缺口）若持續擴大超過4-6個季度，將是系統性估值修正的前兆。Nvidia去職事件的深層意義在於，它在一個估值本已高度依賴「領袖敘事」的時間節點上，疊加了公司治理不確定性的額外風險溢酬，使AI板塊的修正壓力倍增。機構投資人應採取的策略框架是：維持對AI「應用層」（而非基礎設施層）公司的配置，因為應用層的邊際資本需求更低、現金流更早轉正；同時建立對AI基礎設施類股（Nvidia、超微半導體、AI伺服器廠商）的動態避險部位，以應對未來12-18個月可能出現的資本支出縮減週期。從更長的歷史視角看，AI技術對全球生產力的結構性提升幾乎是確定的，但這與短期股價回報是兩個完全不同的命題——真正的長期投資者應在此輪修正中辨別「暫時性估值錯誤」與「永久性資本損失」的根本差異，前者提供買入機會，後者則需要徹底迴避。</p>
+      </div>
+
+      <div class="source">來源：<a href="https://www.economist.com/briefing/2026/11/12/can-the-ai-boom-make-enough-money-to-sustain-itself" target="_blank">The Economist</a></div>
+    </div>
+
+    </section>
+
+
+    <div class="nav-bottom">
+      <a href="../briefings.html">← 返回所有期數</a>
+    </div>
+
+  </div>
+
+  <footer>© 2026 Daily Briefing · 每個工作日更新</footer>
+</body>
+</html>
